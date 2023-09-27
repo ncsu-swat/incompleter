@@ -1,0 +1,824 @@
+snippet_number	original_error	original_error_type	lexecutor_error	lexecutor_error_type	action
+1			SyntaxError	SyntaxError	
+2			SyntaxError	SyntaxError	
+3			null	null	
+4			SyntaxError	SyntaxError	
+5			null	null	
+6			null	null	
+7	ValueError: creationflags is only supported on Windows platforms	ValueError	ValueError: creationflags is only supported on Windows platforms	ValueError	
+8			SyntaxError	SyntaxError	
+9			null	null	
+10			SyntaxError	SyntaxError	
+11			null	null	
+12			null	null	
+13			SyntaxError	SyntaxError	
+14			null	null	
+15			null	null	
+16			SyntaxError	SyntaxError	
+17	pytz.exceptions.UnknownTimeZoneError: 'Asia/India'	pytz.exceptions.UnknownTimeZoneError	pytz.exceptions.UnknownTimeZoneError: 'Asia/India'	pytz.exceptions.UnknownTimeZoneError	
+18			SyntaxError	SyntaxError	
+19			SyntaxError	SyntaxError	
+20			null	null	
+21			SyntaxError	SyntaxError	
+22			SyntaxError	SyntaxError	
+23	NameError: name 'os' is not defined	NameError	TypeError: 'DummyObject' object is not iterable	TypeError	
+24			null	null	
+25			null	null	
+26			SyntaxError	SyntaxError	
+27			SyntaxError	SyntaxError	
+28			SyntaxError	SyntaxError	
+29			SyntaxError	SyntaxError	
+30			null	null	
+31			SyntaxError	SyntaxError	
+32			IndentationError	IndentationError	
+33			IndentationError	IndentationError	
+34			SyntaxError	SyntaxError	
+35			SyntaxError	SyntaxError	
+36			null	null	
+37			SyntaxError	SyntaxError	
+38			null	null	
+39			null	null	
+40			SyntaxError	SyntaxError	
+41			SyntaxError	SyntaxError	
+42			SyntaxError	SyntaxError	
+43			SyntaxError	SyntaxError	
+44			SyntaxError	SyntaxError	
+45	NameError: name 'my_crappy_range' is not defined	NameError	TypeError: 'DummyObject' object is not iterable	TypeError	
+46			null	null	
+47	NameError: name 'df' is not defined	NameError	IndexError: list index out of range	IndexError	
+48	NameError: name 'key' is not defined	NameError	NameError: name 'key' is not defined	NameError	
+49			SyntaxError	SyntaxError	
+50			SyntaxError	SyntaxError	
+51			SyntaxError	SyntaxError	
+52			null	null	
+53			SyntaxError	SyntaxError	
+54			null	null	
+55			SyntaxError	SyntaxError	
+56			SyntaxError	SyntaxError	
+57			SyntaxError	SyntaxError	
+58			SyntaxError	SyntaxError	
+59			SyntaxError	SyntaxError	
+60			null	null	
+61			SyntaxError	SyntaxError	
+62			null	null	
+63			SyntaxError	SyntaxError	
+64			null	null	
+65			null	null	
+66			null	null	
+67			SyntaxError	SyntaxError	
+68			null	null	
+69			SyntaxError	SyntaxError	
+70			IndentationError	IndentationError	
+71			null	null	
+72			SyntaxError	SyntaxError	
+73			SyntaxError	SyntaxError	
+74			null	null	
+75	FileNotFoundError: yourfile.dat not found	FileNotFoundError	FileNotFoundError: yourfile.dat not found.	FileNotFoundError	
+76			null	null	
+77			SyntaxError	SyntaxError	
+78			SyntaxError	SyntaxError	
+79			null	null	
+80			null	null	
+81			null	null	
+82			SyntaxError	SyntaxError	
+83			SyntaxError	SyntaxError	
+84			SyntaxError	SyntaxError	
+85			null	null	
+86			SyntaxError	SyntaxError	
+87			SyntaxError	SyntaxError	
+88			null	null	
+89			SyntaxError	SyntaxError	
+90	ModuleNotFoundError: No module named 'typeguard'	ModuleNotFoundError	TypeError: 'type' object is not subscriptable	TypeError	
+91			SyntaxError	SyntaxError	
+92	NameError: name 'df' is not defined	NameError	TypeError: 'DummyObject' object is not subscriptable	TypeError	
+93			SyntaxError	SyntaxError	
+94			null	null	
+95			null	null	
+96			SyntaxError	SyntaxError	
+97			SyntaxError	SyntaxError	
+98	NameError: name 'sys' is not defined	NameError	TypeError: unsupported operand type(s) for >>: 'builtin_function_or_method' and 'DummyObject'. Did you mean "print(<message>, file=<output_stream>)"?	TypeError	
+99			null	null	
+100	NameError: name 'os' is not defined	NameError	TypeError: 'DummyObject' object is not iterable	TypeError	
+101			SyntaxError	SyntaxError	
+102	NameError: name 'keys' is not defined	NameError	TypeError: 'DummyObject' object is not iterable	TypeError	
+103			SyntaxError	SyntaxError	
+104			SyntaxError	SyntaxError	
+105			null	null	
+106			SyntaxError	SyntaxError	
+107	FileNotFoundError: [Errno 2] No such file or directory: 'path/to/save/image/to.png'	FileNotFoundError	TypeError: cannot unpack non-iterable DummyObject object	TypeError	
+108			null	null	
+109			null	null	
+110			null	null	
+111			SyntaxError	SyntaxError	
+112			SyntaxError	SyntaxError	
+113			null	null	
+114			null	null	
+115			null	null	
+116			null	null	
+117			null	null	
+118	ValueError: can't have unbuffered text I/O	ValueError	ValueError: can't have unbuffered text I/O	ValueError	
+119			TypeError: _c_() got multiple values for argument 'fct'	TypeError	
+120			null	null	
+121			null	null	
+122			SyntaxError	SyntaxError	
+123	NameError: name 'b' is not defined	NameError	TypeError: isinstance() arg 2 must be a type or tuple of types	TypeError	
+124	FileNotFoundError: [Errno 2] No such file or directory: 'data.json'	FileNotFoundError	FileNotFoundError: [Errno 2] No such file or directory: 'data.json'	FileNotFoundError	
+125	NameError: name 'df' is not defined	NameError	TypeError: 'DummyObject' object is not subscriptable	TypeError	
+126	FileNotFoundError: [Errno 2] No such file or directory: '/my/directory' # OSError: [Errno 30] Read-only file system: '/my'	FileNotFoundError	FileNotFoundError: [Errno 2] No such file or directory: '/my/directory' # OSError: [Errno 30] Read-only file system: '/my'	FileNotFoundError	
+127			null	null	
+128			SyntaxError	SyntaxError	
+129			null	null	
+130			null	null	
+131	NameError: name 'Path' is not defined	NameError	TypeError: 'DummyResource' object is not callable	TypeError	
+132			SyntaxError	SyntaxError	
+133			null	null	
+134			null	null	
+135			SyntaxError	SyntaxError	
+136			null	null	
+137			SyntaxError	SyntaxError	
+138			null	null	
+139			SyntaxError	SyntaxError	
+140			null	null	
+141			null	null	
+142			null	null	
+143			SyntaxError	SyntaxError	
+144			SyntaxError	SyntaxError	
+145			null	null	
+146			null	null	
+147			null	null	
+148			SyntaxError	SyntaxError	
+149			null	null	
+150			null	null	
+151			null	null	
+152			SyntaxError	SyntaxError	
+153			null	null	
+154			null	null	
+155			null	null	
+156			SyntaxError	SyntaxError	
+157			null	null	
+158	NameError: name 'df' is not defined	NameError	TypeError: 'DummyObject' object does not support item assignment	TypeError	
+159			null	null	
+160	IndexError: list index out of range	IndexError	IndexError: list index out of range	IndexError	
+161			null	null	
+162	NameError: name 'y' is not defined	NameError	NameError: name 'y' is not defined	NameError	
+163			null	null	
+164			SyntaxError	SyntaxError	
+165			null	null	
+166	FileNotFoundError: [Errno 2] No such file or directory: 'data.txt'	FileNotFoundError	FileNotFoundError: [Errno 2] No such file or directory: 'data.txt'	FileNotFoundError	
+167			null	null	
+168			null	null	
+169			null	null	
+170			SyntaxError	SyntaxError	
+171			SyntaxError	SyntaxError	
+172			SyntaxError	SyntaxError	
+173			SyntaxError	SyntaxError	
+174			SyntaxError	SyntaxError	
+175			null	null	
+176			SyntaxError	SyntaxError	
+177			null	null	
+178			SyntaxError	SyntaxError	
+179			SyntaxError	SyntaxError	
+180			SyntaxError	SyntaxError	
+181	ModuleNotFoundError: No module named 'crtime'	ModuleNotFoundError	TypeError: 'DummyObject' object is not iterable	TypeError	
+182			null	null	
+183			SyntaxError	SyntaxError	
+184			SyntaxError	SyntaxError	
+185			null	null	
+186			null	null	
+187			null	null	
+188			SyntaxError	SyntaxError	
+189			null	null	
+190			null	null	
+191			null	null	
+192			SyntaxError	SyntaxError	
+193			null	null	
+194			null	null	
+195			IndentationError	IndentationError	
+196			null	null	
+197			null	null	
+198			SyntaxError	SyntaxError	
+199			SyntaxError	SyntaxError	
+200			SyntaxError	SyntaxError	
+201			null	null	
+202			null	null	
+203			SyntaxError	SyntaxError	
+204			null	null	
+205			null	null	
+206			null	null	
+207			SyntaxError	SyntaxError	
+208			SyntaxError	SyntaxError	
+209			null	null	
+210			null	null	
+211			null	null	
+212			SyntaxError	SyntaxError	
+213			null	null	
+214			SyntaxError	SyntaxError	
+215			SyntaxError	SyntaxError	
+216			SyntaxError	SyntaxError	
+217			IndentationError	IndentationError	
+218			SyntaxError	SyntaxError	
+219			SyntaxError	SyntaxError	
+220			null	null	
+221			SyntaxError	SyntaxError	
+222			SyntaxError	SyntaxError	
+223			SyntaxError	SyntaxError	
+224			null	null	
+225			KeyError: 'x'	KeyError	
+226			null	null	
+227			null	null	
+228			null	null	
+229			null	null	
+230			null	null	
+231			null	null	
+232			SyntaxError	SyntaxError	
+233			null	null	
+234			null	null	
+235			IndentationError	IndentationError	
+236			SyntaxError	SyntaxError	
+237			null	null	
+238			SyntaxError	SyntaxError	
+239			null	null	
+240			SyntaxError	SyntaxError	
+241			null	null	
+242			SyntaxError	SyntaxError	
+243			null	null	
+244			null	null	
+245			SyntaxError	SyntaxError	
+246			SyntaxError	SyntaxError	
+247			SyntaxError	SyntaxError	
+248			null	null	
+249			null	null	
+250			SyntaxError	SyntaxError	
+251	NameError: name 'number' is not defined	NameError	NameError: name 'number' is not defined	NameError	
+252			SyntaxError	SyntaxError	
+253			SyntaxError	SyntaxError	
+254			null	null	
+255			SyntaxError	SyntaxError	
+256			SyntaxError	SyntaxError	
+257			null	null	
+258			null	null	
+259			SyntaxError	SyntaxError	
+260			SyntaxError	SyntaxError	
+261	NameError: name 'somelist' is not defined	NameError	TypeError: 'DummyObject' object is not iterable	TypeError	
+262			SyntaxError	SyntaxError	
+263			null	null	
+264	FileNotFoundError: [Errno 2] No such file or directory: 'filename.csv'	FileNotFoundError	FileNotFoundError: [Errno 2] No such file or directory: 'filename.csv'	FileNotFoundError	
+265			null	null	
+266			SyntaxError	SyntaxError	
+267			null	null	
+268			null	null	
+269			null	null	
+270			SyntaxError	SyntaxError	
+271			null	null	
+272			SyntaxError	SyntaxError	
+273			SyntaxError	SyntaxError	
+274	NameError: name 'pandas' is not defined	NameError	TypeError: unsupported operand type(s) for >>: 'DummyObject' and 'DummyObject'	TypeError	
+275			SyntaxError	SyntaxError	
+276			null	null	
+277			SyntaxError	SyntaxError	
+278			SyntaxError	SyntaxError	
+279			null	null	
+280			SyntaxError	SyntaxError	
+281			null	null	
+282			SyntaxError	SyntaxError	
+283			SyntaxError	SyntaxError	
+284			SyntaxError	SyntaxError	
+285			SyntaxError	SyntaxError	
+286	NameError: name 'lines' is not defined	NameError	TypeError: argument of type 'DummyObject' is not iterable	TypeError	
+287	NameError: name 'directory' is not defined	NameError	FileNotFoundError: [Errno 2] No such file or directory: 'a'	FileNotFoundError	
+288			SyntaxError	SyntaxError	
+289			SyntaxError	SyntaxError	
+290			SyntaxError	SyntaxError	
+291			null	null	
+292			null	null	
+293			SyntaxError	SyntaxError	
+294			SyntaxError	SyntaxError	
+295			null	null	
+296			null	null	
+297			SyntaxError	SyntaxError	
+298			null	null	
+299			null	null	
+300			SyntaxError	SyntaxError	
+301			null	null	
+302			SyntaxError	SyntaxError	
+303			null	null	
+304			SyntaxError	SyntaxError	
+305			null	null	
+306			SyntaxError	SyntaxError	
+307			null	null	
+308			null	null	
+309	NameError: name 'Any' is not defined	NameError	NameError: name 'Any' is not defined	NameError	
+310			SyntaxError	SyntaxError	
+311			SyntaxError	SyntaxError	
+312			SyntaxError	SyntaxError	
+313			null	null	
+314			SyntaxError	SyntaxError	
+315			SyntaxError	SyntaxError	
+316			null	null	
+317			null	null	
+318	NameError: name 'text' is not defined	NameError	TypeError: must be str or None, not DummyObject	TypeError	
+319			SyntaxError	SyntaxError	
+320			SyntaxError	SyntaxError	
+321			null	null	
+322			null	null	
+323			SyntaxError	SyntaxError	
+324	ValueError: Invalid email address	ValueError	ValueError: Invalid email address.	ValueError	
+325			SyntaxError	SyntaxError	
+326			null	null	
+327			SyntaxError	SyntaxError	
+328			null	null	
+329			SyntaxError	SyntaxError	
+330			SyntaxError	SyntaxError	
+331	FileNotFoundError: [Errno 2] No such file or directory: 'file.zip'	FileNotFoundError	FileNotFoundError: [Errno 2] No such file or directory: 'file.zip'	FileNotFoundError	
+332	NameError: name 'np' is not defined	NameError	ModuleNotFoundError: No module named 'sklearn'	ModuleNotFoundError	
+333			null	null	
+334			SyntaxError	SyntaxError	
+335	KeyError: 3	KeyError	KeyError: 3	KeyError	
+336			SyntaxError	SyntaxError	
+337			SyntaxError	SyntaxError	
+338	NameError: name 'dfbc' is not defined	NameError	TypeError: 'DummyObject' object is not subscriptable	TypeError	
+339	NameError: name 'xrange' is not defined	NameError	TypeError: 'DummyObject' object is not iterable	TypeError	
+340			null	null	
+341			null	null	
+342			null	null	
+343			null	null	
+344			null	null	
+345			SyntaxError	SyntaxError	
+346			null	null	
+347			SyntaxError	SyntaxError	
+348			SyntaxError	SyntaxError	
+349			SyntaxError	SyntaxError	
+350			null	null	
+351			null	null	
+352			SyntaxError	SyntaxError	
+353			null	null	
+354	TypeError: an integer is required (got type str)	TypeError	TypeError: an integer is required (got type str)	TypeError	
+355			null	null	
+356			IndentationError	IndentationError	
+357			SyntaxError	SyntaxError	
+358			SyntaxError	SyntaxError	
+359			null	null	
+360			null	null	
+361			SyntaxError	SyntaxError	
+362			null	null	
+363			TypeError: normalize() argument 2 must be str, not DummyObject	TypeError	
+364			null	null	
+365			SyntaxError	SyntaxError	
+366			SyntaxError	SyntaxError	
+367			SyntaxError	SyntaxError	
+368			null	null	
+369			null	null	
+370			null	null	
+371			SyntaxError	SyntaxError	
+372			null	null	
+373			SyntaxError	SyntaxError	
+374			SyntaxError	SyntaxError	
+375	NameError: name 'np' is not defined	NameError	TypeError: unsupported operand type(s) for *: 'DummyObject' and 'DummyObject'	TypeError	
+376			null	null	
+377			SyntaxError	SyntaxError	
+378			null	null	
+379	ValueError: No objects to concatenate	ValueError	ValueError: No objects to concatenate	ValueError	
+380			null	null	
+381			null	null	
+382			null	null	
+383			null	null	
+384			SyntaxError	SyntaxError	
+385			SyntaxError	SyntaxError	
+386			SyntaxError	SyntaxError	
+387			null	null	
+388			null	null	
+389			null	null	
+390			SyntaxError	SyntaxError	
+391	ZeroDivisionError: division by zero	ZeroDivisionError	ZeroDivisionError: division by zero	ZeroDivisionError	
+392			null	null	
+393			SyntaxError	SyntaxError	
+394			SyntaxError	SyntaxError	
+395			null	null	
+396			SyntaxError	SyntaxError	
+397			SyntaxError	SyntaxError	
+398			null	null	
+399			SyntaxError	SyntaxError	
+400			null	null	
+401			SyntaxError	SyntaxError	
+402			null	null	
+403	OSError: [Errno 49] Can't assign requested address	OSError	OSError: [Errno 49] Can't assign requested address	OSError	
+404			IndentationError	IndentationError	
+405	NameError: name 'default_path' is not defined	NameError	FileNotFoundError: [Errno 2] No such file or directory: 'a'	FileNotFoundError	
+406	FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Python27\\Lib\\genericpath.py'	FileNotFoundError	FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Python27\\Lib\\genericpath.py'	FileNotFoundError	
+407			null	null	
+408			SyntaxError	SyntaxError	
+409	FileNotFoundError: [Errno 2] No such file or directory: '/pythonwork/thefile_subset11.csv'	FileNotFoundError	FileNotFoundError: [Errno 2] No such file or directory: '/pythonwork/thefile_subset11.csv'	FileNotFoundError	
+410			SyntaxError	SyntaxError	
+411			SyntaxError	SyntaxError	
+412			SyntaxError	SyntaxError	
+413			null	null	
+414			null	null	
+415			null	null	
+416			null	null	
+417	NameError: name 'l' is not defined	NameError	_csv.Error: iterable expected, not DummyObject	_csv.Error	
+418			SyntaxError	SyntaxError	
+419			null	null	
+420	NameError: name 'In' is not defined	NameError	TypeError: 'DummyObject' object is not subscriptable	TypeError	
+421	NameError: name 'some_function' is not defined	NameError	TypeError: unsupported operand type(s) for -: 'str' and 'str'	TypeError	
+422			SyntaxError	SyntaxError	
+423			SyntaxError	SyntaxError	
+424			SyntaxError	SyntaxError	
+425			null	null	
+426			null	null	
+427			null	null	
+428			null	null	
+429	NameError: name 'groupby' is not defined	NameError	TypeError: 'DummyObject' object is not iterable	TypeError	
+430			SyntaxError	SyntaxError	
+431	NameError: name 'pip3' is not defined	NameError	TypeError: unsupported operand type(s) for -: 'DummyObject' and 'DummyObject'	TypeError	
+432			SyntaxError	SyntaxError	
+433			SyntaxError	SyntaxError	
+434			null	null	
+435	NameError: name 'command' is not defined	NameError	ModuleNotFoundError: No module named 'myapp'	ModuleNotFoundError	
+436			SyntaxError	SyntaxError	
+437			null	null	
+438			SyntaxError	SyntaxError	
+439			SyntaxError	SyntaxError	
+440			SyntaxError	SyntaxError	
+441			SyntaxError	SyntaxError	
+442			SyntaxError	SyntaxError	
+443			null	null	
+444	ModuleNotFoundError: No module named 'more_itertools'	ModuleNotFoundError	TypeError: 'DummyObject' object is not iterable	TypeError	
+445			null	null	
+446			null	null	
+447	ModuleNotFoundError: No module named 'keras'	ModuleNotFoundError	NameError: name 'my_model' is not defined	NameError	
+448			SyntaxError	SyntaxError	
+449			SyntaxError	SyntaxError	
+450			null	null	
+451			null	null	
+452			null	null	
+453			null	null	
+454	ValueError: can't have unbuffered text I/O	ValueError	ValueError: can't have unbuffered text I/O	ValueError	
+455			SyntaxError	SyntaxError	
+456			SyntaxError	SyntaxError	
+457			null	null	
+458			null	null	
+459			SyntaxError	SyntaxError	
+460			SyntaxError	SyntaxError	
+461			SyntaxError	SyntaxError	
+462			null	null	
+463			null	null	
+464			SyntaxError	SyntaxError	
+465			null	null	
+466	NameError: name 'Session' is not defined	NameError	TypeError: 'DummyObject' object is not iterable	TypeError	
+467	NameError: name 'file' is not defined	NameError	TypeError: 'DummyObject' object is not iterable	TypeError	
+468			null	null	
+469			SyntaxError	SyntaxError	
+470			SyntaxError	SyntaxError	
+471			null	null	
+472			SyntaxError	SyntaxError	
+473			SyntaxError	SyntaxError	
+474			SyntaxError	SyntaxError	
+475			SyntaxError	SyntaxError	
+476			SyntaxError	SyntaxError	
+477			SyntaxError	SyntaxError	
+478			null	null	
+479			null	null	
+480			SyntaxError	SyntaxError	
+481			null	null	
+482			null	null	
+483			SyntaxError	SyntaxError	
+484			SyntaxError	SyntaxError	
+485	FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\System-Pc\\Desktop\\ybear.jpg'	FileNotFoundError	ValueError: not enough values to unpack (expected 2, got 1)	ValueError	
+486			SyntaxError	SyntaxError	
+487			SyntaxError	SyntaxError	
+488			SyntaxError	SyntaxError	
+489			SyntaxError	SyntaxError	
+490			null	null	
+491			null	null	
+492	NameError: name 'models' is not defined	NameError	NameError: name 'models' is not defined	NameError	
+493			IndentationError	IndentationError	
+494			null	null	
+495			null	null	
+496			SyntaxError	SyntaxError	
+497			SyntaxError	SyntaxError	
+498			SyntaxError	SyntaxError	
+499			null	null	
+500			SyntaxError	SyntaxError	
+501			null	null	
+502			SyntaxError	SyntaxError	
+503			null	null	
+504			null	null	
+505	NameError: name 'plt' is not defined	NameError	TypeError: tuple indices must be integers or slices, not tuple	TypeError	
+506			SyntaxError	SyntaxError	
+507	NameError: name 'X' is not defined	NameError	TypeError: 'DummyObject' object is not iterable	TypeError	
+508			null	null	
+509			SyntaxError	SyntaxError	
+510			SyntaxError	SyntaxError	
+511			SyntaxError	SyntaxError	
+512			null	null	
+513			null	null	
+514			null	null	
+515	TypeError: 'builtin_function_or_method' object is not subscriptable	TypeError	TypeError: 'builtin_function_or_method' object is not subscriptable	TypeError	
+516			null	null	
+517			SyntaxError	SyntaxError	
+518	NameError: name 'df' is not defined	NameError	TypeError: 'DummyObject' object is not subscriptable	TypeError	
+519			SyntaxError	SyntaxError	
+520	ModuleNotFoundError: No module named 'aiofiles'	ModuleNotFoundError	AttributeError: __aexit__	AttributeError	
+521			null	null	
+522			null	null	
+523			null	null	
+524			SyntaxError	SyntaxError	
+525			SyntaxError	SyntaxError	
+526			SyntaxError	SyntaxError	
+527			SyntaxError	SyntaxError	
+528			SyntaxError	SyntaxError	
+529			SyntaxError	SyntaxError	
+530			null	null	
+531			SyntaxError	SyntaxError	
+532			null	null	
+533			null	null	
+534			SyntaxError	SyntaxError	
+535			null	null	
+536	NameError: name 'start_date' is not defined	NameError	TypeError: unsupported operand type(s) for +: 'DummyObject' and 'relativedelta'	TypeError	
+537			SyntaxError	SyntaxError	
+538			null	null	
+539			SyntaxError	SyntaxError	
+540			SyntaxError	SyntaxError	
+541			null	null	
+542			SyntaxError	SyntaxError	
+543			SyntaxError	SyntaxError	
+544			SyntaxError	SyntaxError	
+545			SyntaxError	SyntaxError	
+546			SyntaxError	SyntaxError	
+547			SyntaxError	SyntaxError	
+548	ModuleNotFoundError: No module named 'dask'	ModuleNotFoundError	TypeError: object of type 'DummyObject' has no len()	TypeError	
+549			null	null	
+550			null	null	
+551			null	null	
+552			SyntaxError	SyntaxError	
+553			SyntaxError	SyntaxError	
+554			null	null	
+555			null	null	
+556			SyntaxError	SyntaxError	
+557			SyntaxError	SyntaxError	
+558			SyntaxError	SyntaxError	
+559	NameError: name 'df' is not defined	NameError	TypeError: 'DummyObject' object is not subscriptable	TypeError	
+560			SyntaxError	SyntaxError	
+561			null	null	
+562			SyntaxError	SyntaxError	
+563	NameError: name 'numpy' is not defined	NameError	FileNotFoundError: [Errno 2] No such file or directory: 'data'	FileNotFoundError	
+564			SyntaxError	SyntaxError	
+565			null	null	
+566			null	null	
+567			SyntaxError	SyntaxError	
+568			null	null	
+569	FileNotFoundError: c:\1.csv not found	FileNotFoundError	FileNotFoundError: c:\1.csv not found	FileNotFoundError	
+570			SyntaxError	SyntaxError	
+571			null	null	
+572			SyntaxError	SyntaxError	
+573			null	null	
+574			null	null	
+575			null	null	
+576			null	null	
+577			null	null	
+578			SyntaxError	SyntaxError	
+579			null	null	
+580			null	null	
+581			null	null	
+582			null	null	
+583	NameError: name 'orig' is not defined	NameError	NameError: name 'orig' is not defined	NameError	
+584			SyntaxError	SyntaxError	
+585			null	null	
+586			null	null	
+587			null	null	
+588			SyntaxError	SyntaxError	
+589			null	null	
+590			null	null	
+591			SyntaxError	SyntaxError	
+592			SyntaxError	SyntaxError	
+593			null	null	
+594			SyntaxError	SyntaxError	
+595			SyntaxError	SyntaxError	
+596			SyntaxError	SyntaxError	
+597			SyntaxError	SyntaxError	
+598			SyntaxError	SyntaxError	
+599			SyntaxError	SyntaxError	
+600			SyntaxError	SyntaxError	
+601	NameError: name 'namedtuple' is not defined	NameError	TypeError: 'DummyObject' object is not callable	TypeError	
+602	FileNotFoundError: [Errno 2] No such file or directory: './content.xml'	FileNotFoundError	FileNotFoundError: [Errno 2] No such file or directory: './content.xml'	FileNotFoundError	
+603			SyntaxError	SyntaxError	
+604			SyntaxError	SyntaxError	
+605			SyntaxError	SyntaxError	
+606			null	null	
+607			null	null	
+608			SyntaxError	SyntaxError	
+609			null	null	
+610	FileNotFoundError: [Errno 2] No such file or directory: 'foo.txt'	FileNotFoundError	FileNotFoundError: [Errno 2] No such file or directory: 'foo.txt'	FileNotFoundError	
+611			SyntaxError	SyntaxError	
+612			null	null	
+613			null	null	
+614			null	null	
+615			null	null	
+616			SyntaxError	SyntaxError	
+617			SyntaxError	SyntaxError	
+618			null	null	
+619			SyntaxError	SyntaxError	
+620	requests.exceptions.HTTPError: 404 Client Error: Not Found for url: http://lorempixel.com/400/200	requests.exceptions.HTTPError	requests.exceptions.HTTPError: 404 Client Error: Not Found for url: http://lorempixel.com/400/200	requests.exceptions.HTTPError	
+621	NameError: name 'df1' is not defined	NameError	TypeError: 'DummyObject' object is not subscriptable	TypeError	
+622			SyntaxError	SyntaxError	
+623	ModuleNotFoundError: No module named 'nptime'	ModuleNotFoundError	TypeError: unsupported operand type(s) for +: 'DummyObject' and 'datetime.timedelta'	TypeError	
+624			null	null	
+625			null	null	
+626			SyntaxError	SyntaxError	
+627			null	null	
+628			null	null	
+629			null	null	
+630			SyntaxError	SyntaxError	
+631			SyntaxError	SyntaxError	
+632			null	null	
+633			SyntaxError	SyntaxError	
+634	NameError: name 'np' is not defined	NameError	TypeError: unsupported operand type(s) for *: 'int' and 'DummyObject'	TypeError	
+635			SyntaxError	SyntaxError	
+636			null	null	
+637			SyntaxError	SyntaxError	
+638	NameError: name 'filename' is not defined	NameError	TypeError: an integer is required (got type type)	TypeError	
+639			null	null	
+640			null	null	
+641			IndentationError	IndentationError	
+642	KeyError: 'ret'	KeyError	KeyError: 'ret'	KeyError	
+643			null	null	
+644			SyntaxError	SyntaxError	
+645	IndexError: list index out of range	IndexError	IndexError: list index out of range	IndexError	
+646			null	null	
+647	FileNotFoundError: File strings.json does not exist	FileNotFoundError	FileNotFoundError: File strings.json does not exist	FileNotFoundError	
+648			SyntaxError	SyntaxError	
+649			SyntaxError	SyntaxError	
+650			null	null	
+651			SyntaxError	SyntaxError	
+652			null	null	
+653	NameError: name 'plt' is not defined	NameError	TypeError: unsupported operand type(s) for -: 'DummyObject' and 'DummyObject'	TypeError	
+654			SyntaxError	SyntaxError	
+655			SyntaxError	SyntaxError	
+656			SyntaxError	SyntaxError	
+657			null	null	
+658			SyntaxError	SyntaxError	
+659			null	null	
+660	NameError: name 'df' is not defined	NameError	TypeError: 'DummyObject' object does not support item assignment	TypeError	
+661			SyntaxError	SyntaxError	
+662			null	null	
+663			SyntaxError	SyntaxError	
+664			SyntaxError	SyntaxError	
+665			null	null	
+666			null	null	
+667			null	null	
+668			null	null	
+669	NameError: name 'mymodule' is not defined	NameError	NameError: name 'mymodule' is not defined	NameError	
+670			IndentationError	IndentationError	
+671			null	null	
+672			SyntaxError	SyntaxError	
+673	NameError: name 're' is not defined	NameError	TypeError: 'DummyObject' object is not iterable	TypeError	
+674			null	null	
+675			SyntaxError	SyntaxError	
+676			null	null	
+677			SyntaxError	SyntaxError	
+678			null	null	
+679			null	null	
+680			SyntaxError	SyntaxError	
+681			null	null	
+682			null	null	
+683			SyntaxError	SyntaxError	
+684	NameError: name 'serial' is not defined	NameError	NameError: name 'serial' is not defined	NameError	
+685			null	null	
+686			SyntaxError	SyntaxError	
+687			null	null	
+688			null	null	
+689			SyntaxError	SyntaxError	
+690	NameError: name 'T1' is not defined	NameError	TypeError: 'DummyObject' object is not iterable	TypeError	
+691			SyntaxError	SyntaxError	
+692			null	null	
+693			SyntaxError	SyntaxError	
+694			null	null	
+695			null	null	
+696			SyntaxError	SyntaxError	
+697			SyntaxError	SyntaxError	
+698			null	null	
+699			SyntaxError	SyntaxError	
+700			null	null	
+701	FileNotFoundError: [Errno 2] No such file or directory: 'path/to/config.yml'	FileNotFoundError	FileNotFoundError: [Errno 2] No such file or directory: 'path/to/config.yml'	FileNotFoundError	
+702			SyntaxError	SyntaxError	
+703			null	null	
+704	NameError: name 'sys' is not defined	NameError	FileNotFoundError: [Errno 2] No such file or directory: 'your_filename.txt'	FileNotFoundError	
+705			SyntaxError	SyntaxError	
+706	FileNotFoundError: [Errno 2] No such file or directory: 'your_filename.txt'	FileNotFoundError	FileNotFoundError: [Errno 2] No such file or directory: 'your_filename.txt'	FileNotFoundError	
+707			SyntaxError	SyntaxError	
+708			null	null	
+709			SyntaxError	SyntaxError	
+710			null	null	
+711			null	null	
+712	IndexError: list index out of range	IndexError	IndexError: list index out of range	IndexError	
+713			null	null	
+714	NameError: name 'stuff' is not defined	NameError	TypeError: 'DummyObject' object is not subscriptable	TypeError	
+715			SyntaxError	SyntaxError	
+716	NameError: name 'foo' is not defined	NameError	TypeError: can only concatenate str (not "int") to str	TypeError	
+717			SyntaxError	SyntaxError	
+718			null	null	
+719			SyntaxError	SyntaxError	
+720			SyntaxError	SyntaxError	
+721			IndentationError	IndentationError	
+722	NameError: name 'df' is not defined	NameError	TypeError: 'DummyObject' object is not subscriptable	TypeError	
+723			null	null	
+724			SyntaxError	SyntaxError	
+725			null	null	
+726			SyntaxError	SyntaxError	
+727			null	null	
+728			SyntaxError	SyntaxError	
+729			SyntaxError	SyntaxError	
+730			null	null	
+731			null	null	
+732			SyntaxError	SyntaxError	
+733			SyntaxError	SyntaxError	
+734			SyntaxError	SyntaxError	
+735	NameError: name 'raw_data' is not defined	NameError	KeyError: 'Mycol'	KeyError	
+736			null	null	
+737			SyntaxError	SyntaxError	
+738	FileNotFoundError: [Errno 2] No such file or directory: '/path/to/somefile.py'	FileNotFoundError	FileNotFoundError: [Errno 2] No such file or directory: '/path/to/somefile.py'	FileNotFoundError	
+739			SyntaxError	SyntaxError	
+740	NameError: name 'np' is not defined	NameError	TypeError: unsupported operand type(s) for *: 'DummyObject' and 'int'	TypeError	
+741			SyntaxError	SyntaxError	
+742			SyntaxError	SyntaxError	
+743	TypeError: 'foo' is an invalid keyword argument for print()	TypeError	TypeError: 'foo' is an invalid keyword argument for print()	TypeError	
+744			null	null	
+745			null	null	
+746			null	null	
+747			SyntaxError	SyntaxError	
+748	NameError: name 'df' is not defined	NameError	TypeError: unsupported operand type(s) for /: 'DummyObject' and 'DummyObject'	TypeError	
+749			null	null	
+750			null	null	
+751			SyntaxError	SyntaxError	
+752			null	null	
+753			SyntaxError	SyntaxError	
+754			SyntaxError	SyntaxError	
+755			SyntaxError	SyntaxError	
+756			null	null	
+757			null	null	
+758	FileNotFoundError: [Errno 2] No such file or directory: 'whatever.png'	FileNotFoundError	ValueError: not enough values to unpack (expected 2, got 1)	ValueError	
+759			null	null	
+760			SyntaxError	SyntaxError	
+761			null	null	
+762			null	null	
+763	NameError: name 'num_list' is not defined	NameError	TypeError: 'int' object is not subscriptable	TypeError	
+764	ModuleNotFoundError: No module named 'django'	ModuleNotFoundError	TypeError: unsupported operand type(s) for |: 'DummyObject' and 'DummyObject'	TypeError	
+765			SyntaxError	SyntaxError	
+766			SyntaxError	SyntaxError	
+767			SyntaxError	SyntaxError	
+768	NameError: name 'os' is not defined	NameError	TypeError: 'DummyObject' object is not iterable	TypeError	
+769			SyntaxError	SyntaxError	
+770			null	null	
+771			SyntaxError	SyntaxError	
+772	NameError: name 'REDIS_URL' is not defined	NameError	NameError: name 'IsAuthenticated' is not defined	NameError	
+773			SyntaxError	SyntaxError	
+774	NameError: name 'np' is not defined	NameError	TypeError: 'DummyObject' object is not subscriptable	TypeError	
+775			null	null	
+776			SyntaxError	SyntaxError	
+777			null	null	
+778			SyntaxError	SyntaxError	
+779	NameError: name 'command' is not defined	NameError	TypeError: 'DummyResource' object is not callable	TypeError	
+780			null	null	
+781			SyntaxError	SyntaxError	
+782			SyntaxError	SyntaxError	
+783			SyntaxError	SyntaxError	
+784			null	null	
+785			null	null	
+786			null	null	
+787			SyntaxError	SyntaxError	
+788	NameError: name 'data' is not defined	NameError	TypeError: Object of type DummyObject is not JSON serializable	TypeError	
+789			null	null	
+790			IndentationError	IndentationError	
+791			SyntaxError	SyntaxError	
+792			null	null	
+793	TypeError: cannot unpack non-iterable PathCollection object	TypeError	TypeError: cannot unpack non-iterable DummyObject object	TypeError	
+794			SyntaxError	SyntaxError	
+795			SyntaxError	SyntaxError	
+796			null	null	
+797			null	null	
+798	FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Bob\\SecretPasswordFile.txt'	FileNotFoundError	FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Bob\\SecretPasswordFile.txt'	FileNotFoundError	
+799			SyntaxError	SyntaxError	
+800			SyntaxError	SyntaxError	
+801			null	null	
+802			SyntaxError	SyntaxError	
+803			SyntaxError	SyntaxError	
+804			null	null	
+805			SyntaxError	SyntaxError	
+806	NameError: name 'os' is not defined	NameError	TypeError: 'DummyObject' object is not iterable	TypeError	
+807			null	null	
+808			null	null	
+809			SyntaxError	SyntaxError	
+810			SyntaxError	SyntaxError	
+811			SyntaxError	SyntaxError	
+812	NameError: name 'keys' is not defined	NameError	TypeError: 'DummyObject' object is not iterable	TypeError	
+813			null	null	
+814			SyntaxError	SyntaxError	
+815			null	null	
+816			SyntaxError	SyntaxError	
+817			null	null	
+818			SyntaxError	SyntaxError	
+819			null	null	
+820			SyntaxError	SyntaxError	
+821			null	null	
+822			SyntaxError	SyntaxError	
+823			null	null	

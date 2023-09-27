@@ -1,0 +1,4 @@
+# Extracted from https://stackoverflow.com/questions/1712227/how-do-i-get-the-number-of-elements-in-a-list-length-of-a-list-in-python
+len([1, 2, 3])
+3
+

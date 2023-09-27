@@ -1,0 +1,7 @@
+# Extracted from https://stackoverflow.com/questions/279561/what-is-the-python-equivalent-of-static-variables-inside-a-function
+import types
+
+def func(_static=types.SimpleNamespace(counter=0)):
+    _static.counter += 1
+    print(_static.counter)
+

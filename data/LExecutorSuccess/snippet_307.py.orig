@@ -1,0 +1,7 @@
+# Extracted from https://stackoverflow.com/questions/972/adding-a-method-to-an-existing-object-instance
+import gorilla
+import guineapig
+@gorilla.patch(guineapig)
+def needle():
+    print("awesome")
+

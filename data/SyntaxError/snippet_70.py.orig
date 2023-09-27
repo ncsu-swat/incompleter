@@ -1,0 +1,12 @@
+# Extracted from https://stackoverflow.com/questions/2600191/how-do-i-count-the-occurrences-of-a-list-item
+dict((i,a.count(i)) for i in a)
+
+def occurDict(items):
+    d = {}
+    for i in items:
+        if i in d:
+            d[i] = d[i]+1
+        else:
+            d[i] = 1
+return d
+

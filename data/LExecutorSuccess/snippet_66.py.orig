@@ -1,0 +1,11 @@
+# Extracted from https://stackoverflow.com/questions/627435/how-to-remove-an-element-from-a-list-by-index
+a = ['a', 'b', 'c', 'd']
+a.pop(1)
+
+# now a is ['a', 'c', 'd']
+
+a = ['a', 'b', 'c', 'd']
+a.pop()
+
+# now a is ['a', 'b', 'c']
+

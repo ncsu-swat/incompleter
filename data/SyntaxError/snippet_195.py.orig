@@ -1,0 +1,64 @@
+# Extracted from https://stackoverflow.com/questions/54867/what-is-the-difference-between-old-style-and-new-style-classes-in-python
+class C: i = 0
+class C1(C): pass
+class C2(C): i = 2
+class C12(C1, C2): pass
+class C21(C2, C1): pass
+
+assert C12().i == 0
+assert C21().i == 2
+
+try:
+    C12.__mro__
+except AttributeError:
+    pass
+else:
+    assert False
+
+class C(object): i = 0
+class C1(C): pass
+class C2(C): i = 2
+class C12(C1, C2): pass
+class C21(C2, C1): pass
+
+assert C12().i == 2
+assert C21().i == 2
+
+assert C12.__mro__ == (C12, C1, C2, C, object)
+assert C21.__mro__ == (C21, C2, C1, C, object)
+
+# OK, old:
+class Old: pass
+try:
+    raise Old()
+except Old:
+    pass
+else:
+    assert False
+
+# TypeError, new not derived from `Exception`.
+class New(object): pass
+try:
+    raise New()
+except TypeError:
+    pass
+else:
+    assert False
+
+# OK, derived from `Exception`.
+class New(Exception): pass
+try:
+    raise New()
+except New:
+    pass
+else:
+    assert False
+
+# `'str'` is a new style object, so you can't raise it:
+try:
+    raise 'str'
+except TypeError:
+    pass
+else:
+    assert False
+

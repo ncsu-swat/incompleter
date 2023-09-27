@@ -1,0 +1,10 @@
+# Extracted from https://stackoverflow.com/questions/4760215/running-shell-command-and-capturing-the-output
+import os 
+
+def bash(command):
+    output = os.popen(command).read()
+    return output
+
+print_me = bash('ls -l')
+print(print_me)
+

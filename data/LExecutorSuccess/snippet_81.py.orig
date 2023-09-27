@@ -1,0 +1,8 @@
+# Extracted from https://stackoverflow.com/questions/7370801/how-do-i-measure-elapsed-time-in-python
+import time
+
+start = time.time()
+print("hello")
+end = time.time()
+print(end - start)
+

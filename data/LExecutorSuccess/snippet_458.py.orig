@@ -1,0 +1,11 @@
+# Extracted from https://stackoverflow.com/questions/954834/how-do-i-use-raw-input-in-python-3
+import platform
+def str_input(str=''):
+    py_version = platform.python_version() # fetch the python version currently in use
+    if int(py_version[0]) == 2:
+       return raw_input(str) # input string in python2
+    if int(py_version[0]) == 3:
+       return input(str) # input string in python3
+
+str_input("Your Name: ")
+

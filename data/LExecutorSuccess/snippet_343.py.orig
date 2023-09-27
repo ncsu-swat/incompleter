@@ -1,0 +1,8 @@
+# Extracted from https://stackoverflow.com/questions/699866/python-int-to-binary-string
+def dectobin(number):
+    bin = ''
+    while (number >= 1):
+        number, rem = divmod(number, 2)
+        bin = bin + str(rem)
+    return bin
+

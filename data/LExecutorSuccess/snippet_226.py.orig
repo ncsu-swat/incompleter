@@ -1,0 +1,7 @@
+# Extracted from https://stackoverflow.com/questions/9733638/how-to-post-json-data-with-python-requests
+def POST_request():
+    with open("FILE PATH", "r") as data:
+        JSON_Body = data.read()
+    response = requests.post(url="URL", data=JSON_Body)
+    assert response.status_code == 200
+

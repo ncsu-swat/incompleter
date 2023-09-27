@@ -1,0 +1,12 @@
+# Extracted from https://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python
+def mkdirRecursive(dirpath):
+    import os
+    if os.path.isdir(dirpath): return
+
+    h,t = os.path.split(dirpath) # head/tail
+    if not os.path.isdir(h):
+        mkdirRecursive(h)
+
+    os.mkdir(join(h,t))
+# end mkdirRecursive
+

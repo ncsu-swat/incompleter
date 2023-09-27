@@ -1,0 +1,5 @@
+# Extracted from https://stackoverflow.com/questions/7604966/maximum-and-minimum-values-for-ints
+import sys
+max_size = sys.maxsize
+min_size = -sys.maxsize - 1
+

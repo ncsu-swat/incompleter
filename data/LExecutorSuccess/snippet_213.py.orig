@@ -1,0 +1,11 @@
+# Extracted from https://stackoverflow.com/questions/5971312/how-to-set-environment-variables-in-python
+import os
+
+if not os.environ.get("DEBUSSY"):
+    os.environ.setdefault("DEBUSSY","1")
+else:
+     os.environ["DEBUSSY"] = "1"
+
+print(os.environ["DEBUSSY"])
+
+

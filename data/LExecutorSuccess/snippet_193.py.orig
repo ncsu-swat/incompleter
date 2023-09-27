@@ -1,0 +1,4 @@
+# Extracted from https://stackoverflow.com/questions/5618878/how-to-convert-list-to-string
+xs = ['L', 'O', 'L']
+lol_string = ''.join(map(str, xs))
+

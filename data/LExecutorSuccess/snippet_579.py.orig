@@ -1,0 +1,19 @@
+# Extracted from https://stackoverflow.com/questions/11011756/is-there-any-pythonic-way-to-combine-two-dicts-adding-values-for-keys-that-appe
+from collections import Counter
+
+A = Counter({'a':1, 'b':2, 'c':3})
+B = Counter({'b':3, 'c':4, 'd':5}) 
+C = Counter({'a': 5, 'e':3})
+list_of_counts = [A, B, C]
+
+total = sum(list_of_counts, Counter())
+
+print(total)
+# Counter({'c': 7, 'a': 6, 'b': 5, 'd': 5, 'e': 3})
+
+total = Counter()
+for count in list_of_counts:
+    total += count
+print(total)
+# Counter({'c': 7, 'a': 6, 'b': 5, 'd': 5, 'e': 3})
+

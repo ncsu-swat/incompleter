@@ -1,0 +1,48 @@
+# Extracted from https://stackoverflow.com/questions/11551996/why-do-we-need-the-finally-clause-in-python
+count = 0
+while True:
+    count += 1
+    if count > 3:
+        break
+    else:
+        try:
+            x = int(input("Enter your lock number here: "))
+
+            if x == 586:
+                print("Your lock has unlocked :)")
+
+                break
+            else:
+                print("Try again!!")
+
+                continue
+
+        except:
+            print("Invalid entry!!")
+        finally:
+            print("Your Attempts: {}".format(count))
+
+count = 0
+
+while True:
+    count += 1
+    if count > 3:
+        break
+    else:
+        try:
+            x = int(input("Enter your lock number here: "))
+
+            if x == 586:
+                print("Your lock has unlocked :)")
+
+                break
+            else:
+                print("Try again!!")
+
+                continue
+
+        except:
+            print("Invalid entry!!")
+
+        print("Your Attempts: {}".format(count))
+

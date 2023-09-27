@@ -1,0 +1,6 @@
+# Extracted from https://stackoverflow.com/questions/251464/how-to-get-a-function-name-as-a-string
+import inspect
+
+def foo():
+   print(inspect.stack()[0][3])
+

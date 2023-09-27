@@ -1,0 +1,5 @@
+# Extracted from https://stackoverflow.com/questions/4406389/if-else-in-a-list-comprehension
+xs = [22, 13, 45, 50, 98, 69, 43, 44, 1]
+[x+1 if x >= 45 else x+5 for x in xs]
+[27, 18, 46, 51, 99, 70, 48, 49, 6]
+

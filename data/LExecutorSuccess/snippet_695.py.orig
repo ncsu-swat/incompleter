@@ -1,0 +1,21 @@
+# Extracted from https://stackoverflow.com/questions/1261875/what-does-nonlocal-do-in-python-3
+a = 10
+def Outer(msg):
+    a = 20
+    b = 30
+    def Inner():
+        c = 50
+        d = 60
+        print("MU LCL =",locals())
+        nonlocal a
+        a = 100
+        ans = a+c
+        print("Hello from Inner",ans)       
+        print("value of a Inner : ",a)
+    Inner()
+    print("value of a Outer : ",a)
+
+res = Outer("Hello World")
+print(res)
+print("value of a Global : ",a)
+

@@ -1,0 +1,21 @@
+# Extracted from https://stackoverflow.com/questions/104420/how-do-i-generate-all-permutations-of-a-list
+def getPermutations(array):
+    if len(array) == 1:
+        return [array]
+    permutations = []
+    for i in range(len(array)): 
+        # get all perm's of subarray w/o current item
+        perms = getPermutations(array[:i] + array[i+1:])  
+        for p in perms:
+            permutations.append([array[i], *p])
+    return permutations
+
+def getPermutations(array):
+    if len(array) == 1:
+        yield array
+    else:
+        for i in range(len(array)):
+            perms = getPermutations(array[:i] + array[i+1:])
+            for p in perms:
+                yield [array[i], *p]
+

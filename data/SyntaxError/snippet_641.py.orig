@@ -1,0 +1,9 @@
+# Extracted from https://stackoverflow.com/questions/23944657/typeerror-method-takes-1-positional-argument-but-2-were-given
+class accum:
+    def __init__(self):
+        self.acc = 0
+    def accumulator(self, var2add, end):
+        if not end:
+            self.acc+=var2add
+    return self.acc
+

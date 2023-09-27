@@ -1,0 +1,15 @@
+# Extracted from https://stackoverflow.com/questions/1504717/why-does-comparing-strings-using-either-or-is-sometimes-produce-a-differe
+class Person(object):
+   def __init__(self, name, age):
+       self.name = name
+       self.age = age
+
+   def __eq__(self, other):
+       return self.name == other.name and self.age == other.age
+
+jack1 = Person('Jack', 23)
+jack2 = Person('Jack', 23)
+
+jack1 == jack2 # True
+jack1 is jack2 # False
+

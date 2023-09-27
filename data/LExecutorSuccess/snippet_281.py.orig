@@ -1,0 +1,10 @@
+# Extracted from https://stackoverflow.com/questions/5214578/print-string-to-text-file
+import datetime
+
+now = datetime.datetime.now()
+price = 1200
+currency = "INR"
+
+with open("D:\\log.txt","a") as f:
+    f.write(f'Product sold at {currency} {price } on {str(now)}\n')
+

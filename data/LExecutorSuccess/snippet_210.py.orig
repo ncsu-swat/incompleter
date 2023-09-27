@@ -1,0 +1,7 @@
+# Extracted from https://stackoverflow.com/questions/12453580/how-to-concatenate-join-items-in-a-list-to-a-single-string
+words = ['this', 'is', 'a', 'sentence']
+'-'.join(words)
+'this-is-a-sentence'
+' '.join(words)
+'this is a sentence'
+

@@ -1,0 +1,8 @@
+# Extracted from https://stackoverflow.com/questions/4289331/how-to-extract-numbers-from-a-string-in-python
+# extract numbers from garbage string:
+s = '12//n,_@#$%3.14kjlw0xdadfackvj1.6e-19&*ghn334'
+newstr = ''.join((ch if ch in '0123456789.-e' else ' ') for ch in s)
+listOfNumbers = [float(i) for i in newstr.split()]
+print(listOfNumbers)
+[12.0, 3.14, 0.0, 1.6e-19, 334.0]
+

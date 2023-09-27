@@ -1,0 +1,13 @@
+# Extracted from https://stackoverflow.com/questions/2709821/what-is-the-purpose-of-the-self-parameter-why-is-it-needed
+class C:
+    def m1(self, arg):
+        print(self, ' inside')
+        pass
+
+ci =C()
+print(ci, ' outside')
+ci.m1(None)
+print(hex(id(ci))) # hex memory address
+
+0x2b9d79c6cc0
+

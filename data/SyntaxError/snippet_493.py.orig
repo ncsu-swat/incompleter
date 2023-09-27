@@ -1,0 +1,21 @@
+# Extracted from https://stackoverflow.com/questions/452104/is-it-worth-using-pythons-re-compile
+def match(pattern, string, flags=0):
+    return _compile(pattern, flags).match(string)
+
+def _compile(*key):
+
+    # Does cache check at top of function
+    cachekey = (type(key[0]),) + key
+    p = _cache.get(cachekey)
+    if p is not None: return p
+
+    # ...
+    # Does actual compilation on cache miss
+    # ...
+
+    # Caches compiled regex
+    if len(_cache) >= _MAXCACHE:
+        _cache.clear()
+    _cache[cachekey] = p
+    return p
+

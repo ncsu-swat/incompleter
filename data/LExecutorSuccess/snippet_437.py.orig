@@ -1,0 +1,6 @@
+# Extracted from https://stackoverflow.com/questions/16475384/rename-a-dictionary-key
+d = {'a': 1, 'b': 2}
+v = d['b']
+del d['b']
+d['c'] = v
+

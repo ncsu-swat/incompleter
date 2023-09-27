@@ -1,0 +1,11 @@
+# Extracted from https://stackoverflow.com/questions/20625582/how-to-deal-with-settingwithcopywarning-in-pandas
+def scaler(self, numericals):
+    scaler = MinMaxScaler()
+    self.data.loc[:, numericals[0]] = scaler.fit_transform(self.data.loc[:, numericals[0]])
+    self.data.loc[:, numericals[1]] = scaler.fit_transform(self.data.loc[:, numericals[1]])
+
+def scaler(self, numericals):
+    scaler = MinMaxScaler()
+    self.data.loc[:][numericals[0]] = scaler.fit_transform(self.data.loc[:][numericals[0]])
+    self.data.loc[:][numericals[1]] = scaler.fit_transform(self.data.loc[:][numericals[1]])
+

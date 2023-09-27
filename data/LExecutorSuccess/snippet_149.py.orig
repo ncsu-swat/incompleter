@@ -1,0 +1,15 @@
+# Extracted from https://stackoverflow.com/questions/268272/getting-key-with-maximum-value-in-dictionary
+stats = {'a':1000, 'b':3000, 'c': 100, 'd':3000, 'e':3000}
+
+from collections import defaultdict
+from collections import OrderedDict
+
+groupedByValue = defaultdict(list)
+for key, value in sorted(stats.items()):
+    groupedByValue[value].append(key)
+
+# {1000: ['a'], 3000: ['b', 'd', 'e'], 100: ['c']}
+
+groupedByValue[max(groupedByValue)]
+# ['b', 'd', 'e']
+

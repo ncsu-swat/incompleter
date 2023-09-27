@@ -1,0 +1,7 @@
+# Extracted from https://stackoverflow.com/questions/10624937/convert-datetime-object-to-a-string-of-date-only-in-python
+from datetime import datetime
+
+date_time = datetime(2012, 2, 23, 0, 0)
+date = date_time.strftime('%m/%d/%Y')
+print("date: %s" % date)
+

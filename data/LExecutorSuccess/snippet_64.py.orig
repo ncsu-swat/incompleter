@@ -1,0 +1,4 @@
+# Extracted from https://stackoverflow.com/questions/455612/limiting-floats-to-two-decimal-points
+value = 5.34343
+rounded_value = round(value, 2) # 5.34
+
