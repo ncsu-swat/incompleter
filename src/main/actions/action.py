@@ -8,8 +8,6 @@ class Action(ABC):
 
         self.snippet = self.__read_snippet()
 
-        print(self.snippet)
-
     def __str__(self) -> str:
         desc = 'Original Snippet Path: {}\nException Causing Line No.: {}\n'.format(self.snippet_path, str(self.lineno))
         return desc

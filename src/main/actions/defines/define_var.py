@@ -17,7 +17,3 @@ class Def_Var(Action):
 
     def apply_pattern(self):
         pass
-
-if __name__ == "__main__":
-    def_var = Def_Var(snippet_path='data/LExecutorFails/snippet_45.py.orig', lineno=1, var_name='a', var_val=2)
-    print(def_var)
