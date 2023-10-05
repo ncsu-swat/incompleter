@@ -23,7 +23,7 @@ class Def_Var(Action):
                 self.var_name: str = kwargs['var_name']
                 self.var_val: Any = kwargs['var_val']
 
-            def visit_Body(self, node: ast.Module):
+            def visit_Body(self, node: ast.Module) -> ast.Module:
                 node.body.insert(self.lineno-1, ast.Assign(
                     targets = [
                         ast.Name(id=self.var_name, ctx=ast.Store())
