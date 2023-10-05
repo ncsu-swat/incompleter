@@ -28,7 +28,7 @@ class Error:
         snippet_name = self.__reformat_snippet_name()
         lineno = -1
         if m := re.search(r'File ".*?/{}", line (\d+)'.format(snippet_name), self.stack_trace):
-            lineno = m.groups()[0]
+            lineno = int(m.groups()[0])
         
         if lineno == -1: raise ValueError('Unable to extract error line number from:\n\n{}\n'.format(self.stack_trace))
 
