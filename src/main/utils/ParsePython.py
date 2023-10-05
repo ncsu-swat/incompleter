@@ -19,7 +19,7 @@ def add(a, b):
 """)
 
 
-pprint(ast.dump(tree))
+# pprint(ast.dump(tree))
 
 MyVisitor().visit(tree)
 
@@ -35,4 +35,4 @@ class RewriteName(ast.NodeTransformer):
 
 
 RewriteName().visit_Body(tree)
-pprint(ast.dump(tree))
+print(ast.unparse(tree))
