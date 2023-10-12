@@ -3,7 +3,7 @@ from main.actions.action import Action
 from typing import Any
 import ast
 
-class Def_Var(Action):
+class DefVar(Action):
     def __init__(self, snippet: Snippet, lineno: int, **kwargs: Any) -> None:
         super().__init__(snippet, lineno)
 
@@ -65,11 +65,12 @@ class Def_Var(Action):
                 return node
 
         tree = ast.parse(self.snippet.code[0])
-        print(ast.dump(tree, indent=4))
+        # print(ast.dump(tree, indent=4))
 
         AddNameTransformer(lineno=self.lineno, var_name=self.var_name, var_val=self.var_val).visit_Stmt(tree)
 
         print(ast.unparse(ast.fix_missing_locations(tree)))
+        self.snippet.code.append(ast.unparse(ast.fix_missing_locations(tree)))
         
         return tree
 

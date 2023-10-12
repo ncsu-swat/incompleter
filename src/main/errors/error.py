@@ -1,11 +1,11 @@
 import re
 
 from main.actions.action import Action
-from main.actions.defines.define_var import Def_Var
+from main.actions.defines.define_var import DefVar
 
 mappings = {
     'NameError': {
-        r'name \'(\S+)\' is not defined': Def_Var
+        r'name \'(\S+)\' is not defined': DefVar
     }
 }
 
@@ -61,3 +61,7 @@ class Error:
                     if m := re.search(err_msg_pattern, self.err_msg):
                         var_name = m.groups()[0]
                         return var_name, action_class
+
+        return None, None
+
+                        
