@@ -1,8 +1,9 @@
+from path_config import PROJECT_DIR, DATA_DIR
 from main.utils.snippet import Snippet
 from main.errors.error import Error
 
 if __name__ == '__main__':
-    path='data/LExecutorFails/snippet_45.py.orig'
+    path='{}/LExecutorFails/snippet_48.py.orig'.format(DATA_DIR)
     s = Snippet(path)
     out, err = s.run(0)
 
