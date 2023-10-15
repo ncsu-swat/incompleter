@@ -3,7 +3,7 @@ from main.actions.action import Action
 from typing import Any
 import ast
 
-class DefVar(Action):
+class DefineVar(Action):
     def __init__(self, snippet: Snippet, lineno: int, **kwargs: Any) -> None:
         super().__init__(snippet, lineno)
 
@@ -69,8 +69,7 @@ class DefVar(Action):
 
         AddNameTransformer(lineno=self.lineno, var_name=self.var_name, var_val=self.var_val).visit_Stmt(tree)
 
-        print(ast.unparse(ast.fix_missing_locations(tree)))
-        self.snippet.code.append(ast.unparse(ast.fix_missing_locations(tree)))
+        # print(ast.unparse(ast.fix_missing_locations(tree)))
         
-        return tree
+        return ast.unparse(ast.fix_missing_locations(tree))
 

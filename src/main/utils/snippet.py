@@ -8,6 +8,8 @@ from subprocess import Popen, PIPE
 
 class Snippet:
     def __init__(self, snippet_path: str) -> None:
+        self.LIFETIME = 2
+
         self.snippet_path   : str       = snippet_path
         self.tmp_path       : str       = self.__create_tmp_path()
         self.code           : List[str] = [ self.__clean_snippet(self.__read_snippet()) ]
@@ -36,6 +38,9 @@ class Snippet:
         return tmp_path
 
     def __create_tmp_file(self, idx: int) -> str:
+        if idx > len(self.code)-1: raise ValueError('Cannot create temporary file for running snippet: {}#{}\n(snippet index out of bounds - please ensure that you are appending any rewritten snippet to snippet.code list)\n'.format(self.snippet_path, str(idx)))
+        if len(self.code[idx]) == 0: raise ValueError('Cannot create temporary file for running snippet: {}#{}\n(snippet at idx is empty)\n'.format(self.snippet_path, str(idx)))
+
         with open(self.tmp_path, 'w+') as tmp_file:
             try:
                 tmp_file.write(self.code[idx])
@@ -64,5 +69,7 @@ class Snippet:
             self.__delete_tmp_file()
             
             return out, err
-        except Exception as e:
-            print(e)
+        except FileNotFoundError as e:
+            print('FileNotFoundError: when trying to run snippet {}#{}\n'.format(self.snippet_path, str(idx)))
+
+    

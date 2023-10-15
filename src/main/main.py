@@ -1,12 +1,13 @@
 from path_config import PROJECT_DIR, DATA_DIR
-from main.utils.snippet import Snippet
-from main.errors.error import Error
+from collections import defaultdict
+
+from main.utils.moxecutor import Moxecutor
 
 import os
 
 if __name__ == '__main__':
     total_count = 0
-    err_counts_by_steps = [0, 0]
+    err_counts_by_steps = defaultdict(lambda: 0)
     path='{}/LExecutorFails'.format(DATA_DIR)
     
     for file_name in os.listdir(path):
@@ -15,26 +16,16 @@ if __name__ == '__main__':
 
             file_path = os.path.join(path, file_name)
     
-            s = Snippet(file_path)
-            out, err = s.run(0)
+            mox = Moxecutor(snippet_path=file_path)
+            is_fixed, last_epoch = mox.moxecute()
 
-            print('Error:\n{}\n'.format(err))
+            if not is_fixed:
+                err_counts_by_steps[last_epoch] += 1
 
-            if len(err) > 0:
-                err_counts_by_steps[0] += 1
-                e = Error(file_path, err)
 
-                var_name, Action_Class = e.find_action_class()
-
-                if var_name != None and Action_Class != None:
-                    action = Action_Class(snippet=s, lineno=e.lineno, var_name=var_name, var_val=1)
-                    action.apply_pattern()
-
-                    out, err = s.run(1)
-                    if len(err) > 0:
-                        err_counts_by_steps[1] += 1
-
-    print('\n\n===============================\nTotal count: {}\nError count before step 0: {}\nError count after step 0: {}\n'.format(total_count, err_counts_by_steps[0], err_counts_by_steps[1]))
+    print('\n\n===============================\nTotal count: {}\nError count by steps:'.format(str(total_count)))
+    for key, value in err_counts_by_steps.items():
+        print('After step {}: {}\n'.format(str(key), str(value)))
 
     
 
