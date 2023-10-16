@@ -1,3 +1,5 @@
+from path_config import DATA_DIR
+
 import sys
 import os
 import re
@@ -31,7 +33,7 @@ class Snippet:
         return '\n'.join(cleaned_lines)
 
     def __create_tmp_path(self) -> str:
-        tmp_path = 'data/tmp/' + self.snippet_path.split('/')[-1]
+        tmp_path = os.path.join(DATA_DIR, 'tmp', self.snippet_path.split('/')[-1])
         tmp_file = Path(tmp_path)
         tmp_file.parent.mkdir(parents=True, exist_ok=True)
 

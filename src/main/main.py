@@ -8,7 +8,7 @@ import os
 if __name__ == '__main__':
     total_count = 0
     err_counts_by_steps = defaultdict(lambda: 0)
-    path='{}/LExecutorFails'.format(DATA_DIR)
+    path='{}/lxecutor_fails'.format(DATA_DIR)
     
     for file_name in os.listdir(path):
         if file_name.endswith('.orig'):
@@ -26,6 +26,4 @@ if __name__ == '__main__':
     print('\n\n===============================\nTotal count: {}\nError count by steps:'.format(str(total_count)))
     for key, value in err_counts_by_steps.items():
         print('After step {}: {}\n'.format(str(key), str(value)))
-
-    
 
