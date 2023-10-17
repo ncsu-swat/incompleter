@@ -4,7 +4,7 @@ from typing import Any
 import ast
 
 class DefineVar(Action):
-    def __init__(self, snippet: Snippet, lineno: int, **kwargs: Any) -> None:
+    def __init__(self, snippet: Snippet=None, lineno: int=0, **kwargs: dict) -> None:
         super().__init__(snippet, lineno)
 
         self.var_name = kwargs['var_name']
@@ -16,14 +16,17 @@ class DefineVar(Action):
 
         return desc
 
-    def apply_pattern(self) -> ast.Module:
+    def check_criteria(self) -> bool:
+        return True
+
+    def apply_pattern(self) -> str:
         class AddNameTransformer(ast.NodeTransformer):
             def __init__(self, **kwargs: Any) -> None:
                 self.lineno: int = kwargs['lineno']
                 self.var_name: str = kwargs['var_name']
                 self.var_val: Any = kwargs['var_val']
 
-            def visit_Stmt(self, node: ast.Module) -> ast.Module:
+            def visit_Body(self, node: ast.Module) -> ast.Module:
                 # to_visit = []
                 # visited = set()
                 # node_found = False
@@ -64,10 +67,10 @@ class DefineVar(Action):
 
                 return node
 
-        tree = ast.parse(self.snippet.code[0])
+        tree = ast.parse(self.snippet.get_latest())
         # print(ast.dump(tree, indent=4))
 
-        AddNameTransformer(lineno=self.lineno, var_name=self.var_name, var_val=self.var_val).visit_Stmt(tree)
+        AddNameTransformer(lineno=self.lineno, var_name=self.var_name, var_val=self.var_val).visit_Body(tree)
 
         # print(ast.unparse(ast.fix_missing_locations(tree)))
         

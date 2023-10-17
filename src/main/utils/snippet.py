@@ -15,6 +15,7 @@ class Snippet:
         self.snippet_path   : str       = snippet_path
         self.tmp_path       : str       = self.__create_tmp_path()
         self.code           : List[str] = [ self.__clean_snippet(self.__read_snippet()) ]
+        self.latest         : int       = 0
 
     def __read_snippet(self) -> str:
         if not Path(self.snippet_path).exists(): raise FileNotFoundError('Snippet path does not exist\nSnippet path: {}\n'.format(self.snippet_path))
@@ -39,13 +40,10 @@ class Snippet:
 
         return tmp_path
 
-    def __create_tmp_file(self, idx: int) -> str:
-        if idx > len(self.code)-1: raise ValueError('Cannot create temporary file for running snippet: {}#{}\n(snippet index out of bounds - please ensure that you are appending any rewritten snippet to snippet.code list)\n'.format(self.snippet_path, str(idx)))
-        if len(self.code[idx]) == 0: raise ValueError('Cannot create temporary file for running snippet: {}#{}\n(snippet at idx is empty)\n'.format(self.snippet_path, str(idx)))
-
+    def __create_tmp_file(self) -> str:
         with open(self.tmp_path, 'w+') as tmp_file:
             try:
-                tmp_file.write(self.code[idx])
+                tmp_file.write(self.get_latest())
             except Exception as e:
                 print('__create_tmp_file Exception: ' + e)
 
@@ -55,10 +53,16 @@ class Snippet:
         except Exception as e:
             print('__delete_tmp_file Exception: ' + e)
 
-    def run(self, idx: int) -> List[str]:
+    def add(self, str) -> None:
+        self.code.append(str)
+    
+    def get_latest(self) -> str:
+        return self.code[-1]
+
+    def run_latest(self) -> List[str]:
         try:
             # setup tmp_file at tmp_path before running
-            self.__create_tmp_file(idx)
+            self.__create_tmp_file()
             
             print('\nRunning: {}\n'.format(self.tmp_path))
             proc = Popen([sys.executable, self.tmp_path], stdout=PIPE, stderr=PIPE)
@@ -72,6 +76,6 @@ class Snippet:
             
             return out, err
         except FileNotFoundError as e:
-            print('FileNotFoundError: when trying to run snippet {}#{}\n'.format(self.snippet_path, str(idx)))
+            print('FileNotFoundError: when trying to run snippet {}#{}\n'.format(self.snippet_path, str(len(self.code)-1)))
 
     

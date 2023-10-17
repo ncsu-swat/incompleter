@@ -13,8 +13,7 @@ import os
 import base64
 
 import ast
-
-import_dict, import_from_dict, import_alias_dict = {}, {}, {}
+import pickle
 
 # Top PyPI Search
 __top_pypi_path = os.path.join(DATA_DIR, 'package_meta', 'top_pypi.json')
@@ -74,29 +73,67 @@ def __new_github_object() -> Github:
 
     return None
 
-def __search_github_code(query: str) -> List[str]:
-    gh: Github = __new_github_object()
-    search_results: PaginatedList[ContentFile] = gh.search_code(query=query, language='python')
+def __search_github_code_for_imports(project_name: str) -> str:
+    query: str = 'import {} language:python ?page=1'.format(project_name)
 
-    result_code = []
+    gh: Github = __new_github_object()
+    search_results: PaginatedList[ContentFile] = gh.search_code(query=query)
+
+    import_usages_set = set()
     for res in search_results:
-        result_code.append(base64.b64decode(res.content).decode('utf-8'))
+        res_code = base64.b64decode(res.content).decode('utf-8', 'ignore')
+        for line in res_code.split('\n'):
+            if 'import' in line and project_name in line:
+                import_usages_set.add(line.strip())
     
-    return result_code
+    return '\n'.join(list(import_usages_set))
 
 # Parse Github Search Results
 
-def __parse_imports(references: List[str]) -> Tuple[dict, dict, dict]:
-    pass
+def __parse_imports(github_references: List[str]) -> dict:
+    import_dict = {}
+    class ImportVisitor(ast.NodeVisitor):
+        def visit_Import(self, node):
+            for _import_statement in node.names:
+                if _import_statement.asname is not None:
+                    import_dict[_import_statement.asname] = node
+                else:
+                    import_dict[_import_statement.name] = node
 
+        def visit_ImportFrom(self, node):
+            for _import_statement in node.names:
+                if _import_statement.asname is not None:
+                    import_dict[_import_statement.asname] = node
+                else:
+                    import_dict[_import_statement.name] = node
+
+    for github_reference in github_references:
+        try:
+            tree = ast.parse(github_reference)
+            ImportVisitor().visit(tree)
+        except SyntaxError as e:
+            pass
+
+    return import_dict
+
+def __save_import_dict(import_dict: dict) -> None:
+    import_dict_path = os.path.join(DATA_DIR, 'package_meta/import_dict.pickle')
+    with open(import_dict_path, 'wb') as import_dict_pickle:
+        pickle.dump(import_dict, import_dict_pickle)
 
 if __name__ == "__main__":
     top_pypi_json = __get_top_pypi_json()
 
-    for project in top_pypi_json['rows']:
-        package_meta[project['project']] = { 'aliases': [], 'submodules': [] }
+    github_references: List[str] = []
+    for project in top_pypi_json['rows'][0:10]:
+        github_references.append(__search_github_code_for_imports(project['project']))
 
-    print(package_meta)
+    if github_references is not None:
+        import_dict = __parse_imports(github_references)
+        print(import_dict)
+        __save_import_dict(import_dict)
 
-    # __search_github_code('import numpy')
+    
+
+    
 

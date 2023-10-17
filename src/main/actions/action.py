@@ -4,7 +4,7 @@ from pathlib import Path
 from main.utils.snippet import Snippet
 
 class Action(ABC):
-    def __init__(self, snippet: Snippet, lineno: int) -> None:
+    def __init__(self, snippet: Snippet=None, lineno: int=0) -> None:
         self.snippet = snippet
         self.lineno: int = lineno
 
@@ -13,5 +13,9 @@ class Action(ABC):
         return desc
 
     @abstractmethod
-    def apply_pattern(self) -> bool:
+    def check_criteria(self) -> bool:
+        pass
+
+    @abstractmethod
+    def apply_pattern(self) -> str:
         pass

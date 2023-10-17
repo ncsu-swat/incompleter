@@ -8,7 +8,7 @@ import os
 if __name__ == '__main__':
     total_count = 0
     err_counts_by_steps = defaultdict(lambda: 0)
-    path='{}/lxecutor_fails'.format(DATA_DIR)
+    path='{}/lexecutor_fails'.format(DATA_DIR)
     
     for file_name in os.listdir(path):
         if file_name.endswith('.orig'):

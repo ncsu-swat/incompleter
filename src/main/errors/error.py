@@ -1,15 +1,13 @@
 import re
 
 from main.actions.action import Action
-from main.actions.defines.define_var import DefineVar
+from main.errors.nameerror import _NameError
 
 mappings = {
-    'NameError': {
-        r'name \'(\S+)\' is not defined': DefineVar
-    }
+    'NameError': _NameError
 }
 
-class Error:
+class _Error:
     def __init__(self, path: str, stack_trace: str) -> None:
         if len(stack_trace) == 0: raise ValueError('Unable to instantiate Error object for empty stack trace')
 
@@ -55,16 +53,12 @@ class Error:
         return err_msg.strip()
 
     def find_action_class(self) -> Action:
-        for err_type_key, err_msg_dict in mappings.items():
-            if err_type_key == self.err_type:
-                for err_msg_pattern, action_class in err_msg_dict.items():
-                    if m := re.search(err_msg_pattern, self.err_msg):
-                        rets = {
-                            'var_name': m.groups()[0],
-                            'var_val': 1
-                        }
-                        # var_name = m.groups()[0]
-                        return rets, action_class
+        if self.err_type in mappings.keys():
+            ErrorClass = mappings[self.err_type]
+            return ErrorClass(err_msg=self.err_msg).find_action_class()
+        else:
+            # raise NotImplementedError('NotImplementedError: action pattern for error type {} has not been implemented yet.\n'.format(self.err_type))
+            pass
 
         return None, None
 

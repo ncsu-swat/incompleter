@@ -1,30 +1,32 @@
 from typing import Tuple
 
 from main.utils.snippet import Snippet
-from main.errors.error import Error
+from main.errors.error import _Error
 
 class Moxecutor():
     def __init__(self, snippet_path: str) -> None:
-        self.LIFETIME = 2
+        self.LIFETIME = 1
         self.snippet = Snippet(snippet_path)
 
     def moxecute(self) -> Tuple[bool, int]:
         epoch = 0
         while(epoch < self.LIFETIME):
-            out, err = self.snippet.run(epoch)
+            out, err = self.snippet.run_latest()
             
             if len(err) > 0:
                 epoch += 1
-                e = Error(path=self.snippet.snippet_path, stack_trace=err)
+                e = _Error(path=self.snippet.snippet_path, stack_trace=err)
 
-                kwargs, Action_Class = e.find_action_class()
+                ActionClass, kwargs = e.find_action_class()
 
-                if kwargs != None and Action_Class != None:
-                    action = Action_Class(snippet=self.snippet, lineno=e.lineno, **kwargs)
+                if ActionClass is not None and kwargs is not None:
+                    action = ActionClass(snippet=self.snippet, lineno=e.lineno, **kwargs)
                     rewritten_snippet = action.apply_pattern()
 
-                    self.snippet.code.append(rewritten_snippet)
-                    out, err = self.snippet.run(epoch)
+                    self.snippet.add(rewritten_snippet)
+                    out, err = self.snippet.run_latest()
+
+            print('LATEST SNIPPET:\n{}\n'.format(self.snippet.get_latest()))
 
             if len(err) == 0:
                 return True, epoch
