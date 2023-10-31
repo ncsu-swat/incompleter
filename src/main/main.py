@@ -20,6 +20,7 @@ if __name__ == '__main__':
             is_fixed, last_epoch = mox.moxecute()
 
             if not is_fixed:
+                print('HERE')
                 err_counts_by_steps[last_epoch] += 1
 
 
