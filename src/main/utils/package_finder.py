@@ -84,7 +84,11 @@ def __search_github_code_for_imports(project_name: str) -> str:
         res_code = base64.b64decode(res.content).decode('utf-8', 'ignore')
         for line in res_code.split('\n'):
             if 'import' in line and project_name in line:
-                import_usages_set.add(line.strip())
+                if ',' in line:
+                    for single_module in line.split(',')[1:]:
+                        import_usages_set.add('import ' + single_module.strip())
+                else:    
+                    import_usages_set.add(line.strip())
     
     return '\n'.join(list(import_usages_set))
 
@@ -125,7 +129,7 @@ if __name__ == "__main__":
     top_pypi_json = __get_top_pypi_json()
 
     github_references: List[str] = []
-    for project in top_pypi_json['rows'][0:10]:
+    for project in top_pypi_json['rows']:
         github_references.append(__search_github_code_for_imports(project['project']))
 
     if github_references is not None:

@@ -5,7 +5,7 @@ from main.errors.error import _Error
 
 class Moxecutor():
     def __init__(self, snippet_path: str) -> None:
-        self.LIFETIME = 1
+        self.LIFETIME = 3
         self.snippet = Snippet(snippet_path)
 
     def moxecute(self) -> Tuple[bool, int]:
@@ -28,6 +28,8 @@ class Moxecutor():
 
             print('LATEST SNIPPET:\n{}\n'.format(self.snippet.get_latest()))
 
+            
+            print(err)
             if len(err) == 0:
                 return True, epoch
             if epoch == self.LIFETIME-1:
