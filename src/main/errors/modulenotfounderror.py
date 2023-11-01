@@ -8,7 +8,8 @@ mappings = {
 }
 
 class _ModuleNotFoundError:
-    def __init__(self, err_msg) -> None:
+    def __init__(self, snippet, err_msg) -> None:
+        self.snippet = snippet
         self.err_msg = err_msg
 
     def find_action_class(self) -> Action:

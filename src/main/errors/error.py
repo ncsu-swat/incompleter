@@ -1,5 +1,6 @@
 import re
 
+from main.utils.snippet import Snippet
 from main.actions.action import Action
 from main.errors.nameerror import _NameError
 from main.errors.filenotfounderror import _FileNotFoundError
@@ -12,15 +13,17 @@ mappings = {
 }
 
 class _Error:
-    def __init__(self, path: str, stack_trace: str) -> None:
+    def __init__(self, path: str, snippet: Snippet, stack_trace: str) -> None:
         if len(stack_trace) == 0: raise ValueError('Unable to instantiate Error object for empty stack trace')
 
         self.path = path
+        self.snippet = snippet
         self.stack_trace = stack_trace
         
         self.lineno = self.__extract_lineno()
         self.err_type = self.__extract_type()
         self.err_msg = self.__extract_msg()
+        self.err_id = hash(self.err_type + ': ' + self.err_msg)
 
     def __reformat_snippet_name(self):
         snippet_name = self.path.split('/')[-1]
@@ -59,7 +62,7 @@ class _Error:
     def find_action_class(self) -> Action:
         if self.err_type in mappings.keys():
             ErrorClass = mappings[self.err_type]
-            return ErrorClass(err_msg=self.err_msg).find_action_class()
+            return ErrorClass(snippet=self.snippet, err_msg=self.err_msg).find_action_class()
         else:
             # raise NotImplementedError('NotImplementedError: action pattern for error type {} has not been implemented yet.\n'.format(self.err_type))
             pass

@@ -8,14 +8,18 @@ class Moxecutor():
         self.LIFETIME = 4
         self.snippet = Snippet(snippet_path)
 
-    def moxecute(self) -> Tuple[bool, int]:
+    def moxecute(self):
         epoch = 0
+        report = {}
         while(epoch < self.LIFETIME):
             out, err = self.snippet.run_latest()
-            
+
+            # print('Error: {}\n'.format(str(err)))
+
             if len(err) > 0:
                 epoch += 1
-                e = _Error(path=self.snippet.snippet_path, stack_trace=err)
+                e = _Error(path=self.snippet.snippet_path, snippet=self.snippet, stack_trace=err)
+                report[epoch] = e.err_type
 
                 ActionClass, kwargs = e.find_action_class()
 
@@ -29,8 +33,7 @@ class Moxecutor():
             # print('LATEST SNIPPET:\n{}\n'.format(self.snippet.get_latest()))
 
             if len(err) == 0:
-                return True, epoch
-            if epoch == self.LIFETIME-1:
-                return False, epoch
+                report[epoch] = 'Fixed'
+                return report
 
-        return False, -1
+        return report
