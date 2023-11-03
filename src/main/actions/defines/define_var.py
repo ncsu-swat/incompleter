@@ -1,9 +1,9 @@
 from main.utils.snippet import Snippet
-from main.actions.action import Action
+from main.actions.action_base_class import ActionBaseClass
 from typing import Any
 import ast
 
-class DefineVar(Action):
+class DefineVar(ActionBaseClass):
     def __init__(self, snippet: Snippet=None, lineno: int=0, **kwargs: dict) -> None:
         super().__init__(snippet, lineno)
 

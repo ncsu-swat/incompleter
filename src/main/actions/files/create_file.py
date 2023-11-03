@@ -1,11 +1,11 @@
 from main.utils.snippet import Snippet
-from main.actions.action import Action
+from main.actions.action_base_class import ActionBaseClass
 from typing import Any
 import ast
 
 from pathlib import Path
 
-class CreateFile(Action):
+class CreateFile(ActionBaseClass):
     def __init__(self, snippet: Snippet=None, lineno: int=0, **kwargs: dict) -> None:
         super().__init__(snippet, lineno)
 

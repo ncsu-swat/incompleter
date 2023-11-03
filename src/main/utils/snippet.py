@@ -53,8 +53,8 @@ class Snippet:
         except Exception as e:
             print('__delete_tmp_file Exception: ' + e)
 
-    def add(self, str) -> None:
-        self.code.append(str)
+    def add(self, code_str) -> None:
+        self.code.append(code_str)
     
     def get_latest(self) -> str:
         return self.code[-1]

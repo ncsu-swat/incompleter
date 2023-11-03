@@ -1,18 +1,11 @@
+from abc import ABC, abstractmethod
+from typing import Tuple
 import re
 
 from main.utils.snippet import Snippet
-from main.actions.action import Action
-from main.errors.nameerror import _NameError
-from main.errors.filenotfounderror import _FileNotFoundError
-from main.errors.modulenotfounderror import _ModuleNotFoundError
+from main.actions.action_base_class import ActionBaseClass
 
-mappings = {
-    'NameError': _NameError,
-    'FileNotFoundError': _FileNotFoundError,
-    'ModuleNotFoundError': _ModuleNotFoundError
-}
-
-class _Error:
+class ErrorBaseClass(ABC):
     def __init__(self, path: str, snippet: Snippet, stack_trace: str) -> None:
         if len(stack_trace) == 0: raise ValueError('Unable to instantiate Error object for empty stack trace')
 
@@ -59,14 +52,6 @@ class _Error:
 
         return err_msg.strip()
 
-    def find_action_class(self) -> Action:
-        if self.err_type in mappings.keys():
-            ErrorClass = mappings[self.err_type]
-            return ErrorClass(snippet=self.snippet, err_msg=self.err_msg).find_action_class()
-        else:
-            # raise NotImplementedError('NotImplementedError: action pattern for error type {} has not been implemented yet.\n'.format(self.err_type))
-            pass
-
-        return None, None
-
-                        
+    @abstractmethod
+    def find_action_class(self) -> Tuple[ActionBaseClass, dict]:
+        pass

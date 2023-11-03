@@ -3,7 +3,7 @@ from pathlib import Path
 
 from main.utils.snippet import Snippet
 
-class Action(ABC):
+class ActionBaseClass(ABC):
     def __init__(self, snippet: Snippet=None, lineno: int=0) -> None:
         self.snippet = snippet
         self.lineno: int = lineno
