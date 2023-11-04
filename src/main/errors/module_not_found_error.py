@@ -15,7 +15,7 @@ class _ModuleNotFoundError(ErrorBaseClass):
     def __init__(self, path: str, snippet: Snippet, stack_trace: str) -> None:
         super().__init__(path=path, snippet=snippet, stack_trace=stack_trace)
 
-    def find_action_class(self) -> Tuple[ActionBaseClass, dict]:
+    def find_action(self) -> ActionBaseClass:
         for err_msg_pattern, action_class_list in _ModuleNotFoundError.mappings.items():
             if m := re.search(err_msg_pattern, self.err_msg):
                 for ActionClass in action_class_list:
@@ -23,7 +23,7 @@ class _ModuleNotFoundError(ErrorBaseClass):
                     if ActionClass == InstallModule:
                         kwargs['module_name'] = m.groups()[0]
 
-                    if ActionClass(**kwargs).check_criteria():
-                        return ActionClass, kwargs
+                    if (action := ActionClass(snippet=self.snippet, lineno=self.lineno, **kwargs)).check_criteria():
+                        return action
         
-        return None, None
+        return None

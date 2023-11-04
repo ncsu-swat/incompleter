@@ -15,15 +15,14 @@ class Moxecutor():
             out, err = self.snippet.run_latest()
 
             if len(err) > 0:
-                # print('Error: {}\n'.format(str(err)))
+                print('Error: {}\n'.format(str(err)))
                 
                 e = ErrorCoordinator(path=self.snippet.snippet_path, snippet=self.snippet, stack_trace=err)
                 report[_iter] = e.err_type
 
-                ActionClass, kwargs = e.find_action_class()
+                action = e.find_action()
 
-                if ActionClass is not None and kwargs is not None:
-                    action = ActionClass(snippet=self.snippet, lineno=e.lineno, **kwargs)
+                if action is not None:
                     rewritten_snippet = action.apply_pattern()
 
                     self.snippet.add(rewritten_snippet)

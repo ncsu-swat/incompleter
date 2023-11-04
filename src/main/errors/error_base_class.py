@@ -53,5 +53,5 @@ class ErrorBaseClass(ABC):
         return err_msg.strip()
 
     @abstractmethod
-    def find_action_class(self) -> Tuple[ActionBaseClass, dict]:
+    def find_action(self) -> ActionBaseClass:
         pass
