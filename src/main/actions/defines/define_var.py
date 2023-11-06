@@ -71,6 +71,7 @@ class DefineVar(ActionBaseClass):
         # print(ast.dump(tree, indent=4))
 
         AddNameTransformer(lineno=self.lineno, var_name=self.var_name, var_val=self.var_val).visit_Body(tree)
+        self.snippet.register_mock_definition(iter_n=self.snippet.get_current_iter(), target=self.var_name, value=self.var_val)
 
         # print(ast.unparse(ast.fix_missing_locations(tree)))
         

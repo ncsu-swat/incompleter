@@ -7,12 +7,14 @@ from main.errors.error_base_class import ErrorBaseClass
 from main.errors.name_error import _NameError
 from main.errors.file_not_found_error import _FileNotFoundError
 from main.errors.module_not_found_error import _ModuleNotFoundError
+from main.errors.type_error import _TypeError
 
 class ErrorCoordinator(ErrorBaseClass):
     mappings = {
         'NameError': _NameError,
         'FileNotFoundError': _FileNotFoundError,
-        'ModuleNotFoundError': _ModuleNotFoundError
+        'ModuleNotFoundError': _ModuleNotFoundError,
+        'TypeError': _TypeError
     }
 
     def __init__(self, path: str, snippet: Snippet, stack_trace: str) -> None:

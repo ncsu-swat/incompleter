@@ -9,6 +9,8 @@ class DefineFunc(ActionBaseClass):
 
         self.func_name = kwargs['func_name']
 
+        self.func_vararg = []
+        self.func_kwarg = []
         self.func_args = []
         if 'func_args' in kwargs: self.func_args = kwargs['func_args']
         self.func_keywords = {}
@@ -18,15 +20,17 @@ class DefineFunc(ActionBaseClass):
 
     def __str__(self) -> str:
         desc = super().__str__()
-        desc += 'Func name: {}\nFunc args: {}\nFunc body: {}\n'.format(self.func_name, self.func_args, self.func_body)
+        desc += 'Func name: {}\nFunc args: {}\nFunc keywords: {}\nFunc body: {}\n'.format(self.func_name, self.func_args, self.func_keywords, self.func_body)
 
         return desc
 
     def check_criteria(self) -> bool:
-        class FuncVisitor(ast.NodeVisitor):
+        class FuncCallVisitor(ast.NodeVisitor):
             def __init__(self, **kwargs: dict) -> None:
                 self.func_found = False
                 self.func_name = kwargs['func_name']
+                self.func_vararg = kwargs['func_vararg']
+                self.func_kwarg = kwargs['func_kwarg']
                 self.func_args = kwargs['func_args']
                 self.func_keywords = kwargs['func_keywords']
 
@@ -35,22 +39,24 @@ class DefineFunc(ActionBaseClass):
                     if node.func.id == self.func_name:
                         self.func_found = True
 
-                        if 'args' in dir(node):
+                        if node.args:
                             for (arg_i, arg) in enumerate(node.args):
-                                self.func_args.append(ast.arg(arg='arg'+str(arg_i)))
-                        if 'keywords' in dir(node):
+                                if isinstance(arg, ast.Starred):
+                                    self.func_vararg.append(ast.arg(arg='arg'+str(arg_i)))
+                                else:
+                                    self.func_args.append(ast.arg(arg='arg'+str(arg_i)))
+                        if node.keywords:
                             for kw in node.keywords:
-                                self.func_keywords[ast.arg(arg=kw.arg)] = ast.Constant(value=None)
-
-                # if 'attr' in dir(node.func):
-                #     if node.func.attr == self.func_name:
-                #         self.func_found = True
+                                if kw.arg:
+                                    self.func_keywords[ast.arg(arg=kw.arg)] = ast.Constant(value=None)
+                                else:
+                                    self.func_kwarg.append(ast.arg(arg=kw.value.id))
                     
                 return node
 
         tree = ast.parse(self.snippet.get_latest())
         
-        func_visitor = FuncVisitor(func_name=self.func_name, func_args=self.func_args, func_keywords=self.func_keywords)
+        func_visitor = FuncCallVisitor(func_name=self.func_name, func_vararg=self.func_vararg, func_kwarg=self.func_kwarg, func_args=self.func_args, func_keywords=self.func_keywords)
         func_visitor.visit(tree)
 
         return func_visitor.func_found
@@ -60,6 +66,8 @@ class DefineFunc(ActionBaseClass):
             def __init__(self, **kwargs: Any) -> None:
                 self.lineno: int = kwargs['lineno']
                 self.func_name: str = kwargs['func_name']
+                self.func_vararg: str = kwargs['func_vararg']
+                self.func_kwarg: str = kwargs['func_kwarg']
                 self.func_args = kwargs['func_args']
                 self.func_keywords = kwargs['func_keywords']
                 self.func_body: str = kwargs['func_body']
@@ -69,6 +77,8 @@ class DefineFunc(ActionBaseClass):
                     name=self.func_name,
                     args=ast.arguments(
                         posonlyargs=[],
+                        vararg=None,
+                        kwarg=None,
                         args=[],
                         kwonlyargs=[],
                         kw_defaults=[],
@@ -85,7 +95,11 @@ class DefineFunc(ActionBaseClass):
                 if len(self.func_keywords):
                     func_def.args.args = list(self.func_keywords.keys())
                     func_def.args.defaults = list(self.func_keywords.values())
-                
+                if len(self.func_vararg):
+                    func_def.args.vararg = self.func_vararg[0]
+                if len(self.func_kwarg):
+                    func_def.args.kwarg = self.func_kwarg[0]
+
                 node.body.insert(0, func_def)
 
                 return node
@@ -93,8 +107,10 @@ class DefineFunc(ActionBaseClass):
         tree = ast.parse(self.snippet.get_latest())
         # print(ast.dump(tree, indent=4))
 
-        AddFuncTransformer(lineno=self.lineno, func_name=self.func_name, func_args=self.func_args, func_keywords=self.func_keywords, func_body=self.func_body).visit_Body(tree)
+        AddFuncTransformer(lineno=self.lineno, func_name=self.func_name, func_vararg=self.func_vararg, func_kwarg=self.func_kwarg, func_args=self.func_args, func_keywords=self.func_keywords, func_body=self.func_body).visit_Body(tree)
+        self.snippet.register_mock_definition(iter_n=self.snippet.get_current_iter(), target=self.func_name, value=None)
 
+        # print(ast.dump(tree, indent=4))
         print(ast.unparse(ast.fix_missing_locations(tree)))
         
         return ast.unparse(ast.fix_missing_locations(tree))

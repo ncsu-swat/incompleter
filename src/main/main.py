@@ -15,7 +15,7 @@ if __name__ == '__main__':
     for file_name in os.listdir(path):
         if file_name.endswith('.orig'):
             file_path = os.path.join(path, file_name)
-    
+            
             mox = Moxecutor(snippet_path=file_path)
             report = mox.moxecute()
 

@@ -1,6 +1,7 @@
 from main.utils.snippet import Snippet
 from main.actions.action_base_class import ActionBaseClass
 from typing import Any
+import os
 import ast
 
 from pathlib import Path
@@ -23,7 +24,7 @@ class CreateFile(ActionBaseClass):
 
     def apply_pattern(self) -> str:
         try:
-            file_to_create = Path(self.file_name)
+            file_to_create = Path(os.path.join(self.snippet.tmp_dir, self.file_name))
             file_to_create.parent.mkdir(exist_ok=True, parents=True)
             file_to_create.write_text(self.file_content)
         except OSError as e:
