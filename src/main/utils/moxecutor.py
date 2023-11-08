@@ -35,10 +35,5 @@ class Moxecutor():
             # print('LATEST SNIPPET:\n{}\n'.format(self.snippet.get_latest()))
 
         self.snippet.cleanup()
-        
-        print('\nMocked values:\n')
-        print(self.snippet.mocked_values)
-        print('\nDefinition history:\n')
-        print(self.snippet.def_history)
 
         return report

@@ -22,6 +22,7 @@ class DefineVar(ActionBaseClass):
     def apply_pattern(self) -> str:
         class AddNameTransformer(ast.NodeTransformer):
             def __init__(self, **kwargs: Any) -> None:
+                self.snippet: Snippet = kwargs['snippet']
                 self.lineno: int = kwargs['lineno']
                 self.var_name: str = kwargs['var_name']
                 self.var_val: Any = kwargs['var_val']
@@ -53,9 +54,16 @@ class DefineVar(ActionBaseClass):
                 
                 node.body.insert(0, ast.Assign(
                     targets = [
-                        ast.Name(id=self.var_name, ctx=ast.Store())
+                        ast.Name(id='ident_'+str(self.snippet.temp_identifier_counter), ctx=ast.Store())
                     ],
                     value=ast.Constant(value=self.var_val)
+                ))
+
+                node.body.insert(1, ast.Assign(
+                    targets = [
+                        ast.Name(id=self.var_name, ctx=ast.Store())
+                    ],
+                    value=ast.Name(id='ident_'+str(self.snippet.temp_identifier_counter), ctx=ast.Load())
                 ))
 
                 # node.body.insert(self.lineno-1, ast.Assign(
@@ -70,10 +78,12 @@ class DefineVar(ActionBaseClass):
         tree = ast.parse(self.snippet.get_latest())
         # print(ast.dump(tree, indent=4))
 
-        AddNameTransformer(lineno=self.lineno, var_name=self.var_name, var_val=self.var_val).visit_Body(tree)
-        self.snippet.register_mock_definition(iter_n=self.snippet.get_current_iter(), target=self.var_name, value=self.var_val)
+        AddNameTransformer(snippet=self.snippet, lineno=self.lineno, var_name=self.var_name, var_val=self.var_val).visit_Body(tree)
 
-        # print(ast.unparse(ast.fix_missing_locations(tree)))
+        rewritten_snippet = ast.unparse(ast.fix_missing_locations(tree))
+        self.snippet.register_mock_definition(iter_n=self.snippet.get_current_iter(), rewritten_snippet=rewritten_snippet, target=self.var_name, value=self.var_val)
+
+        # print(rewritten_snippet)
         
-        return ast.unparse(ast.fix_missing_locations(tree))
+        return rewritten_snippet
 

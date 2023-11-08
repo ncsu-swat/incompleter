@@ -64,6 +64,7 @@ class DefineFunc(ActionBaseClass):
     def apply_pattern(self) -> str:
         class AddFuncTransformer(ast.NodeTransformer):
             def __init__(self, **kwargs: Any) -> None:
+                self.snippet: Snippet = kwargs['snippet']
                 self.lineno: int = kwargs['lineno']
                 self.func_name: str = kwargs['func_name']
                 self.func_vararg: str = kwargs['func_vararg']
@@ -85,7 +86,13 @@ class DefineFunc(ActionBaseClass):
                         defaults=[]
                     ),
                     body=[
-                        ast.Return(value=ast.Constant(value=None))
+                        ast.Assign(
+                            targets = [
+                                ast.Name(id='ident_'+str(self.snippet.temp_identifier_counter), ctx=ast.Store())
+                            ],
+                            value=ast.Constant(value=None)
+                        ),
+                        ast.Return(value=ast.Name(id='ident_'+str(self.snippet.temp_identifier_counter), ctx=ast.Load()))
                     ],
                     decorator_list=[]
                 )
@@ -107,11 +114,13 @@ class DefineFunc(ActionBaseClass):
         tree = ast.parse(self.snippet.get_latest())
         # print(ast.dump(tree, indent=4))
 
-        AddFuncTransformer(lineno=self.lineno, func_name=self.func_name, func_vararg=self.func_vararg, func_kwarg=self.func_kwarg, func_args=self.func_args, func_keywords=self.func_keywords, func_body=self.func_body).visit_Body(tree)
-        self.snippet.register_mock_definition(iter_n=self.snippet.get_current_iter(), target=self.func_name, value=None)
+        AddFuncTransformer(snippet=self.snippet, lineno=self.lineno, func_name=self.func_name, func_vararg=self.func_vararg, func_kwarg=self.func_kwarg, func_args=self.func_args, func_keywords=self.func_keywords, func_body=self.func_body).visit_Body(tree)
+
+        rewritten_snippet = ast.unparse(ast.fix_missing_locations(tree))
+        self.snippet.register_mock_definition(iter_n=self.snippet.get_current_iter(), rewritten_snippet=rewritten_snippet, target=self.func_name, value=None)
 
         # print(ast.dump(tree, indent=4))
-        print(ast.unparse(ast.fix_missing_locations(tree)))
+        # print(rewritten_snippet)
         
-        return ast.unparse(ast.fix_missing_locations(tree))
+        return rewritten_snippet
 
