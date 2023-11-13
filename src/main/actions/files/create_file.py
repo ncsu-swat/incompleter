@@ -24,9 +24,14 @@ class CreateFile(ActionBaseClass):
 
     def apply_pattern(self) -> str:
         try:
+            # Create file with all intermediate directories
             file_to_create = Path(os.path.join(self.snippet.tmp_dir, self.file_name))
             file_to_create.parent.mkdir(exist_ok=True, parents=True)
-            file_to_create.write_text(self.file_content)
+            
+            # Write to file
+            with open(os.path.join(self.snippet.tmp_dir, self.file_name), 'wb') as file_to_write:
+                file_to_write.write(self.file_content)
+
         except OSError as e:
             pass
 

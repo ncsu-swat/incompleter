@@ -86,13 +86,11 @@ class DefineFunc(ActionBaseClass):
                         defaults=[]
                     ),
                     body=[
-                        ast.Assign(
-                            targets = [
-                                ast.Name(id='ident_'+str(self.snippet.temp_identifier_counter), ctx=ast.Store())
-                            ],
-                            value=ast.Constant(value=None)
-                        ),
-                        ast.Return(value=ast.Name(id='ident_'+str(self.snippet.temp_identifier_counter), ctx=ast.Load()))
+                        ast.Return(value=ast.Call(
+                            func=ast.Name(id='TBD'+str(self.snippet.tbd_counter), ctx=ast.Load()),
+                            args=[],
+                            keywords=[])
+                        )
                     ],
                     decorator_list=[]
                 )

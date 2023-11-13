@@ -1,4 +1,6 @@
 # Extracted from https://stackoverflow.com/questions/11346283/renaming-column-names-in-pandas
+print(x)
+
 new_cols = ['a', 'b', 'c', 'd', 'e']
 new_names_map = {df.columns[i]:new_cols[i] for i in range(len(new_cols))}
 

@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
+import ast
 
 from main.utils.snippet import Snippet
 
@@ -19,3 +20,11 @@ class ActionBaseClass(ABC):
     @abstractmethod
     def apply_pattern(self) -> str:
         pass
+
+    @staticmethod
+    def rewrite_wrapper(visit_method):
+        def wrapper(self, *args, **kwargs):
+            rewritten_tree = visit_method(self, *args, **kwargs)
+            rewritten_snippet = ast.unparse(ast.fix_missing_locations(rewritten_tree))
+            self.snippet.add(rewritten_snippet)
+        return wrapper

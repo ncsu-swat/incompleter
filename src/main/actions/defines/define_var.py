@@ -1,5 +1,6 @@
 from main.utils.snippet import Snippet
 from main.actions.action_base_class import ActionBaseClass
+from main.actions.defines.define_class import DefineClass
 from typing import Any
 import ast
 
@@ -8,7 +9,16 @@ class DefineVar(ActionBaseClass):
         super().__init__(snippet, lineno)
 
         self.var_name = kwargs['var_name']
-        self.var_val = kwargs['var_val']
+        
+        # Lazy definition
+        self.var_val_id = 'TBD'+str(self.snippet.tbd_counter)
+        self.var_val = ast.Call(
+                func=ast.Name(id=self.var_val_id, ctx=ast.Load()),
+                args=[],
+                keywords=[]
+            )
+
+        self.rewritten_snippet = ''
 
     def __str__(self) -> str:
         desc = super().__str__()
@@ -20,70 +30,31 @@ class DefineVar(ActionBaseClass):
         return True
 
     def apply_pattern(self) -> str:
-        class AddNameTransformer(ast.NodeTransformer):
+        class DefineLazyVarTransformer(ast.NodeTransformer):
             def __init__(self, **kwargs: Any) -> None:
                 self.snippet: Snippet = kwargs['snippet']
                 self.lineno: int = kwargs['lineno']
                 self.var_name: str = kwargs['var_name']
-                self.var_val: Any = kwargs['var_val']
+                self.var_val_id: str = kwargs['var_val_id']
+                self.var_val: ast.Module = kwargs['var_val']
 
+            @ActionBaseClass.rewrite_wrapper
             def visit_Body(self, node: ast.Module) -> ast.Module:
-                # to_visit = []
-                # visited = set()
-                # node_found = False
-                # line_count = 0
-
-                # to_visit.append(node)
-                # while(not (node_found or len(to_visit) == 0)):
-                #     parent_node = to_visit[-1]
-                #     if parent_node not in visited: 
-                #         print(str(line_count), parent_node)
-                #     visited.add(parent_node)
-                    
-                #     unvisited_child_exists = False
-                #     for child_node in ast.iter_child_nodes(parent_node):
-                #         if child_node not in visited:
-                #             if len(list(ast.iter_child_nodes(child_node))) > 0:
-                #                 line_count += 1
-
-                #             unvisited_child_exists = True
-                #             to_visit.append(child_node)
-                #             break
-                #     if not unvisited_child_exists:
-                #         to_visit.pop()
-                
                 node.body.insert(0, ast.Assign(
-                    targets = [
-                        ast.Name(id='ident_'+str(self.snippet.temp_identifier_counter), ctx=ast.Store())
-                    ],
-                    value=ast.Constant(value=self.var_val)
-                ))
-
-                node.body.insert(1, ast.Assign(
-                    targets = [
-                        ast.Name(id=self.var_name, ctx=ast.Store())
-                    ],
-                    value=ast.Name(id='ident_'+str(self.snippet.temp_identifier_counter), ctx=ast.Load())
-                ))
-
-                # node.body.insert(self.lineno-1, ast.Assign(
-                #     targets = [
-                #         ast.Name(id=self.var_name, ctx=ast.Store())
-                #     ],
-                #     value=ast.Constant(value=self.var_val)
-                # ))
-
+                        targets = [
+                            ast.Name(id=self.var_name, ctx=ast.Store())
+                        ],
+                        value=self.var_val
+                    )
+                )
+                
                 return node
 
         tree = ast.parse(self.snippet.get_latest())
-        # print(ast.dump(tree, indent=4))
+        DefineLazyVarTransformer(snippet=self.snippet, lineno=self.lineno, var_name=self.var_name, var_val_id=self.var_val_id, var_val=self.var_val).visit_Body(tree)
 
-        AddNameTransformer(snippet=self.snippet, lineno=self.lineno, var_name=self.var_name, var_val=self.var_val).visit_Body(tree)
-
-        rewritten_snippet = ast.unparse(ast.fix_missing_locations(tree))
-        self.snippet.register_mock_definition(iter_n=self.snippet.get_current_iter(), rewritten_snippet=rewritten_snippet, target=self.var_name, value=self.var_val)
-
-        # print(rewritten_snippet)
+        DefineClass(snippet=self.snippet, lineno=self.lineno, class_name=self.var_val_id).apply_pattern()
+        self.snippet.register_mock_definition(iter_n=self.snippet.get_current_iter(), target=self.var_name, value=self.var_val_id)
         
-        return rewritten_snippet
+        return
 

@@ -1,13 +1,17 @@
 from typing import Tuple
 
+from path_config import DATA_DIR
 from main.utils.snippet import Snippet
 from main.errors.error_base_class import ErrorBaseClass
 from main.actions.action_base_class import ActionBaseClass
 from main.actions.files.create_file import CreateFile
 
 import re
+import os
 
 class _FileNotFoundError(ErrorBaseClass):
+    sample_exts = ['json', 'xml', 'html', 'csv', 'xlsx', 'xls', 'ppt', 'pdf', 'txt', 'rtf', 'doc', 'docx', 'odt', 'ods', 'odp', 'zip', 'tar', 'gz', 'png', 'jpg', 'gif', 'tiff', 'svg', 'webp', 'bmp', 'ico', 'hdf', 'h4', 'hdf4', 'he2', 'h5', 'hdf5', 'he5', 'mp3', 'wav', 'ogg', 'mp4', 'avi', 'mov', 'wmv', 'webm']
+
     mappings = {
         r'(\S+) not found.*?': [ CreateFile ],
         r'\'(\S+)\' not found.*?': [ CreateFile ],
@@ -24,8 +28,19 @@ class _FileNotFoundError(ErrorBaseClass):
                 for ActionClass in action_class_list:
                     kwargs = {}
                     if ActionClass == CreateFile:
-                        kwargs['file_name'] = m.groups()[0]
-                        kwargs['file_content'] = 'abc'
+                        file_name = m.groups()[0]
+                        file_ext = file_name.split('.')[-1]
+                        file_content = b''
+
+                        if file_ext in _FileNotFoundError.sample_exts:
+                            sample_file = open(os.path.join(DATA_DIR, 'sample_files', 'sample.{}'.format(file_ext)), 'rb')
+                            file_content = sample_file.read()
+                        else:
+                            sample_file = open(os.path.join(DATA_DIR, 'sample_files', 'sample.txt'), 'rb')
+                            file_content = sample_file.read()
+
+                        kwargs['file_name'] = file_name
+                        kwargs['file_content'] = file_content
 
                     if (action := ActionClass(snippet=self.snippet, lineno=self.lineno, **kwargs)).check_criteria():
                         return action

@@ -28,7 +28,6 @@ class _NameError(ErrorBaseClass):
                         kwargs['func_name'] = m.groups()[0]
                     elif ActionClass == DefineVar:
                         kwargs['var_name'] = m.groups()[0]
-                        kwargs['var_val'] = None
 
                     if (action := ActionClass(snippet=self.snippet, lineno=self.lineno, **kwargs)).check_criteria():
                         return action
