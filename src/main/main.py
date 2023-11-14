@@ -13,7 +13,7 @@ if __name__ == '__main__':
     reporter = Reporter()
     
     for file_name in os.listdir(path):
-        if file_name.endswith('snippet_47.py.orig'):
+        if file_name.endswith('snippet_45.py.orig'):
             file_path = os.path.join(path, file_name)
             
             mox = Moxecutor(snippet_path=file_path)

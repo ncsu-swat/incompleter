@@ -16,9 +16,7 @@ class DefineVar(ActionBaseClass):
                 func=ast.Name(id=self.var_val_id, ctx=ast.Load()),
                 args=[],
                 keywords=[]
-            )
-
-        self.rewritten_snippet = ''
+        )
 
     def __str__(self) -> str:
         desc = super().__str__()
@@ -38,7 +36,7 @@ class DefineVar(ActionBaseClass):
                 self.var_val_id: str = kwargs['var_val_id']
                 self.var_val: ast.Module = kwargs['var_val']
 
-            @ActionBaseClass.rewrite_wrapper
+            @ActionBaseClass.add_to_history
             def visit_Body(self, node: ast.Module) -> ast.Module:
                 node.body.insert(0, ast.Assign(
                         targets = [

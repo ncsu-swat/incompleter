@@ -1,5 +1,6 @@
 from main.utils.snippet import Snippet
 from main.actions.action_base_class import ActionBaseClass
+from main.actions.defines.define_class import DefineClass
 from typing import Any
 import ast
 
@@ -15,8 +16,17 @@ class DefineFunc(ActionBaseClass):
         if 'func_args' in kwargs: self.func_args = kwargs['func_args']
         self.func_keywords = {}
         if 'func_keywords' in kwargs: self.func_keywords = kwargs['func_keywords']
+        
         self.func_body = []
-        if 'func_body' in kwargs: self.func_body = kwargs['func_body']
+        if 'func_body' in kwargs: 
+            self.func_body = kwargs['func_body']
+        else:
+            self.ret_val_id = 'TBD'+str(self.snippet.tbd_counter)
+            self.func_body.append(ast.Return(value=ast.Call(
+                                                func=ast.Name(id=self.ret_val_id, ctx=ast.Load()),
+                                                args=[],
+                                                keywords=[])
+                                            ))
 
     def __str__(self) -> str:
         desc = super().__str__()
@@ -62,7 +72,7 @@ class DefineFunc(ActionBaseClass):
         return func_visitor.func_found
 
     def apply_pattern(self) -> str:
-        class AddFuncTransformer(ast.NodeTransformer):
+        class DefineLazyFuncTransformer(ast.NodeTransformer):
             def __init__(self, **kwargs: Any) -> None:
                 self.snippet: Snippet = kwargs['snippet']
                 self.lineno: int = kwargs['lineno']
@@ -73,6 +83,7 @@ class DefineFunc(ActionBaseClass):
                 self.func_keywords = kwargs['func_keywords']
                 self.func_body: str = kwargs['func_body']
 
+            @ActionBaseClass.add_to_history
             def visit_Body(self, node: ast.Module) -> ast.Module:
                 func_def = ast.FunctionDef(
                     name=self.func_name,
@@ -85,13 +96,7 @@ class DefineFunc(ActionBaseClass):
                         kw_defaults=[],
                         defaults=[]
                     ),
-                    body=[
-                        ast.Return(value=ast.Call(
-                            func=ast.Name(id='TBD'+str(self.snippet.tbd_counter), ctx=ast.Load()),
-                            args=[],
-                            keywords=[])
-                        )
-                    ],
+                    body=self.func_body,
                     decorator_list=[]
                 )
 
@@ -110,15 +115,11 @@ class DefineFunc(ActionBaseClass):
                 return node
 
         tree = ast.parse(self.snippet.get_latest())
-        # print(ast.dump(tree, indent=4))
+        DefineLazyFuncTransformer(snippet=self.snippet, lineno=self.lineno, func_name=self.func_name, func_vararg=self.func_vararg, func_kwarg=self.func_kwarg, func_args=self.func_args, func_keywords=self.func_keywords, func_body=self.func_body).visit_Body(tree)
 
-        AddFuncTransformer(snippet=self.snippet, lineno=self.lineno, func_name=self.func_name, func_vararg=self.func_vararg, func_kwarg=self.func_kwarg, func_args=self.func_args, func_keywords=self.func_keywords, func_body=self.func_body).visit_Body(tree)
-
-        rewritten_snippet = ast.unparse(ast.fix_missing_locations(tree))
-        self.snippet.register_mock_definition(iter_n=self.snippet.get_current_iter(), rewritten_snippet=rewritten_snippet, target=self.func_name, value=None)
-
-        # print(ast.dump(tree, indent=4))
-        # print(rewritten_snippet)
+        if self.ret_val_id: 
+            DefineClass(snippet=self.snippet, lineno=self.lineno, class_name=self.ret_val_id).apply_pattern()
+        self.snippet.register_mock_definition(iter_n=self.snippet.get_current_iter(), target=self.func_name, value=self.ret_val_id)
         
-        return rewritten_snippet
+        return
 

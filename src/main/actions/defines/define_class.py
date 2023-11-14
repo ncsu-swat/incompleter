@@ -25,7 +25,7 @@ class DefineClass(ActionBaseClass):
                 self.lineno: int = kwargs['lineno']
                 self.class_name: str = kwargs['class_name']
 
-            @ActionBaseClass.rewrite_wrapper
+            @ActionBaseClass.add_to_history
             def visit_Body(self, node: ast.Module) -> ast.Module:
                 node.body.insert(0, ast.ClassDef(
                         name=self.class_name,

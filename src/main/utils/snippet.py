@@ -17,7 +17,7 @@ class Snippet:
         self.snippet_path: str = snippet_path
         self.tmp_path: str = self.__create_tmp_path()
         self.tmp_dir: str = '/'.join(self.tmp_path.split('/')[:-1])
-        self.code: List[str] = [ self.__clean_snippet(self.__read_snippet()) ]
+        self.history: List[str] = [ self.__clean_snippet(self.__read_snippet()) ]
         self.latest: int = 0
 
         self.mocked_values: Dict[str, Any] = {}
@@ -73,14 +73,14 @@ class Snippet:
                 os.remove(file_path)
 
     def add(self, code_str) -> None:
-        self.code.append(code_str)
+        self.history.append(code_str)
         self.current_iter += 1
 
     def get_current_iter(self) -> int:
         return self.current_iter
 
     def get_latest(self) -> str:
-        return self.code[-1]
+        return self.history[-1]
 
     def run_latest(self) -> List[str]:
         try:

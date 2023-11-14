@@ -22,9 +22,10 @@ class ActionBaseClass(ABC):
         pass
 
     @staticmethod
-    def rewrite_wrapper(visit_method):
+    def add_to_history(visit_method):
         def wrapper(self, *args, **kwargs):
             rewritten_tree = visit_method(self, *args, **kwargs)
             rewritten_snippet = ast.unparse(ast.fix_missing_locations(rewritten_tree))
             self.snippet.add(rewritten_snippet)
         return wrapper
+            
