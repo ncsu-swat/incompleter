@@ -3,20 +3,22 @@ from typing import Tuple
 from main.utils.snippet import Snippet
 from main.errors.error_base_class import ErrorBaseClass
 from main.actions.action_base_class import ActionBaseClass
-from main.actions.defines.define_var import DefineVar
+from main.actions.replaces.replace_tbd import ReplaceTBD
 
 import re
 import ast
+from enum import Enum
 
 class _TypeError(ErrorBaseClass):
     mappings = {
         r'must be str, not int': [],
         r'\'(\S+)\' object is not (\S+)': [],
         r'list indices must be integers or slices, not (\S+)': [],
-        r'\'(\S+)\' object is not iterable': [ DefineVar ],
+        r'\'(\S+)\' object is not iterable': [ ReplaceTBD ],
         r'argument of type \'(\S+)\' is not iterable': [],
         r'unsupported operand type(s) for \S+: \'(\S+)\' and \'\S+\'': [],
-        r'\'(\S+)\' object does not support item assignment': []
+        r'\'(\S+)\' object does not support item assignment': [],
+        r'can only concatenate str (not "TBD0") to str': []
     }
 
     def __init__(self, path: str, snippet: Snippet, stack_trace: str) -> None:
@@ -28,44 +30,16 @@ class _TypeError(ErrorBaseClass):
                 # print('Matched pattern: {}\n'.format(err_msg_pattern))
                 # print(self.snippet.get_latest().split('\n')[self.lineno+1])
 
+                kwargs = {}
                 if err_msg_pattern == r'\'(\S+)\' object is not iterable':
-                    erroneous_type = m.groups()[0]
+                    kwargs['from_val'] = m.groups()[0]
+                    kwargs['to_val'] = ReplaceTBD.TO_ENUMS.ITERABLE
+                elif err_msg_pattern == r'\'(\S+)\' object is not subscriptable':
+                    kwargs['from_val'] = m.groups()[0]
+                    kwargs['to_val'] = ReplaceTBD.TO_ENUMS.SUBSCRIPTABLE
 
-                    class ErroneousIdentifierFinderVisitor(ast.NodeVisitor):
-                        def __init__(self, **kwargs):
-                            self.erroneous_type = kwargs['from_type']
-                            self.root_err_identifier = ''
-                        def visit_Name(self, node):
-                            
-                            return node
-
-                    print('\n\nIN TYPEERROR - LATEST SNIPPET\n\n{}'.format(self.snippet.get_latest().split('\n')))
-                    tree = ast.parse(self.snippet.get_latest().split('\n')[self.lineno-1])
-                    erroneous_identifier_finder_visitor = ErroneousIdentifierFinderVisitor(snippet=self.snippet, from_type=erroneous_type)
-                    erroneous_identifier_finder_visitor.visit(tree)
-                    
-                    kwargs = {}
-                    kwargs['var_name'] = erroneous_identifier_finder_visitor.root_err_identifier
-                    kwargs['var_val'] = ast.BinOp(
-                            left=ast.List(
-                                elts=[
-                                    ast.Constant(value=None)
-                                ],
-                                ctx=ast.Load()
-                            ),
-                            op=ast.Mult(),
-                            right=ast.Constant(value=1000)
-                        )
-
-                    if len(kwargs['var_name']):
-                        return DefineVar(snippet=self.snippet, lineno=self.lineno, **kwargs)
-
-                # for ActionClass in action_class_list:
-                #     kwargs = {}
-                #     if ActionClass == DefineVar:
-                #         kwargs=
-
-                    # if (action := ActionClass(snippet=self.snippet, lineno=self.lineno, **kwargs)).check_criteria():
-                    #     return action
+                for ActionClass in action_class_list:
+                    if (action := ActionClass(snippet=self.snippet, lineno=self.lineno, **kwargs)).check_criteria():
+                        return action
         
         return None

@@ -9,6 +9,8 @@ class DefineFunc(ActionBaseClass):
         super().__init__(snippet, lineno)
 
         self.func_name = kwargs['func_name']
+        if 'class_scope' in kwargs: self.func_scope = kwargs['class_scope'] or 'global'
+        else: self.func_scope = 'global'
 
         self.func_vararg = []
         self.func_kwarg = []
@@ -77,6 +79,7 @@ class DefineFunc(ActionBaseClass):
                 self.snippet: Snippet = kwargs['snippet']
                 self.lineno: int = kwargs['lineno']
                 self.func_name: str = kwargs['func_name']
+                self.class_scope: str = kwargs['class_scope']
                 self.func_vararg: str = kwargs['func_vararg']
                 self.func_kwarg: str = kwargs['func_kwarg']
                 self.func_args = kwargs['func_args']
@@ -110,7 +113,20 @@ class DefineFunc(ActionBaseClass):
                 if len(self.func_kwarg):
                     func_def.args.kwarg = self.func_kwarg[0]
 
-                node.body.insert(0, func_def)
+                if self.func_scope == 'global':
+                    node.body.insert(0, func_def)
+                else:
+                    class DefineFuncInClassScopeTransformer(ast.NodeTransformer):
+                        def __init__(self, **kwargs: dict) -> None:
+                            self.class_name = kwargs['class_name']
+                            self.func_def = kwargs['func_def']
+
+                        def visit_ClassDef(self, node):
+                            if node.name == self.class_name:
+                                node.body.append(self.func_def)
+                            return node
+                    
+                    node = DefineFuncInClassScopeTransformer(class_name=self.class_scope, func_def=func_def).visit(node)
 
                 return node
 

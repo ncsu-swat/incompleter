@@ -32,7 +32,19 @@ class DefineClass(ActionBaseClass):
                         bases=[],
                         keywords=[],
                         body=[
-                            ast.Pass()
+                            ast.FunctionDef(
+                                name='__init__',
+                                args=ast.arguments(
+                                    posonlyargs=[],
+                                    args=[
+                                        ast.arg(arg='self')
+                                    ],
+                                    kwonlyargs=[],
+                                    kw_defaults=[],
+                                    defaults=[]),
+                                body=[
+                                    ast.Pass()],
+                                decorator_list=[])
                         ],
                         decorator_list=[]
                     )

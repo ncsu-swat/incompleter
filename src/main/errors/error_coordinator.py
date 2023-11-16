@@ -8,12 +8,14 @@ from main.errors.name_error import _NameError
 from main.errors.file_not_found_error import _FileNotFoundError
 from main.errors.module_not_found_error import _ModuleNotFoundError
 from main.errors.type_error import _TypeError
+from main.errors.attribute_error import _AttributeError
 
 class ErrorCoordinator(ErrorBaseClass):
     mappings = {
         'NameError': _NameError,
         'FileNotFoundError': _FileNotFoundError,
         'ModuleNotFoundError': _ModuleNotFoundError,
+        'AttributeError': _AttributeError,
         'TypeError': _TypeError
     }
 
