@@ -9,15 +9,19 @@ class DefineFunc(ActionBaseClass):
         super().__init__(snippet, lineno)
 
         self.func_name = kwargs['func_name']
-        if 'class_scope' in kwargs: self.func_scope = kwargs['class_scope'] or 'global'
-        else: self.func_scope = 'global'
+        if 'class_scope' in kwargs:
+            self.class_scope = kwargs['class_scope'] or 'global'
+        else: 
+            self.class_scope = 'global'
 
         self.func_vararg = []
         self.func_kwarg = []
         self.func_args = []
-        if 'func_args' in kwargs: self.func_args = kwargs['func_args']
+        if 'func_args' in kwargs:
+            self.func_args = kwargs['func_args']
         self.func_keywords = {}
-        if 'func_keywords' in kwargs: self.func_keywords = kwargs['func_keywords']
+        if 'func_keywords' in kwargs:
+            self.func_keywords = kwargs['func_keywords']
         
         self.func_body = []
         if 'func_body' in kwargs: 
@@ -113,8 +117,28 @@ class DefineFunc(ActionBaseClass):
                 if len(self.func_kwarg):
                     func_def.args.kwarg = self.func_kwarg[0]
 
-                if self.func_scope == 'global':
-                    node.body.insert(0, func_def)
+                class RedefineFuncTransformer(ast.NodeTransformer):
+                    def __init__(self, **kwargs):
+                        self.func_def = kwargs['func_def']
+                        self.exists = False
+
+                    def visit_FunctionDef(self, node):
+                        if node.name == self.func_def.name:
+                            self.exists = True
+                            return self.func_def
+                        return node
+
+                if self.class_scope == 'global':
+                    redefine_func_transformer = RedefineFuncTransformer(func_def = func_def)
+                    
+                    new_children = []
+                    for child in node.body:
+                        new_children.append(redefine_func_transformer.visit(child))
+
+                    if not redefine_func_transformer.exists:
+                        node.body.insert(0, func_def)
+                    else:
+                        node.body = new_children
                 else:
                     class DefineFuncInClassScopeTransformer(ast.NodeTransformer):
                         def __init__(self, **kwargs: dict) -> None:
@@ -123,7 +147,16 @@ class DefineFunc(ActionBaseClass):
 
                         def visit_ClassDef(self, node):
                             if node.name == self.class_name:
-                                node.body.append(self.func_def)
+                                redefine_func_transformer = RedefineFuncTransformer(func_def = self.func_def)
+                    
+                                new_children = []
+                                for child in node.body:
+                                    new_children.append(redefine_func_transformer.visit(child))
+
+                                if not redefine_func_transformer.exists:
+                                    node.body.append(self.func_def)
+                                else:
+                                    node.body = new_children
                             return node
                     
                     node = DefineFuncInClassScopeTransformer(class_name=self.class_scope, func_def=func_def).visit(node)
@@ -131,11 +164,11 @@ class DefineFunc(ActionBaseClass):
                 return node
 
         tree = ast.parse(self.snippet.get_latest())
-        DefineLazyFuncTransformer(snippet=self.snippet, lineno=self.lineno, func_name=self.func_name, func_vararg=self.func_vararg, func_kwarg=self.func_kwarg, func_args=self.func_args, func_keywords=self.func_keywords, func_body=self.func_body).visit_Body(tree)
+        DefineLazyFuncTransformer(snippet=self.snippet, lineno=self.lineno, func_name=self.func_name, class_scope=self.class_scope, func_vararg=self.func_vararg, func_kwarg=self.func_kwarg, func_args=self.func_args, func_keywords=self.func_keywords, func_body=self.func_body).visit_Body(tree)
 
-        if self.ret_val_id: 
+        if 'ret_val_id' in dir(self): 
             DefineClass(snippet=self.snippet, lineno=self.lineno, class_name=self.ret_val_id).apply_pattern()
-        self.snippet.register_mock_definition(iter_n=self.snippet.get_current_iter(), target=self.func_name, value=self.ret_val_id)
+            self.snippet.register_mock_definition(iter_n=self.snippet.get_current_iter(), target=self.func_name, value=self.ret_val_id)
         
         return
 

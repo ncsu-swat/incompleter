@@ -3,7 +3,7 @@ from typing import Tuple
 from main.utils.snippet import Snippet
 from main.errors.error_base_class import ErrorBaseClass
 from main.actions.action_base_class import ActionBaseClass
-from main.actions.replaces.replace_tbd import ReplaceTBD
+from main.actions.defines.define_iterable_subscriptable import DefineIterableOrSubscriptable
 
 import re
 import ast
@@ -14,7 +14,8 @@ class _TypeError(ErrorBaseClass):
         r'must be str, not int': [],
         r'\'(\S+)\' object is not (\S+)': [],
         r'list indices must be integers or slices, not (\S+)': [],
-        r'\'(\S+)\' object is not iterable': [ ReplaceTBD ],
+        r'\'(\S+)\' object is not iterable': [ DefineIterableOrSubscriptable ],
+        r'\'(\S+)\' object is not subscriptable': [ DefineIterableOrSubscriptable ],
         r'argument of type \'(\S+)\' is not iterable': [],
         r'unsupported operand type(s) for \S+: \'(\S+)\' and \'\S+\'': [],
         r'\'(\S+)\' object does not support item assignment': [],
@@ -31,12 +32,8 @@ class _TypeError(ErrorBaseClass):
                 # print(self.snippet.get_latest().split('\n')[self.lineno+1])
 
                 kwargs = {}
-                if err_msg_pattern == r'\'(\S+)\' object is not iterable':
-                    kwargs['from_val'] = m.groups()[0]
-                    kwargs['to_val'] = ReplaceTBD.TO_ENUMS.ITERABLE
-                elif err_msg_pattern == r'\'(\S+)\' object is not subscriptable':
-                    kwargs['from_val'] = m.groups()[0]
-                    kwargs['to_val'] = ReplaceTBD.TO_ENUMS.SUBSCRIPTABLE
+                if err_msg_pattern in [ r'\'(\S+)\' object is not iterable', r'\'(\S+)\' object is not subscriptable' ]:
+                    kwargs['class_name'] = m.groups()[0]
 
                 for ActionClass in action_class_list:
                     if (action := ActionClass(snippet=self.snippet, lineno=self.lineno, **kwargs)).check_criteria():
