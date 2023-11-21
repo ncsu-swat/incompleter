@@ -5,7 +5,7 @@ from main.errors.error_coordinator import ErrorCoordinator
 
 class Moxecutor():
     def __init__(self, snippet_path: str) -> None:
-        self.MAX_ITER = 10
+        self.MAX_ITER = 11
         self.snippet_path = snippet_path
         self.snippet = Snippet(snippet_path)
         

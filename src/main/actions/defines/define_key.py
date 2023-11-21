@@ -61,7 +61,5 @@ class DefineKey(ActionBaseClass):
         tree = ast.parse(self.snippet.get_latest())
         tree = DefineKeyTransformer(snippet=self.snippet, lineno=self.lineno, key=self.key).visit_Body(tree)
         
-
-
         return
 

@@ -51,22 +51,21 @@ class DefineFunc(ActionBaseClass):
                 self.func_keywords = kwargs['func_keywords']
 
             def visit_Call(self, node):
-                if 'id' in dir(node.func):
-                    if node.func.id == self.func_name:
-                        self.func_found = True
+                if (isinstance(node.func, ast.Name) and node.func.id == self.func_name) or (isinstance(node.func, ast.Attribute) and node.func.attr == self.func_name):
+                    self.func_found = True
 
-                        if node.args:
-                            for (arg_i, arg) in enumerate(node.args):
-                                if isinstance(arg, ast.Starred):
-                                    self.func_vararg.append(ast.arg(arg='arg'+str(arg_i)))
-                                else:
-                                    self.func_args.append(ast.arg(arg='arg'+str(arg_i)))
-                        if node.keywords:
-                            for kw in node.keywords:
-                                if kw.arg:
-                                    self.func_keywords[ast.arg(arg=kw.arg)] = ast.Constant(value=None)
-                                else:
-                                    self.func_kwarg.append(ast.arg(arg=kw.value.id))
+                    if node.args:
+                        for (arg_i, arg) in enumerate(node.args):
+                            if isinstance(arg, ast.Starred):
+                                self.func_vararg.append(ast.arg(arg='arg'+str(arg_i)))
+                            else:
+                                self.func_args.append(ast.arg(arg='arg'+str(arg_i)))
+                    if node.keywords:
+                        for kw in node.keywords:
+                            if kw.arg:
+                                self.func_keywords[ast.arg(arg=kw.arg)] = ast.Constant(value=None)
+                            else:
+                                self.func_kwarg.append(ast.arg(arg=kw.value.id))
                     
                 return node
 
@@ -108,10 +107,10 @@ class DefineFunc(ActionBaseClass):
                 )
 
                 if len(self.func_args):
-                    func_def.args.args = self.func_args
+                    func_def.args.args += self.func_args
                 if len(self.func_keywords):
-                    func_def.args.args = list(self.func_keywords.keys())
-                    func_def.args.defaults = list(self.func_keywords.values())
+                    func_def.args.args += list(self.func_keywords.keys())
+                    func_def.args.defaults += list(self.func_keywords.values())
                 if len(self.func_vararg):
                     func_def.args.vararg = self.func_vararg[0]
                 if len(self.func_kwarg):

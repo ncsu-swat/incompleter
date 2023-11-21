@@ -1,8 +1,6 @@
 from main.utils.snippet import Snippet
 from main.actions.action_base_class import ActionBaseClass
-from main.actions.defines.define_class import DefineClass
 from main.actions.defines.define_func import DefineFunc
-from main.actions.defines.define_var import DefineVar
 from typing import Any
 import ast
 
@@ -50,7 +48,7 @@ class DefineIterableOrSubscriptable(ActionBaseClass):
 
         return
 
-    def __redefine_init(self):
+    def __redefine_init(self) -> None:
         kwargs = {}
         kwargs['func_name'] = '__init__'
         kwargs['class_scope'] = self.class_name
@@ -93,7 +91,9 @@ class DefineIterableOrSubscriptable(ActionBaseClass):
         ]
         DefineFunc(snippet=self.snippet, lineno=self.lineno, **kwargs).apply_pattern()
 
-    def __define_refresh_keys(self):
+        return
+
+    def __define_refresh_keys(self) -> None:
         kwargs = {}
         kwargs['func_name'] = '__refresh_keys'
         kwargs['class_scope'] = self.class_name
@@ -131,7 +131,9 @@ class DefineIterableOrSubscriptable(ActionBaseClass):
         ]
         DefineFunc(snippet=self.snippet, lineno=self.lineno, **kwargs).apply_pattern()
 
-    def __define_str(self):
+        return
+
+    def __define_str(self) -> None:
         kwargs = {}
         kwargs['func_name'] = '__str__'
         kwargs['class_scope'] = self.class_name
@@ -219,7 +221,9 @@ class DefineIterableOrSubscriptable(ActionBaseClass):
         ]
         DefineFunc(snippet=self.snippet, lineno=self.lineno, **kwargs).apply_pattern()
 
-    def __define_getitem(self):
+        return None
+
+    def __define_getitem(self) -> None:
         kwargs = {}
         kwargs['func_name'] = '__getitem__'
         kwargs['class_scope'] = self.class_name
@@ -420,7 +424,9 @@ class DefineIterableOrSubscriptable(ActionBaseClass):
         ]
         DefineFunc(snippet=self.snippet, lineno=self.lineno, **kwargs).apply_pattern()
 
-    def __define_setitem(self):
+        return
+
+    def __define_setitem(self) -> None:
         kwargs = {}
         kwargs['func_name'] = '__setitem__'
         kwargs['class_scope'] = self.class_name
@@ -683,7 +689,9 @@ class DefineIterableOrSubscriptable(ActionBaseClass):
         ]
         DefineFunc(snippet=self.snippet, lineno=self.lineno, **kwargs).apply_pattern()
 
-    def __define_iter(self):
+        return
+
+    def __define_iter(self) -> None:
         kwargs = {}
         kwargs['func_name'] = '__iter__'
         kwargs['class_scope'] = self.class_name
@@ -694,7 +702,9 @@ class DefineIterableOrSubscriptable(ActionBaseClass):
         ]
         DefineFunc(snippet=self.snippet, lineno=self.lineno, **kwargs).apply_pattern()
 
-    def __define_next(self):
+        return None
+
+    def __define_next(self) -> None:
         kwargs = {}
         kwargs['func_name'] = '__next__'
         kwargs['class_scope'] = self.class_name
@@ -767,7 +777,9 @@ class DefineIterableOrSubscriptable(ActionBaseClass):
         ]
         DefineFunc(snippet=self.snippet, lineno=self.lineno, **kwargs).apply_pattern()
 
-    def __define_len(self):
+        return
+
+    def __define_len(self) -> None:
         kwargs = {}
         kwargs['func_name'] = '__len__'
         kwargs['class_scope'] = self.class_name
@@ -784,3 +796,5 @@ class DefineIterableOrSubscriptable(ActionBaseClass):
                     keywords=[]))
         ]
         DefineFunc(snippet=self.snippet, lineno=self.lineno, **kwargs).apply_pattern()
+
+        return

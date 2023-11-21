@@ -3,6 +3,7 @@ from typing import Tuple
 from main.utils.snippet import Snippet
 from main.errors.error_base_class import ErrorBaseClass
 from main.actions.action_base_class import ActionBaseClass
+from main.actions.defines.define_callable import DefineCallable
 from main.actions.defines.define_iterable_subscriptable import DefineIterableOrSubscriptable
 
 import re
@@ -14,6 +15,7 @@ class _TypeError(ErrorBaseClass):
         r'must be str, not int': [],
         r'\'(\S+)\' object is not (\S+)': [],
         r'list indices must be integers or slices, not (\S+)': [],
+        r'\'(\S+)\' object is not callable': [ DefineCallable ],
         r'\'(\S+)\' object is not iterable': [ DefineIterableOrSubscriptable ],
         r'\'(\S+)\' object is not subscriptable': [ DefineIterableOrSubscriptable ],
         r'argument of type \'(\S+)\' is not iterable': [],
@@ -32,7 +34,7 @@ class _TypeError(ErrorBaseClass):
                 # print(self.snippet.get_latest().split('\n')[self.lineno+1])
 
                 kwargs = {}
-                if err_msg_pattern in [ r'\'(\S+)\' object is not iterable', r'\'(\S+)\' object is not subscriptable' ]:
+                if err_msg_pattern in [ r'\'(\S+)\' object is not callable', r'\'(\S+)\' object is not iterable', r'\'(\S+)\' object is not subscriptable' ]:
                     kwargs['class_name'] = m.groups()[0]
 
                 for ActionClass in action_class_list:
