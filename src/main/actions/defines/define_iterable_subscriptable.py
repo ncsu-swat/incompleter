@@ -61,6 +61,25 @@ class DefineIterableOrSubscriptable(ActionBaseClass):
                     attr='container',
                     ctx=ast.Store())],
                 value=ast.Dict(keys=[], values=[])),
+            # ast.For(
+            #     target=ast.Name(id='i', ctx=ast.Store()),
+            #     iter=ast.Call(
+            #         func=ast.Name(id='range', ctx=ast.Load()),
+            #         args=[
+            #             ast.Constant(value=1000)],
+            #         keywords=[]),
+            #     body=[
+            #         ast.Assign(
+            #             targets=[
+            #                 ast.Subscript(
+            #                     value=ast.Attribute(
+            #                         value=ast.Name(id='self', ctx=ast.Load()),
+            #                         attr='container',
+            #                         ctx=ast.Load()),
+            #                     slice=ast.Name(id='i', ctx=ast.Load()),
+            #                     ctx=ast.Store())],
+            #             value=ast.Name(id='i', ctx=ast.Load()))],
+            #     orelse=[]),
             ast.Assign(
                 targets=[
                     ast.Attribute(

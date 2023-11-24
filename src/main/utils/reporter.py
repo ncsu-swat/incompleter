@@ -3,12 +3,24 @@ class Reporter():
         self.total_count = 0
         self.error_report = {}
         self.fixed_report = {}
+        self.avg_stmt_cov = {}
+        self.avg_br_cov = {}
 
     def __str__(self) -> str:
         report_str = '==========================================\nTotal errors at the beginning: {}\n==========================================\n'.format(str(self.total_count))
 
+        # Report average statement coverage
+        report_str += '\n\n==================================\nAverage statement coverage:\n==================================\n'
+        for _iter, counts in self.avg_stmt_cov.items():
+            report_str += '  Iter# {}: {}%\n'.format(_iter, round(counts*100, 2))
+
+        # Report average branch coverage
+        report_str += '\n\n==================================\nAverage branch coverage:\n==================================\n'
+        for _iter, counts in self.avg_br_cov.items():
+            report_str += '  Iter# {}: {}%\n'.format(_iter, round(counts*100, 2))
+
         # Report complete executablity
-        report_str += '\n==================================\nExecutablity report:\n==================================\n'
+        report_str += '\n\n==================================\nExecutablity report:\n==================================\n'
         for _iter, counts in self.fixed_report.items():
             report_str += '  Iter# {}: {} fully executed.\n'.format(_iter, counts)
 
@@ -21,10 +33,23 @@ class Reporter():
 
         return report_str
 
-    def collect_report(self, report_by_iter: dict) -> None:
+    def collect_report(self, executability_report_by_iter: dict, coverage_report_by_iter: dict) -> None:
         self.total_count += 1
 
-        for _iter, err_type in report_by_iter.items():
+        for _iter, covs in coverage_report_by_iter.items():
+            if covs['stmt'] is not None:
+                if _iter not in self.avg_stmt_cov.keys():
+                    self.avg_stmt_cov[_iter] = covs['stmt']
+                else:
+                    self.avg_stmt_cov[_iter] = (self.avg_stmt_cov[_iter] + covs['stmt'])/2
+
+            if covs['br'] is not None:
+                if _iter not in self.avg_br_cov.keys():
+                    self.avg_br_cov[_iter] = covs['br']
+                else:
+                    self.avg_br_cov[_iter] = (self.avg_br_cov[_iter] + covs['br'])/2
+
+        for _iter, err_type in executability_report_by_iter.items():
             if err_type == 'Fixed':
                 if _iter not in self.fixed_report.keys():
                     self.fixed_report[_iter] = 0
@@ -40,6 +65,8 @@ class Reporter():
         # Sorting the complete executablity report
         self.fixed_report = dict(sorted(self.fixed_report.items()))
         
-        # Sorring the error report
+        # Sorting the error report
         for err_type in self.error_report.keys():
             self.error_report[err_type] = dict(sorted(self.error_report[err_type].items()))
+
+    

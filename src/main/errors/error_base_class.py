@@ -26,8 +26,11 @@ class ErrorBaseClass(ABC):
         snippet_name = self.__reformat_snippet_name()
         lineno = -1
         if matches := re.finditer(r'File ".*?/{}", line (\d+)'.format(snippet_name), self.stack_trace):
-            last_match = list(matches)[-1]
-            lineno = int(last_match.groups()[0])
+            matches_list = list(matches)
+            if len(matches_list):
+                print(len(matches_list))
+                last_match = matches_list[-1]
+                lineno = int(last_match.groups()[0])
         
         # if lineno == -1: raise ValueError('Unable to extract error line number from:\n\n{}\n'.format(self.stack_trace))
 

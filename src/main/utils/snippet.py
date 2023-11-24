@@ -4,6 +4,7 @@ import sys
 import os
 import re
 import shutil
+import json
 import ast
 
 from typing import List, Dict, Tuple, Any
@@ -15,9 +16,10 @@ class Snippet:
         self.current_iter = 0
 
         self.snippet_path: str = snippet_path
+        self.snippet_name: str = snippet_path.split('/')[-1]
         self.tmp_path: str = self.__create_tmp_path()
         self.tmp_dir: str = '/'.join(self.tmp_path.split('/')[:-1])
-        self.history: List[str] = [ self.__clean_snippet(self.__read_snippet()) ]
+        self.history: List[str] = [ self.__place_original_start_marker(self.__clean_snippet(self.__read_snippet())) ]
         self.latest: int = 0
 
         self.mocked_values: Dict[str, Any] = {}
@@ -42,6 +44,9 @@ class Snippet:
         
         return '\n'.join(cleaned_lines)
 
+    def __place_original_start_marker(self, code: str) -> str:
+        return '__original_start_marker = None\n' + code
+
     # def __normalize_snippet(self) -> str:
 
     def __create_tmp_path(self) -> str:
@@ -51,10 +56,12 @@ class Snippet:
 
         return tmp_path
 
-    def __create_tmp_file(self) -> str:
+    def __create_tmp_file(self, content=None) -> str:
+        if content is None: content = self.get_latest()
+
         with open(self.tmp_path, 'w+') as tmp_file:
             try:
-                tmp_file.write(self.get_latest())
+                tmp_file.write(content)
             except Exception as e:
                 print('__create_tmp_file Exception: ' + e)
 
@@ -99,7 +106,49 @@ class Snippet:
             
             return out, err
         except FileNotFoundError as e:
-            print('FileNotFoundError: when trying to run snippet {}#{}\n'.format(self.snippet_path, str(len(self.code)-1)))
+            print('FileNotFoundError: when trying to run snippet {}#{}\n'.format(self.snippet_path, str(self.latest)))
+
+    def compute_latest_coverage(self) -> Tuple[float, float]:
+        latest_code = self.get_latest()
+        latest_code_lines = latest_code.split('\n')
+
+        # Preparing latest code snippet to exclude mock parts of the code from coverage measurement
+        for idx in range(len(latest_code_lines)):
+            if '__original_start_marker' in latest_code_lines[idx]:
+                break
+            latest_code_lines[idx] += ' # pragma: no cover'
+        latest_code = '\n'.join(latest_code_lines)
+
+        try:
+            # setup tmp_file at tmp_path before running
+            self.__create_tmp_file(content=latest_code)
+
+            proc = Popen(['coverage', 'run', '--branch', self.tmp_path], stdout=PIPE, stderr=PIPE, cwd=self.tmp_dir)
+            proc.wait()
+            proc = Popen(['coverage', 'json'], stdout=PIPE, stderr=PIPE, cwd=self.tmp_dir)
+            proc.wait()
+            
+            cov_json = json.load(open(os.path.join(self.tmp_dir, 'coverage.json')))
+            stmt_cov, br_cov = None, None
+            if cov_json['totals']['percent_covered'] is not None:
+                stmt_cov = cov_json['totals']['percent_covered']/100
+            
+            if cov_json['totals']['covered_branches'] is not None and cov_json['totals']['num_branches'] is not None:
+                if cov_json['totals']['num_branches'] == 0:
+                    br_cov = 1.0
+                else:
+                    br_cov = cov_json['totals']['covered_branches']/cov_json['totals']['num_branches']
+
+            # print('Stmt cov: {}, Br cov: {}'.format(str(stmt_cov), str(br_cov)))
+
+            # cleanup tmp_file at tmp_path after running
+            self.__delete_tmp_file()
+
+            return stmt_cov, br_cov
+        except FileNotFoundError as e:
+            print('FileNotFoundError: when trying to compute coverage for snippet {}#{}\n'.format(self.snippet_path, str(self.latest)))
+            
+        return None, None
 
     def register_mock_definition(self, iter_n: int, target: str, value: Any) -> None:
         self.def_history[iter_n] = target
