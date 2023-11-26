@@ -10,6 +10,9 @@ class Reporter():
         self.avg_stmt_cov = {}
         self.avg_br_cov = {}
 
+        self.action_iteration_report = {}
+        self.action_progress_report = {}
+
     def __str__(self) -> str:
         report_str = '==========================================\nTotal errors at the beginning: {}\n==========================================\n\n'.format(str(self.total_count))
         report_str += '==========================================\nTABLE I. Cumulative Metrics:\n==========================================\n\n'.format(str(self.total_count))
@@ -36,21 +39,40 @@ class Reporter():
             table.append(row)
         report_str += tabulate(table, headers, tablefmt='github')
 
-        # Report partial executablity by error types
-        report_str += '\n\n==================================\nTABLE II. Error Type vs. Iteration:\n==================================\n\n'
+        # Report error type count by iteration
+        report_str += '\n\n====================================\nTABLE II. Error Type vs. Iteration:\n====================================\n\n'
         table = []
-        headers = ['Error type'] + [str(i) for i in range(max_rows+1)]
+        headers = ['error-type'] + [str(i) for i in range(max_rows+1)]
         for err_type, err_counts in self.error_report.items():
             row = [err_type]
             for i in range(max_rows+1):
                 row.append(str(err_counts[i]) if i in err_counts.keys() else 0)
             table.append(row)
+        report_str += tabulate(table, headers, tablefmt='github')
 
+        # Report applied action pattern count by iteration
+        report_str += '\n\n=========================================\nTABLE III. Action Pattern vs. Iteration:\n=========================================\n\n'
+        table = []
+        headers = ['action-pattern'] + [str(i) for i in range(max_rows+1)]
+        for action_pattern, action_counts in self.action_iteration_report.items():
+            row = [action_pattern]
+            for i in range(max_rows+1):
+                row.append(str(action_counts[i]) if i in action_counts.keys() else 0)
+            table.append(row)
+        report_str += tabulate(table, headers, tablefmt='github')
+
+        # Report impact of each action pattern. Count how many times an action pattern was part of an action sequence that made a snippet fully executable (f-exec) and count how many times an action pattern helped a snippet's execution to progress beyond its corresponding error.
+        report_str += '\n\n==================================\nTABLE IV. Action Pattern Impact:\n==================================\n\n'
+        table = []
+        headers = ['action-pattern', 'f-exec', 'p-exec']
+        for action_pattern, impact_dict in self.action_progress_report.items():
+            row = [action_pattern, self.action_progress_report[action_pattern]['f-exec'], self.action_progress_report[action_pattern]['p-exec']]
+            table.append(row)
         report_str += tabulate(table, headers, tablefmt='github')
 
         return report_str
 
-    def collect_report(self, executability_report_by_iter: dict, coverage_report_by_iter: dict) -> None:
+    def collect_report(self, executability_report_by_iter: dict, action_report_by_iter: dict, action_report_by_progress: dict, coverage_report_by_iter: dict) -> None:
         self.total_count += 1
 
         if self.is_cov:
@@ -78,6 +100,19 @@ class Reporter():
                 if _iter not in self.error_report[err_type].keys():
                     self.error_report[err_type][_iter] = 0
                 self.error_report[err_type][_iter] += 1
+
+        for _iter, action_pattern in action_report_by_iter.items():
+            if action_pattern not in self.action_iteration_report.keys():
+                self.action_iteration_report[action_pattern] = {}
+            if _iter not in self.action_iteration_report[action_pattern].keys():
+                self.action_iteration_report[action_pattern][_iter] = 0
+            self.action_iteration_report[action_pattern][_iter] += 1
+
+        for action_pattern, impact_dict in action_report_by_progress.items():
+            if action_pattern not in self.action_progress_report.keys():
+                self.action_progress_report[action_pattern] = { 'f-exec': 0, 'p-exec': 0 }
+            self.action_progress_report[action_pattern]['f-exec'] += impact_dict['f-exec']
+            self.action_progress_report[action_pattern]['p-exec'] += impact_dict['p-exec']
 
     def sort(self) -> None:
         # Sorting the complete executablity report

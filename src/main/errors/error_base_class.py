@@ -16,7 +16,7 @@ class ErrorBaseClass(ABC):
         self.lineno = self.__extract_lineno()
         self.err_type = self.__extract_type()
         self.err_msg = self.__extract_msg()
-        self.err_id = hash(self.err_type + ': ' + self.err_msg)
+        self.err_id = str(hash(self.err_type + ': ' + self.err_msg))
 
     def __reformat_snippet_name(self):
         snippet_name = self.path.split('/')[-1]
@@ -28,7 +28,6 @@ class ErrorBaseClass(ABC):
         if matches := re.finditer(r'File ".*?/{}", line (\d+)'.format(snippet_name), self.stack_trace):
             matches_list = list(matches)
             if len(matches_list):
-                print(len(matches_list))
                 last_match = matches_list[-1]
                 lineno = int(last_match.groups()[0])
         

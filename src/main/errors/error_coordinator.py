@@ -24,6 +24,8 @@ class ErrorCoordinator(ErrorBaseClass):
     def __init__(self, path: str, snippet: Snippet, stack_trace: str) -> None:
         super().__init__(path=path, snippet=snippet, stack_trace=stack_trace)
 
+        self.snippet.add_err_id(self.err_id)
+
     def find_action(self) -> ActionBaseClass:
         if self.err_type in ErrorCoordinator.mappings.keys():
             ErrorClass = ErrorCoordinator.mappings[self.err_type]

@@ -20,6 +20,7 @@ class Snippet:
         self.tmp_path: str = self.__create_tmp_path()
         self.tmp_dir: str = '/'.join(self.tmp_path.split('/')[:-1])
         self.history: List[str] = [ self.__place_original_start_marker(self.__clean_snippet(self.__read_snippet())) ]
+        self.err_id_history: List[str] = []
         self.latest: int = 0
 
         self.mocked_values: Dict[str, Any] = {}
@@ -46,8 +47,6 @@ class Snippet:
 
     def __place_original_start_marker(self, code: str) -> str:
         return '__original_start_marker = None\n' + code
-
-    # def __normalize_snippet(self) -> str:
 
     def __create_tmp_path(self) -> str:
         tmp_path = os.path.join(DATA_DIR, 'tmp', self.snippet_path.split('/')[-1])
@@ -94,7 +93,7 @@ class Snippet:
             # setup tmp_file at tmp_path before running
             self.__create_tmp_file()
             
-            print('\nRunning: {}\n'.format(self.tmp_path))
+            # print('\nRunning: {}\n'.format(self.tmp_path))
             proc = Popen([sys.executable, self.tmp_path], stdout=PIPE, stderr=PIPE, cwd=self.tmp_dir)
             proc.wait()
             out, err = proc.communicate()
@@ -149,6 +148,15 @@ class Snippet:
             print('FileNotFoundError: when trying to compute coverage for snippet {}#{}\n'.format(self.snippet_path, str(self.latest)))
             
         return None, None
+
+    def add_err_id(self, err_id):
+        self.err_id_history.append(err_id)
+
+    def has_progress(self):
+        if len(self.err_id_history) > 1:
+            if self.err_id_history[-1] == self.err_id_history[-2]:
+                return False
+        return True
 
     def register_mock_definition(self, iter_n: int, target: str, value: Any) -> None:
         self.def_history[iter_n] = target

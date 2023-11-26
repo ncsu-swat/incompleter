@@ -26,9 +26,9 @@ if __name__ == '__main__':
             file_path = os.path.join(path, file_name)
             
             mox = Moxecutor(snippet_path=file_path, is_cov=args.cov)
-            executability_report, coverage_report = mox.moxecute()
+            executability_report, action_iteration_report, action_progress_report, coverage_report = mox.moxecute()
 
-            reporter.collect_report(executability_report, coverage_report)
+            reporter.collect_report(executability_report, action_iteration_report, action_progress_report, coverage_report)
 
     reporter.sort()
     print(reporter)
