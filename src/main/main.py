@@ -8,6 +8,8 @@ import os
 import sys
 
 import argparse
+from glob import glob
+from tqdm import tqdm
 
 report_aggregate = {}
 
@@ -21,14 +23,13 @@ if __name__ == '__main__':
     path=os.path.join(DATA_DIR, args.dir)
     reporter = Reporter(is_cov=args.cov)
     
-    for file_name in os.listdir(path):
-        if file_name.endswith(args.snippet_name):
-            file_path = os.path.join(path, file_name)
-            
-            mox = Moxecutor(snippet_path=file_path, is_cov=args.cov)
-            executability_report, action_iteration_report, action_progress_report, coverage_report = mox.moxecute()
+    for file_name in tqdm(glob(os.path.join(path, '*'+args.snippet_name)), desc='Moxecution Progress'):
+        file_path = os.path.join(path, file_name)
+        
+        mox = Moxecutor(snippet_path=file_path, is_cov=args.cov)
+        executability_report, action_iteration_report, action_progress_report, coverage_report = mox.moxecute()
 
-            reporter.collect_report(executability_report, action_iteration_report, action_progress_report, coverage_report)
+        reporter.collect_report(executability_report, action_iteration_report, action_progress_report, coverage_report)
 
     reporter.sort()
     print(reporter)

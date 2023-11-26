@@ -46,7 +46,7 @@ class Snippet:
         return '\n'.join(cleaned_lines)
 
     def __place_original_start_marker(self, code: str) -> str:
-        return '__original_start_marker = None\n' + code
+        return '__original_start_marker = None # pragma: no cover\n' + code
 
     def __create_tmp_path(self) -> str:
         tmp_path = os.path.join(DATA_DIR, 'tmp', self.snippet_path.split('/')[-1])
@@ -79,7 +79,12 @@ class Snippet:
                 os.remove(file_path)
 
     def add(self, code_str) -> None:
-        self.history.append(code_str)
+        lines = code_str.split('\n')
+        for idx in range(len(lines)):
+            if '__original_start_marker' in lines[idx]:
+                lines[idx] = lines[idx] + ' # pragma: no cover'
+
+        self.history.append('\n'.join(lines))
         self.current_iter += 1
 
     def get_current_iter(self) -> int:
@@ -124,21 +129,24 @@ class Snippet:
 
             proc = Popen(['coverage', 'run', '--branch', self.tmp_path], stdout=PIPE, stderr=PIPE, cwd=self.tmp_dir)
             proc.wait()
+            proc.communicate()
             proc = Popen(['coverage', 'json'], stdout=PIPE, stderr=PIPE, cwd=self.tmp_dir)
             proc.wait()
+            proc.communicate()
             
-            cov_json = json.load(open(os.path.join(self.tmp_dir, 'coverage.json')))
             stmt_cov, br_cov = None, None
-            if cov_json['totals']['percent_covered'] is not None:
-                stmt_cov = cov_json['totals']['percent_covered']/100
-            
-            if cov_json['totals']['covered_branches'] is not None and cov_json['totals']['num_branches'] is not None:
-                if cov_json['totals']['num_branches'] == 0:
-                    br_cov = 1.0
-                else:
-                    br_cov = cov_json['totals']['covered_branches']/cov_json['totals']['num_branches']
+            if os.path.exists(os.path.join(self.tmp_dir, 'coverage.json')):
+                cov_json = json.load(open(os.path.join(self.tmp_dir, 'coverage.json')))
+                if cov_json['totals']['percent_covered'] is not None:
+                    stmt_cov = cov_json['totals']['percent_covered']/100
+                
+                if cov_json['totals']['covered_branches'] is not None and cov_json['totals']['num_branches'] is not None:
+                    if cov_json['totals']['num_branches'] == 0:
+                        br_cov = 1.0
+                    else:
+                        br_cov = cov_json['totals']['covered_branches']/cov_json['totals']['num_branches']
 
-            # print('Stmt cov: {}, Br cov: {}'.format(str(stmt_cov), str(br_cov)))
+            # print('\nStmt cov: {}, Br cov: {}'.format(str(stmt_cov), str(br_cov)))
 
             # cleanup tmp_file at tmp_path after running
             self.__delete_tmp_file()

@@ -1,4 +1,5 @@
 from typing import Tuple
+from tqdm import tqdm
 
 from main.utils.snippet import Snippet
 from main.errors.error_coordinator import ErrorCoordinator
@@ -7,21 +8,28 @@ class Moxecutor():
     def __init__(self, snippet_path: str, is_cov: bool) -> None:
         self.MAX_ITER = 11
         self.snippet_path = snippet_path
+        self.snippet_name = snippet_path.split('/')[-1]
         self.snippet = Snippet(snippet_path)
         self.is_cov = is_cov
-        
-        self.tmp = []
 
     def moxecute(self):
-        _iter = 0
         executability_report, action_iteration_report, action_progress_report, coverage_report = {}, {}, {}, {}
-        while(_iter < self.MAX_ITER):
+        for _iter in tqdm(range(self.MAX_ITER), desc='{} Progress'.format(self.snippet_name), leave=False):
             try:
                 # Compute coverage at the start of each iteration if is_cov flag is True
                 if self.is_cov:
                     stmt_cov, br_cov = self.snippet.compute_latest_coverage()
-                    for iter_idx in range(_iter, self.MAX_ITER):
-                        coverage_report[iter_idx] = { 'stmt': stmt_cov, 'br': br_cov }
+
+                    if stmt_cov is not None:
+                        for iter_idx in range(_iter, self.MAX_ITER):
+                            if iter_idx not in coverage_report.keys():
+                                coverage_report[iter_idx] = { 'stmt': 0, 'br': 0 }
+                            coverage_report[iter_idx]['stmt'] = stmt_cov
+                    if br_cov is not None:
+                        for iter_idx in range(_iter, self.MAX_ITER):
+                            if iter_idx not in coverage_report.keys():
+                                coverage_report[iter_idx] = { 'stmt': 0, 'br': 0 }
+                            coverage_report[iter_idx]['br'] = br_cov
 
                 # Execute the snippet and collect the output and error
                 out, err = self.snippet.run_latest()
@@ -31,7 +39,7 @@ class Moxecutor():
 
                     # Even if the length of the error output might be >0, we might only have warnings and no actual error
                     if len(e.err_type):
-                        # print('Iter {} -- {}\n'.format(str(_iter), str(e.err_type) + ': ' + str(e.err_msg)))
+                        # print('\nIter {} -- {}\n'.format(str(_iter), str(e.err_type) + ': ' + str(e.err_msg)))
                         
                         # Update dictionary to keep track an action pattern's contribution to full and partial executability of the snippet. We start tracking from _iter == 1 because, at _iter == 0, no action has yet been taken. Only by _iter == 1, we have taken one action and so then we can report the impact of the action pattern that we had taken at the prior iteration, _iter-1.
                         if _iter > 0:
@@ -83,8 +91,8 @@ class Moxecutor():
             except SyntaxError as e:
                 pass
             finally:
-                _iter += 1
                 # print('LATEST SNIPPET:\n{}\n'.format(self.snippet.get_latest()))
+                pass
 
         self.snippet.cleanup()
 

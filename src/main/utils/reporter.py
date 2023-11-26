@@ -13,9 +13,11 @@ class Reporter():
         self.action_iteration_report = {}
         self.action_progress_report = {}
 
+        print()
+
     def __str__(self) -> str:
-        report_str = '==========================================\nTotal errors at the beginning: {}\n==========================================\n\n'.format(str(self.total_count))
-        report_str += '==========================================\nTABLE I. Cumulative Metrics:\n==========================================\n\n'.format(str(self.total_count))
+        report_str = '\n\n==========================================\nTotal errors at the beginning: {}\n==========================================\n\n'.format(str(self.total_count))
+        report_str += '\n\n==========================================\nTABLE I. Cumulative Metrics:\n==========================================\n\n'.format(str(self.total_count))
 
         max_rows = max(list(self.fixed_report.keys())+list(self.avg_stmt_cov.keys())+list(self.avg_br_cov.keys()))
         table = []
@@ -24,7 +26,7 @@ class Reporter():
         cumm_fixed = self.fixed_report[0] if 0 in self.fixed_report.keys() else 0
         cumm_stmt = self.avg_stmt_cov[0] if 0 in self.avg_stmt_cov.keys() else 0
         cumm_br = self.avg_br_cov[0] if 0 in self.avg_br_cov.keys() else 0
-        for _iter in range(1, max_rows+1):
+        for _iter in range(0, max_rows+1):
             # Report complete executablity
             cumm_fixed += self.fixed_report[_iter] if _iter in self.fixed_report.keys() else 0
             cumm_stmt = (cumm_stmt + self.avg_stmt_cov[_iter])/2 if _iter in self.avg_stmt_cov.keys() else 0
@@ -40,7 +42,7 @@ class Reporter():
         report_str += tabulate(table, headers, tablefmt='github')
 
         # Report error type count by iteration
-        report_str += '\n\n====================================\nTABLE II. Error Type vs. Iteration:\n====================================\n\n'
+        report_str += '\n\n\n\n====================================\nTABLE II. Error Type vs. Iteration:\n====================================\n\n'
         table = []
         headers = ['error-type'] + [str(i) for i in range(max_rows+1)]
         for err_type, err_counts in self.error_report.items():
@@ -51,7 +53,7 @@ class Reporter():
         report_str += tabulate(table, headers, tablefmt='github')
 
         # Report applied action pattern count by iteration
-        report_str += '\n\n=========================================\nTABLE III. Action Pattern vs. Iteration:\n=========================================\n\n'
+        report_str += '\n\n\n\n=========================================\nTABLE III. Action Pattern vs. Iteration:\n=========================================\n\n'
         table = []
         headers = ['action-pattern'] + [str(i) for i in range(max_rows+1)]
         for action_pattern, action_counts in self.action_iteration_report.items():
@@ -62,7 +64,7 @@ class Reporter():
         report_str += tabulate(table, headers, tablefmt='github')
 
         # Report impact of each action pattern. Count how many times an action pattern was part of an action sequence that made a snippet fully executable (f-exec) and count how many times an action pattern helped a snippet's execution to progress beyond its corresponding error.
-        report_str += '\n\n==================================\nTABLE IV. Action Pattern Impact:\n==================================\n\n'
+        report_str += '\n\n\n\n==================================\nTABLE IV. Action Pattern Impact:\n==================================\n\n'
         table = []
         headers = ['action-pattern', 'f-exec', 'p-exec']
         for action_pattern, impact_dict in self.action_progress_report.items():

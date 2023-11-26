@@ -32,32 +32,34 @@ class AddImport(ActionBaseClass):
         if self.module_name in self.import_dict.keys():
             return True
 
+        for module, import_ast in self.import_dict.items():
+            if 'names' in dir(import_ast):
+                for alias in import_ast.names:
+                    if alias.name == self.module_name:
+                        self.import_dict[self.module_name] = ast.Import(
+                                                                names = [
+                                                                    ast.alias(name=self.module_name)
+                                                                ]
+                                                            )
+                        return True
+
         return False
 
     def apply_pattern(self) -> str:
         class AddImportTransformer(ast.NodeTransformer):
             def __init__(self, **kwargs: Any) -> None:
+                self.snippet: Snippet = kwargs['snippet']
                 self.lineno: int = kwargs['lineno']
                 self.module_name: str = kwargs['module_name']
                 self.import_dict: dict = kwargs['import_dict']
 
+            @ActionBaseClass.add_to_history
             def visit_Body(self, node: ast.Module) -> ast.Module:
                 node.body.insert(0, self.import_dict[self.module_name])
-
-                # node.body.insert(self.lineno-1, ast.Assign(
-                #     targets = [
-                #         ast.Name(id=self.var_name, ctx=ast.Store())
-                #     ],
-                #     value=ast.Constant(value=self.var_val)
-                # ))
 
                 return node
 
         tree = ast.parse(self.snippet.get_latest())
-        # print(ast.dump(tree, indent=4))
+        AddImportTransformer(snippet=self.snippet, lineno=self.lineno, module_name=self.module_name, import_dict=self.import_dict).visit_Body(tree)
 
-        AddImportTransformer(lineno=self.lineno, module_name=self.module_name, import_dict=self.import_dict).visit_Body(tree)
-
-        # print(ast.unparse(ast.fix_missing_locations(tree)))
         
-        return ast.unparse(ast.fix_missing_locations(tree))
