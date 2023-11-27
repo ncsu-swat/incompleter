@@ -87,6 +87,7 @@ more-itertools==10.1.0
 multidict==6.0.4
 mymodule==1.0.0
 mysql-connector-python==8.2.0
+nap==2.0.0
 nptime==1.1
 numpy==1.26.1
 numpy-indexed==0.3.7
