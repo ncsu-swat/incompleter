@@ -1,0 +1,7 @@
+# Extracted from https://stackoverflow.com/questions/82831/how-do-i-check-whether-a-file-exists-without-exceptions
+import os
+os.path.exists("C:\\Users\\####\\Desktop\\test.txt") 
+True
+os.path.exists("C:\\Users\\####\\Desktop\\test.tx")
+False
+

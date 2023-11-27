@@ -1,0 +1,6 @@
+# Extracted from https://stackoverflow.com/questions/12309269/how-do-i-write-json-data-to-a-file
+import json
+data = [1,2,3,4,5]
+with open('no.txt', 'w') as txtfile:
+    json.dump(data, txtfile)
+

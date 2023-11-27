@@ -1,0 +1,14 @@
+# Extracted from https://stackoverflow.com/questions/2186525/how-to-use-glob-to-find-files-recursively
+from pathlib import Path
+
+for path in Path('src').rglob('*.c'):
+    print(path.name)
+
+import fnmatch
+import os
+
+matches = []
+for root, dirnames, filenames in os.walk('src'):
+    for filename in fnmatch.filter(filenames, '*.c'):
+        matches.append(os.path.join(root, filename))
+

@@ -1,0 +1,9 @@
+# Extracted from https://stackoverflow.com/questions/1823058/how-to-print-a-number-using-commas-as-thousands-separators
+import locale
+
+locale.setlocale( locale.LC_ALL, '' )
+locale.currency( 1234567.89, grouping = True )
+
+'Portuguese_Brazil.1252'
+'R$ 1.234.567,89'
+

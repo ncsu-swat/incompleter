@@ -1,0 +1,84 @@
+# Extracted from https://stackoverflow.com/questions/17330160/how-does-the-property-decorator-work-in-python
+class C(object):
+    def __init__(self):
+        self._x = None
+
+    @property
+    def x(self):
+        """I'm the 'x' property."""
+        return self._x
+
+    @x.setter
+    def x(self, value):
+        self._x = value
+
+    @x.deleter
+    def x(self):
+        del self._x
+
+class C(object):
+    def __init__(self):
+        self._x = None
+
+    def _x_get(self):
+        return self._x
+
+    def _x_set(self, value):
+        self._x = value
+
+    def _x_del(self):
+        del self._x
+
+    x = property(_x_get, _x_set, _x_del, 
+                    "I'm the 'x' property.")
+
+class C(object):
+    def __init__(self):
+        self._x = None
+
+    def _x_get(self):
+        return self._x
+
+    def _x_set(self, value):
+        self._x = value
+
+    def _x_del(self):
+        del self._x
+
+    x = property(_x_get, doc="I'm the 'x' property.")
+    x = x.setter(_x_set)
+    x = x.deleter(_x_del)
+
+class C(object):
+    def __init__(self):
+        self._x = None
+
+    def _x_get(self):
+        return self._x
+    x = property(_x_get, doc="I'm the 'x' property.")
+
+    def _x_set(self, value):
+        self._x = value
+    x = x.setter(_x_set)
+
+    def _x_del(self):
+        del self._x
+    x = x.deleter(_x_del)
+
+class C(object):
+    def __init__(self):
+        self._x = None
+
+    @property
+    def x(self):
+        """I'm the 'x' property."""
+        return self._x
+
+    @x.setter
+    def x(self, value):
+        self._x = value
+
+    @x.deleter
+    def x(self):
+        del self._x
+

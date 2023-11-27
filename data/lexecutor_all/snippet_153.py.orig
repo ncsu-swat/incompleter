@@ -1,0 +1,6 @@
+# Extracted from https://stackoverflow.com/questions/134934/display-number-with-leading-zeros
+for i in (1, 10, 100):
+    print('{num:02d}'.format(num=i))
+
+print(format(i, '02d'))
+

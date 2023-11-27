@@ -1,0 +1,23 @@
+# Extracted from https://stackoverflow.com/questions/517970/how-to-clear-the-interpreter-console
+import os
+
+# Clear Windows command prompt.
+if (os.name in ('ce', 'nt', 'dos')):
+    os.system('cls')
+
+# Clear the Linux terminal.
+elif ('posix' in os.name):
+    os.system('clear')
+
+import os
+
+def clear():
+    if os.name == 'posix':
+        os.system('clear')
+
+    elif os.name in ('ce', 'nt', 'dos'):
+        os.system('cls')
+
+
+clear()
+

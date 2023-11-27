@@ -1,0 +1,11 @@
+# Extracted from https://stackoverflow.com/questions/72899/how-do-i-sort-a-list-of-dictionaries-by-a-value-of-the-dictionary
+py = [{'name':'Homer', 'age':39}, {'name':'Bart', 'age':10}]
+
+sort_on = "name"
+decorated = [(dict_[sort_on], dict_) for dict_ in py]
+decorated.sort()
+result = [dict_ for (key, dict_) in decorated]
+
+result
+[{'age': 10, 'name': 'Bart'}, {'age': 39, 'name': 'Homer'}]
+

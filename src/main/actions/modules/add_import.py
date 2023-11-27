@@ -61,5 +61,3 @@ class AddImport(ActionBaseClass):
 
         tree = ast.parse(self.snippet.get_latest())
         AddImportTransformer(snippet=self.snippet, lineno=self.lineno, module_name=self.module_name, import_dict=self.import_dict).visit_Body(tree)
-
-        

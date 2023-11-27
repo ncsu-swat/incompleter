@@ -1,0 +1,6 @@
+# Extracted from https://stackoverflow.com/questions/1894269/how-to-convert-string-representation-of-list-to-a-list
+x = '[ "A","B","C" , " D"]'
+[i.strip() for i in x.split('"') if len(i.strip().strip(',').strip(']').strip('['))>0]
+
+['A', 'B', 'C', 'D']
+

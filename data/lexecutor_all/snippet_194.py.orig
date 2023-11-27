@@ -1,0 +1,6 @@
+# Extracted from https://stackoverflow.com/questions/715417/converting-from-a-string-to-boolean-in-python
+import ast
+ast.literal_eval("false".title())
+# or
+ast.literal_eval("False".title())
+

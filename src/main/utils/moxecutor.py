@@ -13,7 +13,8 @@ class Moxecutor():
         self.is_cov = is_cov
 
     def moxecute(self):
-        executability_report, action_iteration_report, action_progress_report, coverage_report = {}, {}, {}, {}
+        err_coord = None
+        executability_report, action_iteration_report, action_progress_report, coverage_report, unresolved_report = {}, {}, {}, {}, {}
         for _iter in tqdm(range(self.MAX_ITER), desc='{} Progress'.format(self.snippet_name), leave=False):
             try:
                 # Compute coverage at the start of each iteration if is_cov flag is True
@@ -35,11 +36,11 @@ class Moxecutor():
                 out, err = self.snippet.run_latest()
 
                 if len(err) > 0:
-                    e = ErrorCoordinator(path=self.snippet.snippet_path, snippet=self.snippet, stack_trace=err)
+                    err_coord = ErrorCoordinator(path=self.snippet.snippet_path, snippet=self.snippet, stack_trace=err)
 
                     # Even if the length of the error output might be >0, we might only have warnings and no actual error
-                    if len(e.err_type):
-                        # print('\nIter {} -- {}\n'.format(str(_iter), str(e.err_type) + ': ' + str(e.err_msg)))
+                    if len(err_coord.err_type):
+                        # print('\nIter {} -- {}\n'.format(str(_iter), str(err_coord.err_type) + ': ' + str(err_coord.err_msg)))
                         
                         # Update dictionary to keep track an action pattern's contribution to full and partial executability of the snippet. We start tracking from _iter == 1 because, at _iter == 0, no action has yet been taken. Only by _iter == 1, we have taken one action and so then we can report the impact of the action pattern that we had taken at the prior iteration, _iter-1.
                         if _iter > 0:
@@ -50,10 +51,10 @@ class Moxecutor():
                                 action_progress_report[prior_action]['p-exec'] += 1
 
                         # Report executability
-                        executability_report[_iter] = e.err_type
+                        executability_report[_iter] = err_coord.err_type
 
                         # Find the appropriate action in response to the error
-                        action = e.find_action()
+                        action = err_coord.find_action()
                         action_iteration_report[_iter] = type(action).__name__
 
                         # Carry out the action
@@ -64,27 +65,31 @@ class Moxecutor():
                         executability_report[_iter] = 'Fixed'
 
                         # After achieving full executability, we can say that all the action patterns that had been applied to this snippet, had contribution(s) towards full executability.
-                        prior_action = action_iteration_report[_iter-1]
-                        if prior_action not in action_progress_report.keys():
-                            action_progress_report[prior_action] = { 'f-exec': 0, 'p-exec': 0 }
-                        action_progress_report[prior_action]['p-exec'] += 1
-                        for action_name, impact_dict in action_progress_report.items():
-                            action_progress_report[action_name]['f-exec'] += 1
+                        if _iter > 0:
+                            prior_action = action_iteration_report[_iter-1]
+                            if prior_action not in action_progress_report.keys():
+                                action_progress_report[prior_action] = { 'f-exec': 0, 'p-exec': 0 }
+                            action_progress_report[prior_action]['p-exec'] += 1
+                            for action_name, impact_dict in action_progress_report.items():
+                                action_progress_report[action_name]['f-exec'] += 1
 
-                        return executability_report, action_iteration_report, action_progress_report, coverage_report
+                        self.snippet.cleanup()
+                        return executability_report, action_iteration_report, action_progress_report, coverage_report, unresolved_report
                 else:
                     # If there are no warnings and errors, we consider the snippet fully executed
                     executability_report[_iter] = 'Fixed'
 
                     # After achieving full executability, we can say that all the action patterns that had been applied to this snippet, had contribution(s) towards full executability.
-                    prior_action = action_iteration_report[_iter-1]
-                    if prior_action not in action_progress_report.keys():
-                        action_progress_report[prior_action] = { 'f-exec': 0, 'p-exec': 0 }
-                    action_progress_report[prior_action]['p-exec'] += 1
-                    for action_name, impact_dict in action_progress_report.items():
-                        action_progress_report[action_name]['f-exec'] += 1 
+                    if _iter > 0:
+                        prior_action = action_iteration_report[_iter-1]
+                        if prior_action not in action_progress_report.keys():
+                            action_progress_report[prior_action] = { 'f-exec': 0, 'p-exec': 0 }
+                        action_progress_report[prior_action]['p-exec'] += 1
+                        for action_name, impact_dict in action_progress_report.items():
+                            action_progress_report[action_name]['f-exec'] += 1 
                     
-                    return executability_report, action_iteration_report, action_progress_report, coverage_report
+                    self.snippet.cleanup()
+                    return executability_report, action_iteration_report, action_progress_report, coverage_report, unresolved_report
             
             except IndentationError as e:
                 pass
@@ -94,7 +99,9 @@ class Moxecutor():
                 # print('LATEST SNIPPET:\n{}\n'.format(self.snippet.get_latest()))
                 pass
 
-        self.snippet.cleanup()
+        if err_coord is not None:
+            unresolved_report[err_coord.err_type] = err_coord.err_msg + ' (' + self.snippet_name + ')'
 
-        return executability_report, action_iteration_report, action_progress_report, coverage_report
+        self.snippet.cleanup()
+        return executability_report, action_iteration_report, action_progress_report, coverage_report, unresolved_report
         

@@ -1,0 +1,6 @@
+# Extracted from https://stackoverflow.com/questions/1252163/printing-python-version-in-output
+import os
+
+if __name__ == "__main__":
+    os.system('python -V') # can also use python --version
+

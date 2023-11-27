@@ -1,0 +1,14 @@
+# Extracted from https://stackoverflow.com/questions/3263672/the-difference-between-sys-stdout-write-and-print
+def myfunc(outfile=None):
+    if outfile is None:
+        out = sys.stdout
+    else:
+        out = open(outfile, 'w')
+    try:
+        # do some stuff
+        out.write(mytext + '\n')
+        # ...
+    finally:
+        if outfile is not None:
+            out.close()
+

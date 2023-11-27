@@ -1,0 +1,21 @@
+# Extracted from https://stackoverflow.com/questions/10660435/how-do-i-split-the-definition-of-a-long-string-over-multiple-lines
+class ClassName():
+    def method_name():
+        if condition_0:
+            if condition_1:
+                if condition_2:
+                    some_variable_0 =\
+"""
+some_js_func_call(
+    undefined,
+    {
+        'some_attr_0': 'value_0',
+        'some_attr_1': 'value_1',
+        'some_attr_2': '""" + some_variable_1 + """'
+    },
+    undefined,
+    undefined,
+    true
+)
+"""
+

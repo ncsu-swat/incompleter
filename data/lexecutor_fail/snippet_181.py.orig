@@ -1,0 +1,7 @@
+# Extracted from https://stackoverflow.com/questions/237079/how-do-i-get-file-creation-and-modification-date-times
+from crtime import get_crtimes_in_dir
+
+for fname, date in get_crtimes_in_dir(".", raise_on_error=True, as_epoch=False):
+    print(fname, date)
+    # file_a.py Mon Mar 18 20:51:18 CET 2019
+

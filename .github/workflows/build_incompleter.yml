@@ -1,0 +1,32 @@
+name: incompleter
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: incompleter-build
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: python3 -m pip install -r requirements.txt
+        shell: bash
+
+      - name: Add src directory to Python path
+        run: export PYTHONPATH=$PYTHONPATH:src/
+        shell: bash
+
+      - name: Run Python script
+        run: cd src && python3 -m main.main lexecutor_all -c

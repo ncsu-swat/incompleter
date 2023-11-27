@@ -1,0 +1,5 @@
+# Extracted from https://stackoverflow.com/questions/2589711/find-full-path-of-the-python-interpreter
+import sys
+
+print(sys.executable)
+

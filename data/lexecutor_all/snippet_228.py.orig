@@ -1,0 +1,13 @@
+# Extracted from https://stackoverflow.com/questions/159720/what-is-the-naming-convention-in-python-for-variable-and-function
+name = "John"
+
+def display(name):
+    print("John")
+
+first_name = "John"
+
+def display_first_name(first_name):
+    print(first_name)
+
+FIRST_NAME = "John"
+

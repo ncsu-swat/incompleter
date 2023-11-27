@@ -1,0 +1,9 @@
+# Extracted from https://stackoverflow.com/questions/72852/how-to-do-relative-imports-in-python
+import os
+import inspect
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+os.sys.path.insert(1, parentdir)
+# print("currentdir = ", currentdir)
+# print("parentdir=", parentdir)
+

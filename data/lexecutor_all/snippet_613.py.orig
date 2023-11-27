@@ -1,0 +1,10 @@
+# Extracted from https://stackoverflow.com/questions/3257919/what-is-the-difference-between-is-none-and-none
+p = [1]
+q = [1]
+p is q # False because they are not the same actual object
+p == q # True because they are equivalent
+
+p = None
+q = None
+p is q # True because they are both pointing to the same "None"
+

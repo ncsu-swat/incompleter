@@ -1,0 +1,5 @@
+# Extracted from https://stackoverflow.com/questions/4978787/how-do-i-split-a-string-into-a-list-of-characters
+text = "My hovercraft is full of eels"
+[text[i] for i in range(len(text))]
+['M', 'y', ' ', 'h', 'o', 'v', 'e', 'r', 'c', 'r', 'a', 'f', 't', ' ', 'i', 's', ' ', 'f', 'u', 'l', 'l', ' ', 'o', 'f', ' ', 'e', 'e', 'l', 's']
+

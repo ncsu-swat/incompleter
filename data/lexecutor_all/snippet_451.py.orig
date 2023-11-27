@@ -1,0 +1,5 @@
+# Extracted from https://stackoverflow.com/questions/4934806/how-can-i-find-scripts-directory
+import os
+exec_filepath = os.path.realpath(__file__)
+exec_dirpath = exec_filepath[0:len(exec_filepath)-len(os.path.basename(__file__))]
+

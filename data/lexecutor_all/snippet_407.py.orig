@@ -1,0 +1,13 @@
+# Extracted from https://stackoverflow.com/questions/1265665/how-can-i-check-if-a-string-represents-an-int-without-using-try-except
+"+7".lstrip("-+").isdigit()
+True
+"-7".lstrip("-+").isdigit()
+True
+"7".lstrip("-+").isdigit()
+True
+"13.4".lstrip("-+").isdigit()
+False
+
+def is_int(val):
+   return val.lstrip("-+").isdigit()
+

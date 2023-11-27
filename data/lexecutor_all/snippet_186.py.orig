@@ -1,0 +1,8 @@
+# Extracted from https://stackoverflow.com/questions/16819222/how-to-return-dictionary-keys-as-a-list-in-python
+newdict = {1:0, 2:0, 3:0}
+[k  for  k in  newdict.keys()]
+[1, 2, 3]
+
+[k  for  k in  newdict]
+[1, 2, 3]
+

@@ -1,0 +1,6 @@
+# Extracted from https://stackoverflow.com/questions/4564559/get-exception-description-and-stack-trace-which-caused-an-exception-all-as-a-st
+try:
+    ...
+except Exception as e:
+    print(traceback.print_tb(e.__traceback__))
+

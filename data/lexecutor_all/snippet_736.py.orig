@@ -1,0 +1,6 @@
+# Extracted from https://stackoverflow.com/questions/2891790/pretty-print-a-numpy-array-without-scientific-notation-and-with-given-precision
+import numpy as np
+
+x = np.random.random([5,5])
+print(x.round(3))
+

@@ -1,0 +1,15 @@
+# Extracted from https://stackoverflow.com/questions/1747817/create-a-dictionary-with-comprehension
+names = ['a', 'b', 'd', 'f', 'c']
+names_to_id = {v:k for k, v in enumerate(names)}
+# {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'f': 4}
+
+names = ['a', 'b', 'd', 'f', 'd', 'c']
+sorted_list = list(set(names))
+sorted_list.sort()
+names_to_id = {v:k for k, v in enumerate(sorted_list)}
+# {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'f': 4}
+
+names = [1,2,5,5,6,2,1]
+names_to_id = {v:k for k, v in enumerate(set(names))}
+# {1: 0, 2: 1, 5: 2, 6: 3}
+

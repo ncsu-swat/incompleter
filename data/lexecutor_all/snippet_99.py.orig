@@ -1,0 +1,9 @@
+# Extracted from https://stackoverflow.com/questions/2257441/random-string-generation-with-upper-case-letters-and-digits
+import numpy as np
+import string        
+
+if __name__ == '__main__':
+    length = 16
+    a = np.random.choice(list(string.ascii_uppercase + string.digits), length)                
+    print(''.join(a))
+

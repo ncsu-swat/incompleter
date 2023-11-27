@@ -1,0 +1,8 @@
+# Extracted from https://stackoverflow.com/questions/988228/convert-a-string-representation-of-a-dictionary-to-a-dictionary
+import json
+h = '{"foo":"bar", "foo2":"bar2"}'
+d = json.loads(h)
+d
+{u'foo': u'bar', u'foo2': u'bar2'}
+type(d)
+

@@ -1,0 +1,31 @@
+# Extracted from https://stackoverflow.com/questions/6116978/how-to-replace-multiple-substrings-of-a-string
+import glob
+import re
+
+mapfile = input("Enter map file name with extension eg. codifica.txt: ")
+sep = input("Enter map file column separator eg. |: ")
+mask = input("Enter search mask with extension eg. 2010*txt for all files to be processed: ")
+suff = input("Enter suffix with extension eg. _NEW.txt for newly generated files: ")
+
+rep = {} # creation of empy dictionary
+
+with open(mapfile) as temprep: # loading of definitions in the dictionary using input file, separator is prompted
+    for line in temprep:
+        (key, val) = line.strip('\n').split(sep)
+        rep[key] = val
+
+for filename in glob.iglob(mask): # recursion on all the files with the mask prompted
+
+    with open (filename, "r") as textfile: # load each file in the variable text
+        text = textfile.read()
+
+        # start replacement
+        #rep = dict((re.escape(k), v) for k, v in rep.items()) commented to enable the use in the mapping of re reserved characters
+        pattern = re.compile("|".join(rep.keys()))
+        text = pattern.sub(lambda m: rep[m.group(0)], text)
+
+        #write of te output files with the prompted suffice
+        target = open(filename[:-4]+"_NEW.txt", "w")
+        target.write(text)
+        target.close()
+

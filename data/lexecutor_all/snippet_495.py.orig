@@ -1,0 +1,8 @@
+# Extracted from https://stackoverflow.com/questions/3389574/check-if-multiple-strings-exist-in-another-string
+a = ['a', 'b', 'c']
+str = "a123"
+if set(a) & set(str):
+    print("some of the strings found in str")
+else:
+    print("no strings found in str")
+

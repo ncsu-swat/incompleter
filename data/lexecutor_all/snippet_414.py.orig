@@ -1,0 +1,6 @@
+# Extracted from https://stackoverflow.com/questions/464864/how-to-get-all-possible-combinations-of-a-list-s-elements
+def combinations(arr, carry):
+    for i in range(len(arr)):
+        yield carry + arr[i]
+        yield from combinations(arr[i + 1:], carry + arr[i])
+

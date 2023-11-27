@@ -1,0 +1,4 @@
+# Extracted from https://stackoverflow.com/questions/483666/reverse-invert-a-dictionary-mapping
+my_map = { 'a': 1, 'b':2 }
+dict(map(reversed, my_map.items()))
+

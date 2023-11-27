@@ -1,0 +1,30 @@
+# Extracted from https://stackoverflow.com/questions/4675728/redirect-stdout-to-a-file-in-python
+class out_to_lt():
+    def __init__(self, lt):
+        if type(lt) == list:
+            self.lt = lt
+        else:
+            raise Exception("Need to pass a list")            
+    def __enter__(self):
+        import sys
+        self._sys = sys
+        self._stdout = sys.stdout
+        sys.stdout = self
+        return self
+    def write(self,txt):
+        self.lt.append(txt)    
+    def __exit__(self, type, value, traceback):
+        self._sys.stdout = self._stdout
+
+lt = []
+with out_to_lt(lt) as o:
+    print("Test 123\n\n")
+    print(help(str))
+
+class out_to_lt():
+    ...
+    def isatty(self):
+        return True #True: You're running in a real terminal, False:You're being piped, redirected, cron
+    def flush(self):
+        pass
+

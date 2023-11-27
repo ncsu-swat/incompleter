@@ -1,11 +1,18 @@
 import os, sys
 from subprocess import Popen, PIPE
 
-count = 0
-for file in os.listdir('../../../data/lexecutor_success'):
-    if file.endswith('.py.orig'):
-        count += 1
-        out, err = Popen([sys.executable, file], stdout=PIPE, stderr=PIPE).communicate()
+from glob import glob
 
-        if not len(err):
-            print(file)
+count = 0
+# for file in glob('../../../data/lexecutor_success/*.py.orig'):
+#     count += 1
+#     proc = Popen(['python3', file], stdout=PIPE, stderr=PIPE)
+#     proc.wait()
+#     out, err = proc.communicate()
+
+#     if len(err) == 0:
+#         proc = Popen(['mv', file.replace('.orig', ''), '../../../data/lexecutor_success/originally_runs_error_free/'])
+#         proc.wait()
+#         proc = Popen(['mv', file, '../../../data/lexecutor_success/originally_runs_error_free/'])
+#         proc.wait()
+

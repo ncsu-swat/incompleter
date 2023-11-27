@@ -1,0 +1,20 @@
+# Extracted from https://stackoverflow.com/questions/2018026/what-are-the-differences-between-the-urllib-urllib2-urllib3-and-requests-modul
+try: # Try importing requests first.
+    import requests
+except ImportError: 
+    try: # Try importing Python3 urllib
+        import urllib.request
+    except AttributeError: # Now importing Python2 urllib
+        import urllib
+
+
+def get_content(url):
+    try:  # Using requests.
+        return requests.get(url).content # Returns requests.models.Response.
+    except NameError:  
+        try: # Using Python3 urllib.
+            with urllib.request.urlopen(index_url) as response:
+                return response.read() # Returns http.client.HTTPResponse.
+        except AttributeError: # Using Python3 urllib.
+            return urllib.urlopen(url).read() # Returns an instance.
+

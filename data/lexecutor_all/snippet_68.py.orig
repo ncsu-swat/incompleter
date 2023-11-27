@@ -1,0 +1,7 @@
+# Extracted from https://stackoverflow.com/questions/2225038/determine-the-type-of-an-object
+isinstance(True, int)
+
+isinstance(False, int)
+
+type(True) == int
+

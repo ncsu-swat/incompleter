@@ -1,0 +1,9 @@
+# Extracted from https://stackoverflow.com/questions/1549641/how-can-i-capitalize-the-first-letter-of-each-word-in-a-string
+"hello world".title()
+'Hello World'
+u"hello world".title()
+u'Hello World'
+
+"they're bill's friends from the UK".title()
+"They'Re Bill'S Friends From The Uk"
+

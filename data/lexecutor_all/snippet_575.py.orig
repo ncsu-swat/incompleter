@@ -1,0 +1,9 @@
+# Extracted from https://stackoverflow.com/questions/1345827/how-do-i-find-the-time-difference-between-two-datetime-objects-in-python
+from datetime import datetime
+
+datetimeFormat = '%Y/%m/%d %H:%M:%S.%f'    
+time1 = '2016/03/16 10:01:28.585'
+time2 = '2016/03/16 09:56:28.067'  
+time_dif = datetime.strptime(time1, datetimeFormat) - datetime.strptime(time2,datetimeFormat)
+print(time_dif)
+
