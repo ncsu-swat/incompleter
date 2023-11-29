@@ -29,11 +29,11 @@ class Reporter():
         cumm_fixed = self.fixed_report[0] if 0 in self.fixed_report.keys() else 0
         cumm_stmt = self.avg_stmt_cov[0] if 0 in self.avg_stmt_cov.keys() else 0
         cumm_br = self.avg_br_cov[0] if 0 in self.avg_br_cov.keys() else 0
-        for _iter in range(0, max_rows+1):
+        for _iter in range(1, max_rows+1):
             # Report complete executablity
             cumm_fixed += self.fixed_report[_iter] if _iter in self.fixed_report.keys() else 0
-            cumm_stmt = (cumm_stmt + self.avg_stmt_cov[_iter])/2 if _iter in self.avg_stmt_cov.keys() else 0
-            cumm_br = (cumm_br + self.avg_br_cov[_iter])/2 if _iter in self.avg_br_cov.keys() else 0
+            cumm_stmt = (cumm_stmt + self.avg_stmt_cov[_iter])/2 if _iter in self.avg_stmt_cov.keys() else cumm_stmt
+            cumm_br = (cumm_br + self.avg_br_cov[_iter])/2 if _iter in self.avg_br_cov.keys() else cumm_br
 
             row = ['Iter#{}'.format(_iter), cumm_fixed]
             if self.is_cov:
