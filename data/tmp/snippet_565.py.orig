@@ -1,0 +1,18 @@
+class TBD0: # pragma: no cover
+ # pragma: no cover
+    def __init__(self): # pragma: no cover
+        pass # pragma: no cover
+__original_start_marker = None # pragma: no cover
+x = [1, 2, 3, 4]
+y = iter(x)
+y = [1, 2, 3, 4]
+y.next()
+1
+y.next()
+2
+y.next()
+3
+y.next()
+4
+y.next()
+StopIteration

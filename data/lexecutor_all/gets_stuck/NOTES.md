@@ -12,4 +12,3 @@ Notes on possible reasons for snippets to get stuck during execution.
 10. snippet_609: waits for input
 11. snippet_694: waits for input
 12. snippet_730: waits for input
-13. snippet_376: waits for server respose
