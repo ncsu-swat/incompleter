@@ -39,6 +39,8 @@ class DefineClass(ActionBaseClass):
                                     args=[
                                         ast.arg(arg='self')
                                     ],
+                                    vararg=ast.arg(arg='args'),
+                                    kwarg=ast.arg(arg='kwargs'),
                                     kwonlyargs=[],
                                     kw_defaults=[],
                                     defaults=[]),

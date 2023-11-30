@@ -44,6 +44,7 @@ class DefineFunc(ActionBaseClass):
         class FuncCallVisitor(ast.NodeVisitor):
             def __init__(self, **kwargs: dict) -> None:
                 self.func_found = False
+                self.found_node = None
                 self.func_name = kwargs['func_name']
                 self.func_vararg = kwargs['func_vararg']
                 self.func_kwarg = kwargs['func_kwarg']
@@ -51,22 +52,56 @@ class DefineFunc(ActionBaseClass):
                 self.func_keywords = kwargs['func_keywords']
 
             def visit_Call(self, node):
-                if (isinstance(node.func, ast.Name) and node.func.id == self.func_name) or (isinstance(node.func, ast.Attribute) and node.func.attr == self.func_name):
-                    self.func_found = True
+                if self.func_found:
+                    return node
 
-                    if node.args:
-                        for (arg_i, arg) in enumerate(node.args):
+                print(ast.dump(node, indent=2))
+                if isinstance(node.func, ast.Name) or isinstance(node.func, ast.Attribute):
+                    if isinstance(node.func, ast.Name):
+                        if node.func.id == self.func_name:
+                            self.found_node = node
+                            self.func_found = True
+                        else:
+                            # Recurse into node.func.args (for func calls that are args. e.g. foo(bar()) or foo(bar.func()) )
+                            for (idx, child) in enumerate(node.args):
+                                self.visit(child)
+                            if 'keywords' in dir(node):
+                                for (idx, child) in enumerate(node.keywords):
+                                    self.visit(child.value)
+                            return node
+                    elif isinstance(node.func, ast.Attribute):
+                        # Recursively look for the intended attribute (self.func_name)
+                        if node.func.attr == self.func_name:
+                            self.found_node = node
+                            self.func_found = True
+
+                            # We won't be recursing anymore at this point
+                        else:
+                            # Recurse into node.func first (for chain func calls. e.g. foo.bar() or foo.bar().func())
+                            self.visit(node.func)
+
+                            # Recurse into node.func.args (for func calls that are args. e.g. foo(bar()) or foo(bar.func()) )
+                            for (idx, child) in enumerate(node.args):
+                                self.visit(child)
+                            if 'keywords' in dir(node):
+                                for (idx, child) in enumerate(node.keywords):
+                                    self.visit(child.value)
+
+                            return node
+
+                    if self.found_node.args:
+                        for (arg_i, arg) in enumerate(self.found_node.args):
                             if isinstance(arg, ast.Starred):
                                 self.func_vararg.append(ast.arg(arg='arg'+str(arg_i)))
                             else:
                                 self.func_args.append(ast.arg(arg='arg'+str(arg_i)))
-                    if node.keywords:
-                        for kw in node.keywords:
+                    if self.found_node.keywords:
+                        for kw in self.found_node.keywords:
                             if kw.arg:
                                 self.func_keywords[ast.arg(arg=kw.arg)] = ast.Constant(value=None)
                             else:
                                 self.func_kwarg.append(ast.arg(arg=kw.value.id))
-                    
+                
                 return node
 
         tree = ast.parse(self.snippet.get_latest())
