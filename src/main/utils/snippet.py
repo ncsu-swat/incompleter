@@ -20,8 +20,10 @@ class Snippet:
         self.tmp_path: str = self.__create_tmp_path()
         self.tmp_dir: str = '/'.join(self.tmp_path.split('/')[:-1])
         self.history: List[str] = [ self.__place_original_start_marker(self.__clean_snippet(self.__read_snippet())) ]
-        self.err_id_history: List[str] = []
         self.latest: int = 0
+        
+        self.err_history: List[str] = []
+        self.action_sequence: List[str] = []
 
         self.mocked_values: Dict[str, Any] = {}
         self.def_history: Dict[int, str] = {} # e.g. { iteration_number: defined_identifier }
@@ -157,14 +159,17 @@ class Snippet:
             
         return None, None
 
-    def add_err_id(self, err_id):
-        self.err_id_history.append(err_id)
+    def add_to_err_history(self, err_line, err_type, err_msg):
+        self.err_history.append(err_type + ': ' + err_msg + '~ ' + err_line)
 
     def has_progress(self):
-        if len(self.err_id_history) > 1:
-            if self.err_id_history[-1] == self.err_id_history[-2]:
+        if len(self.err_history) > 1:
+            if self.err_history[-1] == self.err_history[-2]:
                 return False
         return True
+
+    def add_to_action_sequence(self, action_class_name):
+        self.action_sequence.append(action_class_name)
 
     def register_mock_definition(self, iter_n: int, target: str, value: Any) -> None:
         self.def_history[iter_n] = target

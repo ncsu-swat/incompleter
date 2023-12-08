@@ -24,7 +24,13 @@ class ErrorCoordinator(ErrorBaseClass):
     def __init__(self, path: str, snippet: Snippet, stack_trace: str) -> None:
         super().__init__(path=path, snippet=snippet, stack_trace=stack_trace)
 
-        self.snippet.add_err_id(self.err_id)
+        self.stack_trace_lines = self.stack_trace.split('\n')
+        self.err_line = ''
+        for idx, line in enumerate(self.stack_trace_lines):
+            if self.err_msg in line:
+                self.err_line = self.stack_trace_lines[idx-1]
+                break
+        self.snippet.add_to_err_history(self.err_line, self.err_type, self.err_msg)
 
     def find_action(self) -> ActionBaseClass:
         if self.err_type in ErrorCoordinator.mappings.keys():

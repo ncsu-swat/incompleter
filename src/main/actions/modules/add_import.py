@@ -11,6 +11,7 @@ class AddImport(ActionBaseClass):
         super().__init__(snippet, lineno)
 
         self.module_name = kwargs['module_name']
+        self.package_list = self.__get_popular_package_list()
         self.import_dict = self.__get_local_package_index()
 
     def __str__(self) -> str:
@@ -18,6 +19,12 @@ class AddImport(ActionBaseClass):
         desc += 'Module name: {}\n'.format(self.module_name)
 
         return desc
+
+    def __get_popular_package_list(self) -> dict:
+        with open(os.path.join(DATA_DIR, 'package_meta/popular_packages_list.pickle'), 'rb') as package_list_pickle:
+            if package_list := pickle.load(package_list_pickle):
+                return package_list
+        return None
 
     def __get_local_package_index(self) -> dict:
         with open(os.path.join(DATA_DIR, 'package_meta/import_dict.pickle'), 'rb') as import_dict_pickle:
@@ -29,13 +36,19 @@ class AddImport(ActionBaseClass):
         if self.import_dict is None:
             return False
 
+        # Add import for a module only it is in the top pypi packages list
         if self.module_name in self.import_dict.keys():
-            return True
+            import_ast = self.import_dict[self.module_name]
+            if 'names' in dir(import_ast):
+                for alias in import_ast.names:
+                    if alias.name in self.package_list:
+                        return True
 
+        # If self.module_name is directly not present in the import_dict keys, check if the alias name of the corresponding ast of the entry is the self.module_name
         for module, import_ast in self.import_dict.items():
             if 'names' in dir(import_ast):
                 for alias in import_ast.names:
-                    if alias.name == self.module_name:
+                    if alias.name == self.module_name and alias.name in self.package_list:
                         self.import_dict[self.module_name] = ast.Import(
                                                                 names = [
                                                                     ast.alias(name=self.module_name)

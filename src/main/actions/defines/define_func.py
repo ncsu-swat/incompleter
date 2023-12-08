@@ -55,7 +55,6 @@ class DefineFunc(ActionBaseClass):
                 if self.func_found:
                     return node
 
-                print(ast.dump(node, indent=2))
                 if isinstance(node.func, ast.Name) or isinstance(node.func, ast.Attribute):
                     if isinstance(node.func, ast.Name):
                         if node.func.id == self.func_name:
@@ -100,7 +99,10 @@ class DefineFunc(ActionBaseClass):
                             if kw.arg:
                                 self.func_keywords[ast.arg(arg=kw.arg)] = ast.Constant(value=None)
                             else:
-                                self.func_kwarg.append(ast.arg(arg=kw.value.id))
+                                if isinstance(kw.value, ast.Name):
+                                    self.func_kwarg.append(ast.arg(arg=kw.value.id))
+                                else:
+                                    self.func_kwarg.append(ast.arg(arg='kwargs'))
                 
                 return node
 

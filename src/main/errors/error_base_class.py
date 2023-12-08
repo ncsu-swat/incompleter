@@ -16,7 +16,6 @@ class ErrorBaseClass(ABC):
         self.lineno = self.__extract_lineno()
         self.err_type = self.__extract_type()
         self.err_msg = self.__extract_msg()
-        self.err_id = str(hash(self.err_type + ': ' + self.err_msg))
 
     def __reformat_snippet_name(self):
         snippet_name = self.path.split('/')[-1]

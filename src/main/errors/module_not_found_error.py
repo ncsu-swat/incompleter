@@ -4,12 +4,13 @@ from main.utils.snippet import Snippet
 from main.errors.error_base_class import ErrorBaseClass
 from main.actions.action_base_class import ActionBaseClass
 from main.actions.modules.install_module import InstallModule
+from main.actions.modules.remove_import import RemoveImport
 
 import re
 
 class _ModuleNotFoundError(ErrorBaseClass):
     mappings = {
-        r'No module named \'(\S+)\'': [ InstallModule ]
+        r'No module named \'(\S+)\'': [ InstallModule, RemoveImport ]
     }
     
     def __init__(self, path: str, snippet: Snippet, stack_trace: str) -> None:
@@ -20,7 +21,7 @@ class _ModuleNotFoundError(ErrorBaseClass):
             if m := re.search(err_msg_pattern, self.err_msg):
                 for ActionClass in action_class_list:
                     kwargs = {}
-                    if ActionClass == InstallModule:
+                    if ActionClass == InstallModule or ActionClass == RemoveImport:
                         kwargs['module_name'] = m.groups()[0]
 
                     if (action := ActionClass(snippet=self.snippet, lineno=self.lineno, **kwargs)).check_criteria():

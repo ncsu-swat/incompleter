@@ -28,11 +28,12 @@ if __name__ == '__main__':
         file_path = os.path.join(path, file_name)
         
         mox = Moxecutor(snippet_path=file_path, is_cov=args.cov)
-        executability_report, action_iteration_report, action_progress_report, coverage_report, unresolved_report = mox.moxecute()
+        executability_report, action_iteration_report, action_progress_report, action_sequence_length, coverage_report, unresolved_report = mox.moxecute()
 
-        reporter.collect_report(executability_report, action_iteration_report, action_progress_report, coverage_report, unresolved_report)
+        reporter.collect_report(file_name, executability_report, action_iteration_report, action_progress_report, action_sequence_length, coverage_report, unresolved_report)
 
     reporter.sort()
+    reporter.compute_venn()
     print(reporter)
 
     sys.exit(0)

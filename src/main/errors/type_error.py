@@ -5,6 +5,7 @@ from main.errors.error_base_class import ErrorBaseClass
 from main.actions.action_base_class import ActionBaseClass
 from main.actions.defines.define_callable import DefineCallable
 from main.actions.defines.define_iterable_subscriptable import DefineIterableOrSubscriptable
+from main.actions.defines.define_operator import DefineOperator
 
 import re
 import ast
@@ -19,9 +20,9 @@ class _TypeError(ErrorBaseClass):
         r'\'(\S+)\' object is not iterable': [ DefineIterableOrSubscriptable ],
         r'\'(\S+)\' object does not support item assignment': [ DefineIterableOrSubscriptable ],
         r'\'(\S+)\' object is not subscriptable': [ DefineIterableOrSubscriptable ],
-        r'argument of type \'(\S+)\' is not iterable': [],
-        r'unsupported operand type(s) for \S+: \'(\S+)\' and \'\S+\'': [],
-        r'\'(\S+)\' object does not support item assignment': [],
+        r'argument of type \'(\S+)\' is not iterable': [ DefineIterableOrSubscriptable ],
+        r'\'(\S+)\' object does not support item assignment': [ DefineIterableOrSubscriptable ],
+        r'unsupported operand type\(s\) for (\S+): \'(\S+)\' and \'(\S+)\'': [ DefineOperator ],
         r'can only concatenate str (not "TBD0") to str': []
     }
 
@@ -35,8 +36,12 @@ class _TypeError(ErrorBaseClass):
                 # print(self.snippet.get_latest().split('\n')[self.lineno+1])
 
                 kwargs = {}
-                if err_msg_pattern in [ r'\'(\S+)\' object is not callable', r'\'(\S+)\' object is not iterable', r'\'(\S+)\' object does not support item assignment', r'\'(\S+)\' object is not subscriptable' ]:
+                if err_msg_pattern in [ r'\'(\S+)\' object is not callable', r'\'(\S+)\' object is not iterable', r'argument of type \'(\S+)\' is not iterable', r'\'(\S+)\' object does not support item assignment', r'\'(\S+)\' object is not subscriptable' ]:
                     kwargs['class_name'] = m.groups()[0]
+                elif err_msg_pattern in [ r'unsupported operand type\(s\) for (\S+): \'(\S+)\' and \'(\S+)\'' ]:
+                    kwargs['operator'] = m.groups()[0]
+                    kwargs['class1'] = m.groups()[1]
+                    kwargs['class2'] = m.groups()[2]
 
                 for ActionClass in action_class_list:
                     if (action := ActionClass(snippet=self.snippet, lineno=self.lineno, **kwargs)).check_criteria():

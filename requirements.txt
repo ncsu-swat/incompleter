@@ -152,3 +152,4 @@ widgetsnbextension==4.0.9
 wrapt==1.14.1
 yarl==1.9.2
 zipp==3.17.0
+matplotlib-venn==0.11.9
