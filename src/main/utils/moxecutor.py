@@ -7,10 +7,11 @@ from main.errors.error_coordinator import ErrorCoordinator
 class Moxecutor():
     def __init__(self, snippet_path: str, is_cov: bool) -> None:
         self.MAX_ITER = 20
+        self.is_cov = is_cov
+
         self.snippet_path = snippet_path
         self.snippet_name = snippet_path.split('/')[-1]
         self.snippet = Snippet(snippet_path)
-        self.is_cov = is_cov
 
     def moxecute(self):
         _iter = 0
@@ -42,7 +43,7 @@ class Moxecutor():
 
                     # Even if the length of the error output might be >0, we might only have warnings and no actual error
                     if len(err_coord.err_type):
-                        # tqdm.write('\nSnippet#: {} -- Iter {} -- {}\n'.format(str(self.snippet_path.split('/')[-1].split('.')[0].split('snippet_')[-1]), str(_iter), str(err_coord.err_type) + ': ' + str(err_coord.err_msg)))
+                        tqdm.write('\nSnippet#: {} -- Iter {} -- {}\n'.format(str(self.snippet_path.split('/')[-1].split('.')[0].split('snippet_')[-1]), str(_iter), str(err_coord.err_type) + ': ' + str(err_coord.err_msg)))
                         
                         # Update dictionary to keep track of an action pattern's contribution to full and partial executability of the snippet. We start tracking from _iter == 1 because, at _iter == 0, no action has yet been taken. Only by _iter == 1, we have taken one action and so then we can report the impact of the action pattern that we had taken at the prior iteration, _iter-1.
                         if _iter > 0:
@@ -102,7 +103,7 @@ class Moxecutor():
             except SyntaxError as e:
                 pass
             finally:
-                # print('\nLATEST SNIPPET:\n{}\n'.format(self.snippet.get_latest()))
+                print('\nLATEST SNIPPET:\n{}\n'.format(self.snippet.get_latest()))
                 _iter += 1
 
         if err_coord is not None:

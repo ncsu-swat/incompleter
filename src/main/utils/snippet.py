@@ -19,8 +19,9 @@ class Snippet:
         self.snippet_name: str = snippet_path.split('/')[-1]
         self.tmp_path: str = self.__create_tmp_path()
         self.tmp_dir: str = '/'.join(self.tmp_path.split('/')[:-1])
-        self.history: List[str] = [ self.__place_original_start_marker(self.__clean_snippet(self.__read_snippet())) ]
+        
         self.latest: int = 0
+        self.history: List[str] = [ self.__place_original_start_marker(self.__clean_snippet(self.__read_snippet())) ]
         
         self.err_history: List[str] = []
         self.action_sequence: List[str] = []
@@ -30,6 +31,9 @@ class Snippet:
         
         self.tbd_counter = 0
         self.tbd_tracker: Dict[str, str] = {} # e.g. { TBD#: identifier }
+
+        # Since this function relies on the tbd_counter, we need to call the __replace_iterables_subscriptables_with_tbd function after defining tbd_counter
+        self.__replace_iterables_subscriptables_with_tbd()
 
     def __read_snippet(self) -> str:
         if not Path(self.snippet_path).exists(): raise FileNotFoundError('Snippet path does not exist\nSnippet path: {}\n'.format(self.snippet_path))
@@ -49,6 +53,124 @@ class Snippet:
 
     def __place_original_start_marker(self, code: str) -> str:
         return '__original_start_marker = None # pragma: no cover\n' + code
+
+    def __replace_iterables_subscriptables_with_tbd(self) ->str:
+        from main.actions.action_base_class import ActionBaseClass
+        from main.actions.defines.define_class import DefineClass
+        from main.actions.defines.define_iterable_subscriptable import DefineIterableOrSubscriptable
+
+        print(self.get_latest())
+        containers_tracker = {}
+
+        class ListReplace(ast.NodeTransformer):
+            def __init__(self, **kwargs: dict) -> None:
+                self.snippet = kwargs['snippet']
+
+            @ActionBaseClass.add_to_history
+            def visit_Body(self, node):
+                for (idx, child) in enumerate(node.body):
+                    node.body[idx] = self.visit(child)
+                return node
+
+            def visit_List(self, node):
+                containers_tracker['TBD'+str(self.snippet.tbd_counter)] = {
+                    'type': 'List',
+                    'elts': ast.List(elts=[elt for elt in node.elts])
+                }
+                self.snippet.tbd_counter += 1
+
+                return ast.Call(
+                    func=ast.Name(id='TBD'+str(self.snippet.tbd_counter), ctx=ast.Load()),
+                    args=[],
+                    keywords=[])
+
+        class TupleReplace(ast.NodeTransformer):
+            def __init__(self, **kwargs: dict) -> None:
+                self.snippet = kwargs['snippet']
+
+            @ActionBaseClass.add_to_history
+            def visit_Body(self, node):
+                for (idx, child) in enumerate(node.body):
+                    node.body[idx] = self.visit(child)
+                return node
+
+            def visit_Tuple(self, node):
+                containers_tracker['TBD'+str(self.snippet.tbd_counter)] = {
+                    'type': 'Tuple',
+                    'elts': ast.Tuple(elts=[elt for elt in node.elts])
+                }
+                self.snippet.tbd_counter += 1
+                
+                return ast.Call(
+                    func=ast.Name(id='TBD'+str(self.snippet.tbd_counter), ctx=ast.Load()),
+                    args=[],
+                    keywords=[])
+
+        class SetReplace(ast.NodeTransformer):
+            def __init__(self, **kwargs: dict) -> None:
+                self.snippet = kwargs['snippet']
+
+            @ActionBaseClass.add_to_history
+            def visit_Body(self, node):
+                for (idx, child) in enumerate(node.body):
+                    node.body[idx] = self.visit(child)
+                return node
+
+            def visit_Set(self, node):
+                containers_tracker['TBD'+str(self.snippet.tbd_counter)] = {
+                    'type': 'Set',
+                    'elts': ast.Set(elts=[elt for elt in node.elts])
+                }
+                self.snippet.tbd_counter += 1
+                
+                return ast.Call(
+                    func=ast.Name(id='TBD'+str(self.snippet.tbd_counter), ctx=ast.Load()),
+                    args=[],
+                    keywords=[])
+
+        class DictReplace(ast.NodeTransformer):
+            def __init__(self, **kwargs: dict) -> None:
+                self.snippet = kwargs['snippet']
+
+            @ActionBaseClass.add_to_history
+            def visit_Body(self, node):
+                for (idx, child) in enumerate(node.body):
+                    node.body[idx] = self.visit(child)
+                return node
+
+            def visit_Dict(self, node):
+                containers_tracker['TBD'+str(self.snippet.tbd_counter)] = {
+                    'type': 'Dict',
+                    'elts': ast.Dict(keys=[key for key in node.keys], values=[value for value in node.values])
+                }
+                self.snippet.tbd_counter += 1
+                
+                return ast.Call(
+                    func=ast.Name(id='TBD'+str(self.snippet.tbd_counter), ctx=ast.Load()),
+                    args=[],
+                    keywords=[])
+
+        latest_code = self.get_latest()
+        tree = ast.parse(latest_code)
+        ListReplace(snippet=self).visit_Body(tree)
+
+        # latest_code = self.get_latest()
+        # tree = ast.parse(latest_code)
+        # TupleReplace(snippet=self).visit_Body(tree)
+        
+        latest_code = self.get_latest()
+        tree = ast.parse(latest_code)
+        SetReplace(snippet=self).visit_Body(tree)
+
+        latest_code = self.get_latest()
+        tree = ast.parse(latest_code)
+        DictReplace(snippet=self).visit_Body(tree)
+
+        for (tbd_name, tbd_container) in containers_tracker.items():
+            DefineClass(snippet=self, class_name=tbd_name).apply_pattern()
+            DefineIterableOrSubscriptable(snippet=self, class_name=tbd_name, container_values=tbd_container['elts']).apply_pattern()
+
+        return
 
     def __create_tmp_path(self) -> str:
         tmp_path = os.path.join(DATA_DIR, 'tmp', self.snippet_path.split('/')[-1])
@@ -176,7 +298,7 @@ class Snippet:
         self.mocked_values[target] = value
         
         self.tbd_tracker[value] = target
-        if 'TBD' in value: self.tbd_counter += 1
+        if 'TBD' in target: self.tbd_counter += 1
 
     def get_mocked_value(self, target: str) -> Any:
         return self.mocked_values[target]

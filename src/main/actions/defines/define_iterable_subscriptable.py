@@ -12,6 +12,12 @@ class DefineIterableOrSubscriptable(ActionBaseClass):
         if 'class_name' in kwargs: 
             self.class_name = kwargs['class_name']
 
+        self.container_values = None
+        if 'container_values' in kwargs:
+            self.container_values = kwargs['container_values']
+        else:
+            self.container_values = ast.Dict(keys=[], values=[])
+
     def __str__(self) -> str:
         desc = super().__str__()
         desc += 'Iterable/Subscriptable Class name: {}\n'.format(self.class_name)
@@ -60,26 +66,7 @@ class DefineIterableOrSubscriptable(ActionBaseClass):
                     value=ast.Name(id='self', ctx=ast.Load()),
                     attr='container',
                     ctx=ast.Store())],
-                value=ast.Dict(keys=[], values=[])),
-            # ast.For(
-            #     target=ast.Name(id='i', ctx=ast.Store()),
-            #     iter=ast.Call(
-            #         func=ast.Name(id='range', ctx=ast.Load()),
-            #         args=[
-            #             ast.Constant(value=1000)],
-            #         keywords=[]),
-            #     body=[
-            #         ast.Assign(
-            #             targets=[
-            #                 ast.Subscript(
-            #                     value=ast.Attribute(
-            #                         value=ast.Name(id='self', ctx=ast.Load()),
-            #                         attr='container',
-            #                         ctx=ast.Load()),
-            #                     slice=ast.Name(id='i', ctx=ast.Load()),
-            #                     ctx=ast.Store())],
-            #             value=ast.Name(id='i', ctx=ast.Load()))],
-            #     orelse=[]),
+                value=self.container_values),
             ast.Assign(
                 targets=[
                     ast.Attribute(

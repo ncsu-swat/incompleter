@@ -147,7 +147,7 @@ class Reporter():
             report_str += str(self.only_incompleter)
             report_str += '\n\n  ----------------------------\n   Common\n  ----------------------------\n\n   '
             report_str += str(self.common)
-            report_str += '\n\n  ----------------------------\n   Only LExecutor\n  ----------------------------\n\n   '
+            report_str += '\n\n  ----------------------------\n   None\n  ----------------------------\n\n   '
             report_str += str(self.none)
             report_str += '\n\n'
 
