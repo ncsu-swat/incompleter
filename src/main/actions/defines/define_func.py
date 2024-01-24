@@ -27,7 +27,7 @@ class DefineFunc(ActionBaseClass):
         if 'func_body' in kwargs: 
             self.func_body = kwargs['func_body']
         else:
-            self.ret_val_id = 'TBD'+str(self.snippet.tbd_counter)
+            self.ret_val_id = self.snippet.get_next_tbd_name()
             self.func_body.append(ast.Return(value=ast.Call(
                                                 func=ast.Name(id=self.ret_val_id, ctx=ast.Load()),
                                                 args=[],

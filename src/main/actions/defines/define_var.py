@@ -15,7 +15,7 @@ class DefineVar(ActionBaseClass):
         else: self.class_scope = 'global'
         
         # Lazy definition
-        self.var_val_id = 'TBD'+str(self.snippet.tbd_counter)
+        self.var_val_id = self.snippet.get_next_tbd_name()
         self.var_val = ast.Call(
                 func=ast.Name(id=self.var_val_id, ctx=ast.Load()),
                 args=[],

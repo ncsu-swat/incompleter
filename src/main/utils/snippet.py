@@ -221,6 +221,11 @@ class Snippet:
     def get_latest(self) -> str:
         return self.history[-1]
 
+    def get_next_tbd_name(self) -> str:
+        tbd_name = 'TBD'+str(self.tbd_counter)
+        self.tbd_counter += 1
+        return tbd_name
+
     def is_infinite(self) -> bool:
         proc_q = Queue()
         proc = Process(target=self.run_latest, args=(proc_q, ))
@@ -369,7 +374,6 @@ class Snippet:
         self.mocked_values[target] = value
         
         self.tbd_tracker[value] = target
-        if 'TBD' in target: self.tbd_counter += 1
 
     def get_mocked_value(self, target: str) -> Any:
         return self.mocked_values[target]
