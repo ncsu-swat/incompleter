@@ -6,6 +6,8 @@ from main.actions.action_base_class import ActionBaseClass
 from main.actions.defines.define_callable import DefineCallable
 from main.actions.defines.define_iterable_subscriptable import DefineIterableOrSubscriptable
 from main.actions.defines.define_operator import DefineOperator
+from main.actions.defines.define_str import DefineString
+from main.actions.defines.define_int import DefineInteger
 
 import re
 import ast
@@ -13,17 +15,18 @@ from enum import Enum
 
 class _TypeError(ErrorBaseClass):
     mappings = {
-        r'must be str, not int': [],
-        r'\'(\S+)\' object is not (\S+)': [],
+        r'\'(\S+)\' object cannot be interpreted as an integer': [ DefineInteger ],
         r'list indices must be integers or slices, not (\S+)': [],
         r'\'(\S+)\' object is not callable': [ DefineCallable ],
+        r'\'(\S+)\' object is not a mapping': [ DefineIterableOrSubscriptable ],
         r'\'(\S+)\' object is not iterable': [ DefineIterableOrSubscriptable ],
         r'\'(\S+)\' object does not support item assignment': [ DefineIterableOrSubscriptable ],
         r'\'(\S+)\' object is not subscriptable': [ DefineIterableOrSubscriptable ],
         r'argument of type \'(\S+)\' is not iterable': [ DefineIterableOrSubscriptable ],
         r'\'(\S+)\' object does not support item assignment': [ DefineIterableOrSubscriptable ],
         r'unsupported operand type\(s\) for (\S+): \'(\S+)\' and \'(\S+)\'': [ DefineOperator ],
-        r'can only concatenate str (not "TBD0") to str': []
+        r'.*(expected|should be|must be).*(str|string).*(not|got)\s\'?([^\']+)\'?': [ DefineString ],
+        r'can only concatenate str (not \"(\S+)\") to str': [ DefineString ]
     }
 
     def __init__(self, path: str, snippet: Snippet, stack_trace: str) -> None:
@@ -42,7 +45,9 @@ class _TypeError(ErrorBaseClass):
                     kwargs['operator'] = m.groups()[0]
                     kwargs['class1'] = m.groups()[1]
                     kwargs['class2'] = m.groups()[2]
-
+                elif err_msg_pattern in [ r'.*(expected|should be|must be).*(str|string).*(not|got)\s\'?([^\']+)\'?', r'can only concatenate str (not \"(\S+)\") to str', r'\'(\S+)\' object cannot be interpreted as an integer' ]:
+                    kwargs['class'] = m.groups()[-1]
+                
                 for ActionClass in action_class_list:
                     if (action := ActionClass(snippet=self.snippet, lineno=self.lineno, **kwargs)).check_criteria():
                         return action

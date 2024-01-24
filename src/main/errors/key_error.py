@@ -9,7 +9,7 @@ import re
 
 class _KeyError(ErrorBaseClass):
     mappings = {
-        r'(\S+)': [ DefineKey ]
+        r'\'?([^\']+)\'?': [ DefineKey ]
     }
 
     def __init__(self, path: str, snippet: Snippet, stack_trace: str) -> None:

@@ -1,6 +1,7 @@
 from main.utils.snippet import Snippet
 from main.actions.action_base_class import ActionBaseClass
 from main.actions.defines.define_func import DefineFunc
+from main.actions.defines.define_int import DefineInteger
 from typing import Any
 import ast
 

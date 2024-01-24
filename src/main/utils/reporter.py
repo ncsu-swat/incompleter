@@ -1,12 +1,18 @@
+from path_config import DATA_DIR
+
+import os
+import pickle
 from tabulate import tabulate
 
 from matplotlib_venn import venn2
 from matplotlib import pyplot as plt
 
+from main.utils.snippet import Snippet
+
 class Reporter():
     lexecutor_success = set(['24', '224', '350', '340', '589', '618', '14', '71', '271', '321', '30', '292', '679', '668', '639', '15', '177', '355', '392', '231', '382', '60', '629', '678', '718', '749', '351', '211', '190', '341', '759', '708', '499', '445', '713', '593', '746', '657', '723', '632', '501', '400', '434', '804', '756', '587', '389', '607', '565', '780', '681', '541', '646', '586', '159', '299', '777', '652', '561', '571', '582', '685', '138', '426', '692', '770', '682', '453', '38', '416', '665', '711', '490', '750', '797', '359', '786', '446', '775', '650', '813', '710', '481', '491', '700', '462', '516', '687', '209', '369', '817', '413', '823', '792', '452', '239', '268', '39', '698', '80', '362', '140', '381', '150', '317', '206', '688', '479', '115', '303', '12', '121', '313', '36', '105', '267', '478', '353', '130', '95', '237', '175', '291', '62', '151', '233', '322', '134', '316', '196'])
 
-    def __init__(self, is_cov: bool) -> None:
+    def __init__(self, chunk_num: str, is_cov: bool) -> None:
         self.total_count = 0
         self.fexec_count = 0
         self.pexec_count = 0
@@ -16,7 +22,9 @@ class Reporter():
         
         self.is_cov = is_cov
         self.avg_stmt_cov = {}
+        self.hundred_stmt_counter = 0
         self.avg_br_cov = {}
+        self.hundred_br_counter = 0
 
         self.action_iteration_report = {}
         self.action_progress_report = {}
@@ -25,10 +33,12 @@ class Reporter():
         self.pexec_action_sequence_length = 0
 
         self.unresolved_report = {}
+        self.last_errs = []
         
         # Attributes for Venn Diagram
         self.all_cases = set()
         self.resolved_cases = set()
+        self.timeout = set()
         
         self.only_lexecutor = set()
         self.only_incompleter = set()
@@ -40,25 +50,27 @@ class Reporter():
         self.common_perc = 0
         self.none_perc = 0
 
+        self.log_dir = os.path.join(DATA_DIR, 'new_all', 'logs', 'incompleter', chunk_num)
+
         print()
 
     def __str__(self) -> str:
         report_str = '\n\n==========================================\n Total errors at the beginning: {}\n==========================================\n\n'.format(str(self.total_count))
-        report_str += '\n\n==========================================\n TABLE I. Cumulative Metrics:\n==========================================\n\n'.format(str(self.total_count))
-        report_str += 'This table shows a cumulative measure of full executability, statement coverage, and branch coverage from one iteration to the next.\n\n'
+        report_str += '\n\n==========================================\n Total timed out: {}\n==========================================\n\n'.format(str(Snippet.timedout_counter))
+        report_str += '\n\n====================================================\n TABLE I. Cumulative Metrics (Total Snippets {}):\n====================================================\n\n'.format(str(self.total_count))
+        report_str += 'This table shows a cumulative measure of full executability, statement coverage, and branch coverage from one iteration to the next. The percentange of snippets with 100% statement coverage is {}%. The percentage of snippets with 100% branch coverage is {}%.\n\n'.format((self.hundred_stmt_counter/self.total_count)*100, (self.hundred_br_counter/self.total_count)*100)
 
-        max_rows = max(list(self.fixed_report.keys())+list(self.avg_stmt_cov.keys())+list(self.avg_br_cov.keys()))
+        all_row_keys = list(self.fixed_report.keys())+list(self.avg_stmt_cov.keys())+list(self.avg_br_cov.keys())
+        max_rows = max(all_row_keys if len(all_row_keys) > 0 else [0])
         table = []
         headers = ['iter#', 'exec(cnt)', 'stmt(%)', 'br(%)']
 
-        cumm_fixed = self.fixed_report[0] if 0 in self.fixed_report.keys() else 0
-        cumm_stmt = self.avg_stmt_cov[0] if 0 in self.avg_stmt_cov.keys() else 0
-        cumm_br = self.avg_br_cov[0] if 0 in self.avg_br_cov.keys() else 0
-        for _iter in range(1, max_rows+1):
+        cumm_fixed = 0
+        for _iter in range(0, max_rows):
             # Report complete executablity
             cumm_fixed += self.fixed_report[_iter] if _iter in self.fixed_report.keys() else 0
-            cumm_stmt = (cumm_stmt + self.avg_stmt_cov[_iter])/2 if _iter in self.avg_stmt_cov.keys() else cumm_stmt
-            cumm_br = (cumm_br + self.avg_br_cov[_iter])/2 if _iter in self.avg_br_cov.keys() else cumm_br
+            cumm_stmt = self.avg_stmt_cov[_iter] if _iter in self.avg_stmt_cov.keys() else cumm_stmt
+            cumm_br = self.avg_br_cov[_iter] if _iter in self.avg_br_cov.keys() else cumm_br
 
             row = ['Iter#{}'.format(_iter), cumm_fixed]
             if self.is_cov:
@@ -73,11 +85,21 @@ class Reporter():
         report_str += '\n\n\n\n====================================\n TABLE II. Error Type vs. Iteration:\n====================================\n\n'
         report_str += 'This table shows a list of error types and the number of times they occur at each iteration. This table shows the gradual resolution of certain error types and the gradual appearance of others. The gradual appearance of other error types can be attributed to side-effects from some prior applied action pattern. Or, if an action pattern was able to execute a previously erroneous statement, other error types could originate from the following statements in the code.\n\n'
         table = []
-        headers = ['error-type'] + [str(i) for i in range(max_rows+1)]
+        if max_rows < 10:
+            headers = ['error-type'] + [str(i) for i in range(max_rows+1)]
+        else:
+            headers = ['error-type'] + [str(i) for i in range(5)] + ['...'] + [str(i) for i in range(max_rows-4, max_rows+1)]
         for err_type, err_counts in self.error_report.items():
             row = [err_type]
-            for i in range(max_rows+1):
-                row.append(str(err_counts[i]) if i in err_counts.keys() else 0)
+            if max_rows < 10:
+                for i in range(max_rows+1):
+                    row.append(str(err_counts[i]) if i in err_counts.keys() else 0)
+            else:
+                for i in range(5):
+                    row.append(str(err_counts[i]) if i in err_counts.keys() else 0)
+                row.append('...')
+                for i in range(max_rows-4, max_rows+1):
+                    row.append(str(err_counts[i]) if i in err_counts.keys() else 0)
             table.append(row)
         report_str += tabulate(table, headers, tablefmt='github')
 
@@ -85,11 +107,21 @@ class Reporter():
         report_str += '\n\n\n\n=========================================\n TABLE III. Action Pattern vs. Iteration:\n=========================================\n\n'
         report_str += 'This table shows a list of action patterns and the number of times they had been applied at each iteration. This metric could be a proxy for the impact of an action pattern since an action pattern is likely to be impactful if it has been applied a large number of times.\n\n'
         table = []
-        headers = ['action-pattern'] + [str(i) for i in range(max_rows+1)]
+        if max_rows < 10:
+            headers = ['action-pattern'] + [str(i) for i in range(max_rows+1)]
+        else:
+            headers = ['action-pattern'] + [str(i) for i in range(5)] + ['...'] + [str(i) for i in range(max_rows-4, max_rows+1)]
         for action_pattern, action_counts in self.action_iteration_report.items():
             row = [action_pattern]
-            for i in range(max_rows+1):
-                row.append(str(action_counts[i]) if i in action_counts.keys() else 0)
+            if max_rows < 10: 
+                for i in range(max_rows+1):
+                    row.append(str(action_counts[i]) if i in action_counts.keys() else 0)
+            else:
+                for i in range(5):
+                    row.append(str(action_counts[i]) if i in action_counts.keys() else 0)
+                row.append('...')
+                for i in range(max_rows-4, max_rows+1):
+                    row.append(str(action_counts[i]) if i in action_counts.keys() else 0)
             table.append(row)
         report_str += tabulate(table, headers, tablefmt='github')
 
@@ -129,7 +161,7 @@ class Reporter():
 
         # Report Venn diagram statistics
         if self.only_lexecutor is not None and self.only_incompleter is not None and self.common is not None and self.none is not None:
-            report_str += '\n\n\n\n==================================\n TABLE VII. VENN DIAGRAM STATISTICS:\n==================================\n\n'
+            report_str += '\n\n\n\n=======================================\n TABLE VII. VENN DIAGRAM STATISTICS:\n=======================================\n\n'
             report_str += 'This table shows the venn diagram statistics between LExecutor and incompleter.\n\n'
             table = []
             headers = ['Set', 'snippet_cnt(%)']
@@ -150,6 +182,9 @@ class Reporter():
             report_str += '\n\n  ----------------------------\n   None\n  ----------------------------\n\n   '
             report_str += str(self.none)
             report_str += '\n\n'
+
+        # Write failure, success, timeout and last_errs for post-processing
+        self.write_pickles()
 
         return report_str
 
@@ -172,6 +207,13 @@ class Reporter():
                         self.avg_br_cov[_iter] = covs['br']
                     else:
                         self.avg_br_cov[_iter] = (self.avg_br_cov[_iter] + covs['br'])/2
+            
+            if coverage_report_by_iter is not None and len(coverage_report_by_iter.keys()) > 0:
+                if coverage_report_by_iter[max(coverage_report_by_iter.keys())]['stmt'] == 1.0:
+                    self.hundred_stmt_counter += 1
+            if coverage_report_by_iter is not None and len(coverage_report_by_iter.keys()) > 0:
+                if coverage_report_by_iter[max(coverage_report_by_iter.keys())]['br'] == 1.0:
+                    self.hundred_br_counter += 1
 
         for _iter, err_type in executability_report_by_iter.items():
             self.all_cases.add(snippet_number)
@@ -181,6 +223,8 @@ class Reporter():
                 if _iter not in self.fixed_report.keys():
                     self.fixed_report[_iter] = 0
                 self.fixed_report[_iter] += 1
+            elif err_type == 'Timedout':
+                self.timeout.add(snippet_number)
             else:
                 if err_type not in self.error_report.keys():
                     self.error_report[err_type] = {}
@@ -220,6 +264,32 @@ class Reporter():
         # Sorting the error report
         for err_type in self.error_report.keys():
             self.error_report[err_type] = dict(sorted(self.error_report[err_type].items()))
+
+    def check_pickles(self):
+        with open(os.path.join(self.log_dir, 'failure.pkl'), 'rb') as failure_pkl_file:
+            failure = pickle.load(failure_pkl_file)
+            print(failure)
+        with open(os.path.join(self.log_dir, 'success.pkl'), 'rb') as success_pkl_file:
+            success = pickle.load(success_pkl_file)
+            print(success)
+        with open(os.path.join(self.log_dir, 'timeout.pkl'), 'rb') as timeout_pkl_file:
+            timeout = pickle.load(timeout_pkl_file)
+            print(timeout)
+        with open(os.path.join(self.log_dir, 'lasterrs.pkl'), 'rb') as lasterrs_pkl_file:
+            lasterrs = pickle.load(lasterrs_pkl_file)
+            print(lasterrs)
+
+    def write_pickles(self):
+        with open(os.path.join(self.log_dir, 'failure.pkl'), 'wb') as failure_pkl_file:
+            pickle.dump(list(self.all_cases.difference(self.resolved_cases)), failure_pkl_file)
+        with open(os.path.join(self.log_dir, 'success.pkl'), 'wb') as success_pkl_file:
+            pickle.dump(list(self.resolved_cases), success_pkl_file)
+        with open(os.path.join(self.log_dir, 'timeout.pkl'), 'wb') as timeout_pkl_file:
+            pickle.dump(list(self.timeout), timeout_pkl_file)
+        with open(os.path.join(self.log_dir, 'lasterrs.pkl'), 'wb') as lasterrs_pkl_file:
+            for key, item in self.unresolved_report.items():
+                self.last_errs += [key]*len(item)
+            pickle.dump(self.last_errs, lasterrs_pkl_file)
 
     def compute_venn(self) -> None:
         self.only_lexecutor = set()

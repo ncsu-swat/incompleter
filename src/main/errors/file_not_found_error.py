@@ -13,8 +13,7 @@ class _FileNotFoundError(ErrorBaseClass):
     sample_exts = ['json', 'xml', 'html', 'csv', 'xlsx', 'xls', 'ppt', 'pdf', 'txt', 'rtf', 'doc', 'docx', 'odt', 'ods', 'odp', 'zip', 'tar', 'gz', 'png', 'jpg', 'gif', 'tiff', 'svg', 'webp', 'bmp', 'ico', 'hdf', 'h4', 'hdf4', 'he2', 'h5', 'hdf5', 'he5', 'mp3', 'wav', 'ogg', 'mp4', 'avi', 'mov', 'wmv', 'webm']
 
     mappings = {
-        r'(\S+) not found.*?': [ CreateFile ],
-        r'\'(\S+)\' not found.*?': [ CreateFile ],
+        r'\'?(\S+)\'? not found.*?': [ CreateFile ],
         r'\[Errno 2\] No such file or directory: \'(\S+)\'': [ CreateFile ],
         r'File (\S+) does not exist': [ CreateFile]
     }

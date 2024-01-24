@@ -1,0 +1,91 @@
+# LExecutor: DO NOT INSTRUMENT
+
+#Source: https://stackoverflow.com/questions/49454529/django-forms-typeerror-init-got-an-unexpected-keyword-argument-instance
+from lexecutor.Runtime import _n_
+from lexecutor.Runtime import _a_
+from lexecutor.Runtime import _c_
+from lexecutor.Runtime import _l_
+class Establishments(_a_(443032, _n_(443031, "models", lambda: models), "Model")):
+    _l_(443082)
+
+    title = _c_(443034, _a_(443033, models, "CharField"), max_length=255)
+    _l_(443035)
+    town = _c_(443037, _a_(443036, models, "ForeignKey"), Town, on_delete=SET_NULL, null=True)
+    _l_(443038)
+    addrstreet = _c_(443040, _a_(443039, models, "CharField"), max_length=255)
+    _l_(443041)
+    addrzip = _c_(443043, _a_(443042, models, "CharField"), max_length=12)
+    _l_(443044)
+    telephone = _c_(443046, _a_(443045, models, "CharField"), max_length=15)
+    _l_(443047)
+    email = _c_(443049, _a_(443048, models, "CharField"), max_length=255)
+    _l_(443050)
+    chamberofcomnr = _c_(443052, _a_(443051, models, "CharField"), max_length=25)
+    _l_(443053)
+    description = _c_(443055, _a_(443054, models, "TextField"), max_length=255)
+    _l_(443056)
+    website =  _c_(443058, _a_(443057, models, "CharField"), max_length=255)
+    _l_(443059)
+    categorie = _c_(443061, _a_(443060, models, "ForeignKey"), Establishmentcategory, on_delete=SET_NULL, null=True)
+    _l_(443062)
+    pub_date = _c_(443064, _a_(443063, models, "DateTimeField"), 'date published')
+    _l_(443065)
+    drupuser = _c_(443067, _a_(443066, models, "ForeignKey"), Drupalusers, on_delete=SET_NULL, null=True)
+    _l_(443068)
+    druppublished = _c_(443070, _a_(443069, models, "BooleanField"))
+    _l_(443071)
+    drupurl = _c_(443073, _a_(443072, models, "CharField"), max_length=255)
+    _l_(443074)
+    drupnodeid = _c_(443076, _a_(443075, models, "IntegerField"))
+    _l_(443077)
+    def __str__(self):
+        _l_(443081)
+
+        aux = _a_(443079, _n_(443078, "self", lambda: self), "title")
+        _l_(443080)
+        return aux
+class Impcalendar(_a_(443084, _n_(443083, "models", lambda: models), "Model")):
+    _l_(443146)
+
+    establishment = _c_(443087, _a_(443085, models, "ForeignKey"), _n_(443086, "Establishments", lambda: Establishments), on_delete=SET_NULL, null=True)
+    _l_(443088)
+    active = _c_(443090, _a_(443089, models, "BooleanField"))
+    _l_(443091)
+    prio = _c_(443093, _a_(443092, models, "IntegerField"))
+    _l_(443094)
+    url = _c_(443096, _a_(443095, models, "CharField"), max_length=255)
+    _l_(443097)
+    check_intervalh = _c_(443099, _a_(443098, models, "IntegerField"))
+    _l_(443100)
+    check_fixedh = _c_(443102, _a_(443101, models, "IntegerField"))
+    _l_(443103)
+    log = _c_(443105, _a_(443104, models, "BooleanField"))
+    _l_(443106)
+    cuttag = _c_(443108, _a_(443107, models, "CharField"), max_length=255)
+    _l_(443109)
+    cuttxt =  _c_(443111, _a_(443110, models, "CharField"), max_length=255)
+    _l_(443112)
+    cuttxtend = _c_(443114, _a_(443113, models, "CharField"), max_length=255)
+    _l_(443115)
+    comment = _c_(443117, _a_(443116, models, "CharField"), max_length=255)
+    _l_(443118)
+    page = _c_(443120, _a_(443119, models, "TextField"))
+    _l_(443121)
+    pageold = _c_(443123, _a_(443122, models, "TextField"))    
+    _l_(443124)    
+    change = _c_(443126, _a_(443125, models, "TextField"))
+    _l_(443127)
+    pagedate = _c_(443129, _a_(443128, models, "DateTimeField"))
+    _l_(443130)
+    pagedatenext = _c_(443132, _a_(443131, models, "DateTimeField"))
+    _l_(443133)
+    status = _c_(443135, _a_(443134, models, "IntegerField"))
+    _l_(443136)
+    errors = _c_(443138, _a_(443137, models, "IntegerField"))
+    _l_(443139)
+    def __str__(self):
+        _l_(443145)
+
+        aux = _c_(443143, _n_(443140, "str", lambda: str), _a_(443142, _n_(443141, "self", lambda: self), "id"))
+        _l_(443144)
+        return aux

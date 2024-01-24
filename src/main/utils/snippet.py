@@ -11,7 +11,12 @@ from typing import List, Dict, Tuple, Any
 from pathlib import Path
 from subprocess import Popen, PIPE
 
+from multiprocessing import Process, Queue
+
 class Snippet:
+    TIMEOUT = 60 #seconds
+    timedout_counter = 0
+
     def __init__(self, snippet_path: str) -> None:
         self.current_iter = 0
 
@@ -33,7 +38,7 @@ class Snippet:
         self.tbd_tracker: Dict[str, str] = {} # e.g. { TBD#: identifier }
 
         # Since this function relies on the tbd_counter, we need to call the __replace_iterables_subscriptables_with_tbd function after defining tbd_counter
-        self.__replace_iterables_subscriptables_with_tbd()
+        # self.__replace_iterables_subscriptables_with_tbd()
 
     def __read_snippet(self) -> str:
         if not Path(self.snippet_path).exists(): raise FileNotFoundError('Snippet path does not exist\nSnippet path: {}\n'.format(self.snippet_path))
@@ -59,7 +64,6 @@ class Snippet:
         from main.actions.defines.define_class import DefineClass
         from main.actions.defines.define_iterable_subscriptable import DefineIterableOrSubscriptable
 
-        print(self.get_latest())
         containers_tracker = {}
 
         class ListReplace(ast.NodeTransformer):
@@ -217,7 +221,39 @@ class Snippet:
     def get_latest(self) -> str:
         return self.history[-1]
 
-    def run_latest(self) -> List[str]:
+    def is_infinite(self) -> bool:
+        proc_q = Queue()
+        proc = Process(target=self.run_latest, args=(proc_q, ))
+        proc.start()
+        proc.join(timeout=60)
+        if proc.is_alive():
+            # print('\nEXECUTION TIMEOUT\n')
+            proc.terminate()
+            return True
+        else:
+            return False
+
+    def run_timed_latest(self) -> Tuple[str, str]:
+        try:
+            proc_q = Queue()
+            proc = Process(target=self.run_latest, args=(proc_q, ))
+            proc.start()
+            proc.join(timeout=Snippet.TIMEOUT)
+            if proc.is_alive():
+                # print('\nEXECUTION TIMEOUT\n')
+                Snippet.timedout_counter += 1
+                proc.terminate()
+                return None, None
+            else:
+                out = proc_q.get()
+                err = proc_q.get()
+                return out, err
+        except Exception as e:
+            print('Exception: {}'.format(e))
+        
+        return None, None
+
+    def run_latest(self, proc_q) -> Tuple[str, str]:
         try:
             # setup tmp_file at tmp_path before running
             self.__create_tmp_file()
@@ -226,17 +262,44 @@ class Snippet:
             proc = Popen([sys.executable, self.tmp_path], stdout=PIPE, stderr=PIPE, cwd=self.tmp_dir)
             proc.wait()
             out, err = proc.communicate()
-            out = out.decode('utf-8')
-            err = err.decode('utf-8')
+            out = out.decode('ISO-8859-1')
+            err = err.decode('ISO-8859-1')
 
             # cleanup tmp_file at tmp_path after running
             self.__delete_tmp_file()
+
+            proc_q.put(out)
+            proc_q.put(err)
             
             return out, err
         except FileNotFoundError as e:
             print('FileNotFoundError: when trying to run snippet {}#{}\n'.format(self.snippet_path, str(self.latest)))
+            proc_q.put(None)
+            proc_q.put(None)
+            return None, None
 
-    def compute_latest_coverage(self) -> Tuple[float, float]:
+    def compute_timed_latest_coverage(self) -> Tuple[float, float]:
+        try:
+            proc_q = Queue()
+            proc = Process(target=self.compute_latest_coverage, args=(proc_q, ))
+            proc.start()
+            proc.join(timeout=Snippet.TIMEOUT)
+            if proc.is_alive():
+                # print('\nCOVERAGE EXECUTION TIMEOUT\n')
+                proc.terminate()
+                return None, None, None, None
+            else:
+                out = proc_q.get()
+                err = proc_q.get()
+                stmt_cov = proc_q.get()
+                br_cov = proc_q.get()
+                return out.decode('ISO-8859-1'), err.decode('ISO-8859-1'), stmt_cov, br_cov
+        except Exception as e:
+            print('Exception: {}'.format(e))
+        
+        return None, None
+
+    def compute_latest_coverage(self, proc_q) -> Tuple[float, float]:
         latest_code = self.get_latest()
         latest_code_lines = latest_code.split('\n')
 
@@ -253,7 +316,7 @@ class Snippet:
 
             proc = Popen(['coverage', 'run', '--branch', self.tmp_path], stdout=PIPE, stderr=PIPE, cwd=self.tmp_dir)
             proc.wait()
-            proc.communicate()
+            out, err = proc.communicate()
             proc = Popen(['coverage', 'json'], stdout=PIPE, stderr=PIPE, cwd=self.tmp_dir)
             proc.wait()
             proc.communicate()
@@ -275,11 +338,19 @@ class Snippet:
             # cleanup tmp_file at tmp_path after running
             self.__delete_tmp_file()
 
-            return stmt_cov, br_cov
+            proc_q.put(out)
+            proc_q.put(err)
+            proc_q.put(stmt_cov)
+            proc_q.put(br_cov)
+            return 0
         except FileNotFoundError as e:
             print('FileNotFoundError: when trying to compute coverage for snippet {}#{}\n'.format(self.snippet_path, str(self.latest)))
             
-        return None, None
+        proc_q.put(None)
+        proc_q.put(None)
+        proc_q.put(None)
+        proc_q.put(None)
+        return -1
 
     def add_to_err_history(self, err_line, err_type, err_msg):
         self.err_history.append(err_type + ': ' + err_msg + '~ ' + err_line)

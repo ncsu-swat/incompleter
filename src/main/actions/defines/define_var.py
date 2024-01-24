@@ -29,10 +29,11 @@ class DefineVar(ActionBaseClass):
         return desc
 
     def check_criteria(self) -> bool:
-        if len(self.class_scope) > 0:
-            if self.class_scope == 'global' or 'TBD' in self.class_scope:
-                return True
-        return False
+        # if len(self.class_scope) > 0:
+        #     if self.class_scope == 'global' or 'TBD' in self.class_scope:
+        #         return True
+        # return False
+        return True
 
     def apply_pattern(self) -> str:
         class DefineLazyVarTransformer(ast.NodeTransformer):

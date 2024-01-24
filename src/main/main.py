@@ -21,7 +21,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     path=os.path.join(DATA_DIR, args.dir)
-    reporter = Reporter(is_cov=args.cov)
+    reporter = Reporter(chunk_num=args.dir.split('/')[-1], is_cov=args.cov)
     
     print()
     for file_name in tqdm(glob(os.path.join(path, '*'+args.snippet_name)), desc='Moxecution (mock+execution) Progress'):

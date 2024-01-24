@@ -13,16 +13,23 @@ class Moxecutor():
         self.snippet_name = snippet_path.split('/')[-1]
         self.snippet = Snippet(snippet_path)
 
+        # self.is_infinite = self.snippet.is_infinite()
+        # if self.is_infinite:
+        #     tqdm.write('\n\nInfinite Snippet# {}\n\n'.format(str(self.snippet_path.split('/')[-1].split('.')[0].split('snippet_')[-1])))
+
     def moxecute(self):
+        MAX_ITER = 25
         _iter = 0
         err_coord = None
         executability_report, action_iteration_report, action_progress_report, coverage_report, unresolved_report = {}, {}, {}, {}, {}
         
-        while True: # Fix-point loop
+        while _iter < MAX_ITER: # Fix-point loop
             try:
-                # Compute coverage at the start of each iteration if is_cov flag is True
+                out, err = None, None
                 if self.is_cov:
-                    stmt_cov, br_cov = self.snippet.compute_latest_coverage()
+                    # If we are computing coverage then check output and error from the coverage wrapper to avoid having to run twice
+                    # Compute coverage at the start of each iteration if is_cov flag is True
+                    out, err, stmt_cov, br_cov = self.snippet.compute_timed_latest_coverage()
 
                     if stmt_cov is not None:
                         for iter_idx in range(_iter, self.MAX_ITER):
@@ -34,9 +41,15 @@ class Moxecutor():
                             if iter_idx not in coverage_report.keys():
                                 coverage_report[iter_idx] = { 'stmt': 0, 'br': 0 }
                             coverage_report[iter_idx]['br'] = br_cov
+                else:
+                    # If we are not computing coverage then run snippet without coverage
+                    # Execute the snippet and collect the output and error
+                    out, err = self.snippet.run_timed_latest()
 
-                # Execute the snippet and collect the output and error
-                out, err = self.snippet.run_latest()
+                if err is None:
+                    executability_report[_iter] = 'Timedout'
+                    tqdm.write('\n\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\nSnippet#: {} -- Potentially Timed Out\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n'.format(str(self.snippet_path.split('/')[-1].split('.')[0].split('snippet_')[-1])))
+                    break
 
                 if len(err) > 0:
                     err_coord = ErrorCoordinator(path=self.snippet.snippet_path, snippet=self.snippet, stack_trace=err)
@@ -44,7 +57,8 @@ class Moxecutor():
                     # Even if the length of the error output might be >0, we might only have warnings and no actual error
                     if len(err_coord.err_type):
                         tqdm.write('\nSnippet#: {} -- Iter {} -- {}\n'.format(str(self.snippet_path.split('/')[-1].split('.')[0].split('snippet_')[-1]), str(_iter), str(err_coord.err_type) + ': ' + str(err_coord.err_msg)))
-                        
+                        tqdm.write(err)
+
                         # Update dictionary to keep track of an action pattern's contribution to full and partial executability of the snippet. We start tracking from _iter == 1 because, at _iter == 0, no action has yet been taken. Only by _iter == 1, we have taken one action and so then we can report the impact of the action pattern that we had taken at the prior iteration, _iter-1.
                         if _iter > 0:
                             prior_action = action_iteration_report[_iter-1]
@@ -54,6 +68,8 @@ class Moxecutor():
                             if self.snippet.has_progress():
                                 action_progress_report[prior_action]['p-exec'] += 1
                             else:
+                                for i in range(_iter, MAX_ITER):
+                                    executability_report[i] = err_coord.err_type
                                 break # Fix-point break
 
                         # Report executability
@@ -63,6 +79,7 @@ class Moxecutor():
                         action = err_coord.find_action()
                         action_iteration_report[_iter] = type(action).__name__
                         self.snippet.add_to_action_sequence(type(action).__name__)
+                        print('\n\nACTION TO APPLY: {}'.format(type(action).__name__))
 
                         # Carry out the action
                         if action is not None:

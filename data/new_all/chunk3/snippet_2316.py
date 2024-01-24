@@ -1,0 +1,9 @@
+# LExecutor: DO NOT INSTRUMENT
+
+#Source: https://stackoverflow.com/questions/50950043/typeerror-nonetype-object-is-not-subscriptable-odoo-11-custom-report
+from lexecutor.Runtime import _n_
+from lexecutor.Runtime import _a_
+from lexecutor.Runtime import _c_
+from lexecutor.Runtime import _l_
+{'products': _c_(528983, _a_(528982, _n_(528981, "product", lambda: product), "template"), 10, 35, 36, 34, 6, 3, 24, 28, 5, 26, 18, 4, 1, 2, 8, 37, 25, 16, 17, 14, 20, 11, 21, 31, 12, 9, 32, 29, 30, 27, 23, 13, 15, 33, 7, 19, 22, 38), 'categ_value': {'Physique': {'categ_name': 'Physique', 'valuation': 760512.0}, 'En vente': {'categ_name': 'En vente', 'valuation': 0.0}, 'Logiciel': {'categ_name': 'Logiciel', 'valuation': 0.0}, 'Services': {'categ_name': 'Services', 'valuation': 0.0}, 'Tous': {'categ_name': 'Tous', 'valuation': 0.0}}}
+_l_(528984)
