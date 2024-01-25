@@ -2,6 +2,7 @@ from main.utils.snippet import Snippet
 from main.actions.action_base_class import ActionBaseClass
 from main.actions.defines.define_func import DefineFunc
 from main.actions.defines.define_int import DefineInteger
+from main.actions.defines.define_str import DefineString
 from typing import Any
 import ast
 
@@ -39,12 +40,24 @@ class DefineOperator(ActionBaseClass):
             class_scope = self.class1
             func_args = [ast.arg(arg='self'), ast.arg(arg='other')]
 
+            # Subclassing one class based on type of the other
+            if self.class2 in [ 'int', 'float' ]:
+                DefineInteger(snippet=self.snippet, lineno=self.lineno, class_name=self.class1).apply_pattern()
+            elif self.class2 in [ 'str' ]:
+                DefineString(snippet=self.snippet, lineno=self.lineno, class_name=self.class1).apply_pattern()
+            
             DefineFunc(snippet=self.snippet, lineno=self.lineno, func_name=func_name, class_scope=class_scope, func_args=func_args).apply_pattern()
         if 'TBD' in self.class2:
             func_name = self.operator_to_func_name[self.operator]
             class_scope = self.class2
             func_args = [ast.arg(arg='self'), ast.arg(arg='other')]
 
+            # Subclassing one class based on type of the other
+            if self.class1 in [ 'int', 'float' ]:
+                DefineInteger(snippet=self.snippet, lineno=self.lineno, class_name=self.class2).apply_pattern()
+            elif self.class1 in [ 'str' ]:
+                DefineString(snippet=self.snippet, lineno=self.lineno, class_name=self.class2).apply_pattern()
+            
             DefineFunc(snippet=self.snippet, lineno=self.lineno, func_name=func_name, class_scope=class_scope, func_args=func_args).apply_pattern()
         
         return

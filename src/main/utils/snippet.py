@@ -16,11 +16,11 @@ from main.utils.session import Session
 
 class Snippet:
     TIMEOUT = 60 #seconds
-    fixpoint_tolerance = 1 #check progress with respect to (current-tolerance)th iteration. This value should be 1 for most error types. For ModuleNotFoundError, the tolerance is set to 2 (from errors.module_not_found_error) because after trying the pattern InstallModule, we want to get a second chance with the pattern RemoveImport.
     timedout_counter = 0
 
     def __init__(self, snippet_path: str) -> None:
         self.current_iter = 0
+        self.fixpoint_tolerance = 1 #check progress with respect to (current-tolerance)th iteration. This value should be 1 for most error types. For ModuleNotFoundError, the tolerance is set to 2 (from errors.module_not_found_error) because after trying the pattern InstallModule, we want to get a second chance with the pattern RemoveImport.
 
         self.snippet_path: str = snippet_path
         self.snippet_name: str = snippet_path.split('/')[-1]
@@ -360,11 +360,11 @@ class Snippet:
         return -1
 
     def add_to_err_history(self, err_line, err_type, err_msg):
-        self.err_history.append(err_type + ': ' + err_msg + '~ ' + err_line)
+        self.err_history.append(err_type + ': ' + err_msg + '~' + err_line)
 
     def has_progress(self):
-        if len(self.err_history) > Snippet.fixpoint_tolerance:
-            if self.err_history[-1] == self.err_history[-Snippet.fixpoint_tolerance-1]:
+        if len(self.err_history) > self.fixpoint_tolerance:
+            if self.err_history[-1] == self.err_history[-self.fixpoint_tolerance-1]:
                 return False
         return True
 

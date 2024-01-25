@@ -35,12 +35,17 @@ class DefineInteger(ActionBaseClass):
                 self.lineno = kwargs['lineno']
 
             @ActionBaseClass.add_to_history
+            def visit_Body(self, node):
+                for (idx, child) in enumerate(node.body):
+                    node.body[idx] = self.visit(child)                
+                return node
+
             def visit_ClassDef(self, node):
                 if node.name == self.class_name:
                     node.bases.append(ast.Name(id='int', ctx=ast.Load()))
                 return node
         
         tree = ast.parse(self.snippet.get_latest())
-        tree = IntegerSubclasser(class_name=self.class_name, snippet=self.snippet, lineno=self.lineno).visit(tree)
+        tree = IntegerSubclasser(class_name=self.class_name, snippet=self.snippet, lineno=self.lineno).visit_Body(tree)
 
         return None

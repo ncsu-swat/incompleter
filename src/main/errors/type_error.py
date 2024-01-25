@@ -16,12 +16,10 @@ from enum import Enum
 class _TypeError(ErrorBaseClass):
     mappings = {
         r'\'(\S+)\' object cannot be interpreted as an integer': [ DefineInteger ],
-        r'list indices must be integers or slices, not (\S+)': [],
+        r'.*(?:expected|should be|must be|can only concatenate).*(?:str|string).*(?:not|got)\s[\'\"]?([^\'\"]+)[\'\"]?.*': [ DefineString ],
         r'\'(\S+)\' object is not callable': [ DefineCallable ],
         r'.*\'(\S+)\'.*not.*(mapping|iterable|subscriptable|support item assignment)': [ DefineIterableOrSubscriptable ],
-        r'unsupported operand type\(s\) for (\S+): \'(\S+)\' and \'(\S+)\'': [ DefineOperator ],
-        r'.*(expected|should be|must be).*(str|string).*(not|got)\s\'?([^\']+)\'?': [ DefineString ],
-        r'can only concatenate str (not \"(\S+)\") to str': [ DefineString ]
+        r'(?:unsupported operand type\(s\) for )?\'?([^\']+)\'?(?:\:| not supported.*) \'(\S+)\' and \'(\S+)\'': [ DefineOperator ]
     }
 
     def __init__(self, path: str, snippet: Snippet, stack_trace: str) -> None:
@@ -36,12 +34,12 @@ class _TypeError(ErrorBaseClass):
                 kwargs = {}
                 if err_msg_pattern in [ r'\'(\S+)\' object is not callable', r'.*\'(\S+)\'.*not.*(mapping|iterable|subscriptable|support item assignment)' ]:
                     kwargs['class_name'] = m.groups()[0]
-                elif err_msg_pattern in [ r'unsupported operand type\(s\) for (\S+): \'(\S+)\' and \'(\S+)\'' ]:
+                elif err_msg_pattern in [ r'(?:unsupported operand type\(s\) for )?\'?([^\']+)\'?(?:\:| not supported.*) \'(\S+)\' and \'(\S+)\'' ]:
                     kwargs['operator'] = m.groups()[0]
                     kwargs['class1'] = m.groups()[1]
                     kwargs['class2'] = m.groups()[2]
-                elif err_msg_pattern in [ r'.*(expected|should be|must be).*(str|string).*(not|got)\s\'?([^\']+)\'?', r'can only concatenate str (not \"(\S+)\") to str', r'\'(\S+)\' object cannot be interpreted as an integer' ]:
-                    kwargs['class'] = m.groups()[-1]
+                elif err_msg_pattern in [ r'.*(?:expected|should be|must be|can only concatenate).*(?:str|string).*(?:not|got)\s[\'\"]?([^\'\"]+)[\'\"]?.*', r'\'(\S+)\' object cannot be interpreted as an integer' ]:
+                    kwargs['class_name'] = m.groups()[-1]
                 
                 for ActionClass in action_class_list:
                     if (action := ActionClass(snippet=self.snippet, lineno=self.lineno, **kwargs)).check_criteria():

@@ -16,8 +16,6 @@ class _ModuleNotFoundError(ErrorBaseClass):
     def __init__(self, path: str, snippet: Snippet, stack_trace: str) -> None:
         super().__init__(path=path, snippet=snippet, stack_trace=stack_trace)
 
-        
-
     def find_action(self) -> ActionBaseClass:
         for err_msg_pattern, action_class_list in _ModuleNotFoundError.mappings.items():
             if m := re.search(err_msg_pattern, self.err_msg):
