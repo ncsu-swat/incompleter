@@ -12,9 +12,11 @@ from pathlib import Path
 from subprocess import Popen, PIPE
 
 from multiprocessing import Process, Queue
+from main.utils.session import Session
 
 class Snippet:
     TIMEOUT = 60 #seconds
+    fixpoint_tolerance = 1 #check progress with respect to (current-tolerance)th iteration. This value should be 1 for most error types. For ModuleNotFoundError, the tolerance is set to 2 (from errors.module_not_found_error) because after trying the pattern InstallModule, we want to get a second chance with the pattern RemoveImport.
     timedout_counter = 0
 
     def __init__(self, snippet_path: str) -> None:
@@ -177,7 +179,7 @@ class Snippet:
         return
 
     def __create_tmp_path(self) -> str:
-        tmp_path = os.path.join(DATA_DIR, 'tmp', self.snippet_path.split('/')[-1])
+        tmp_path = os.path.join(DATA_DIR, 'tmp', Session.working_dir, self.snippet_path.split('/')[-1])
         tmp_file = Path(tmp_path)
         tmp_file.parent.mkdir(parents=True, exist_ok=True)
 
@@ -361,8 +363,8 @@ class Snippet:
         self.err_history.append(err_type + ': ' + err_msg + '~ ' + err_line)
 
     def has_progress(self):
-        if len(self.err_history) > 1:
-            if self.err_history[-1] == self.err_history[-2]:
+        if len(self.err_history) > Snippet.fixpoint_tolerance:
+            if self.err_history[-1] == self.err_history[-Snippet.fixpoint_tolerance-1]:
                 return False
         return True
 

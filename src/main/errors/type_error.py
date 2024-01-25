@@ -18,12 +18,7 @@ class _TypeError(ErrorBaseClass):
         r'\'(\S+)\' object cannot be interpreted as an integer': [ DefineInteger ],
         r'list indices must be integers or slices, not (\S+)': [],
         r'\'(\S+)\' object is not callable': [ DefineCallable ],
-        r'\'(\S+)\' object is not a mapping': [ DefineIterableOrSubscriptable ],
-        r'\'(\S+)\' object is not iterable': [ DefineIterableOrSubscriptable ],
-        r'\'(\S+)\' object does not support item assignment': [ DefineIterableOrSubscriptable ],
-        r'\'(\S+)\' object is not subscriptable': [ DefineIterableOrSubscriptable ],
-        r'argument of type \'(\S+)\' is not iterable': [ DefineIterableOrSubscriptable ],
-        r'\'(\S+)\' object does not support item assignment': [ DefineIterableOrSubscriptable ],
+        r'.*\'(\S+)\'.*not.*(mapping|iterable|subscriptable|support item assignment)': [ DefineIterableOrSubscriptable ],
         r'unsupported operand type\(s\) for (\S+): \'(\S+)\' and \'(\S+)\'': [ DefineOperator ],
         r'.*(expected|should be|must be).*(str|string).*(not|got)\s\'?([^\']+)\'?': [ DefineString ],
         r'can only concatenate str (not \"(\S+)\") to str': [ DefineString ]
@@ -39,7 +34,7 @@ class _TypeError(ErrorBaseClass):
                 # print(self.snippet.get_latest().split('\n')[self.lineno+1])
 
                 kwargs = {}
-                if err_msg_pattern in [ r'\'(\S+)\' object is not callable', r'\'(\S+)\' object is not iterable', r'argument of type \'(\S+)\' is not iterable', r'\'(\S+)\' object does not support item assignment', r'\'(\S+)\' object is not subscriptable' ]:
+                if err_msg_pattern in [ r'\'(\S+)\' object is not callable', r'.*\'(\S+)\'.*not.*(mapping|iterable|subscriptable|support item assignment)' ]:
                     kwargs['class_name'] = m.groups()[0]
                 elif err_msg_pattern in [ r'unsupported operand type\(s\) for (\S+): \'(\S+)\' and \'(\S+)\'' ]:
                     kwargs['operator'] = m.groups()[0]
