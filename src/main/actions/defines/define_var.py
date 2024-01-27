@@ -15,12 +15,8 @@ class DefineVar(ActionBaseClass):
         else: self.class_scope = 'global'
         
         # Lazy definition
-        self.var_val_id = self.snippet.get_next_tbd_name()
-        self.var_val = ast.Call(
-                func=ast.Name(id=self.var_val_id, ctx=ast.Load()),
-                args=[],
-                keywords=[]
-        )
+        self.var_val_id = None
+        self.var_val = None
 
     def __str__(self) -> str:
         desc = super().__str__()
@@ -33,6 +29,19 @@ class DefineVar(ActionBaseClass):
         #     if self.class_scope == 'global' or 'TBD' in self.class_scope:
         #         return True
         # return False
+        
+        self.var_val_id = self.snippet.get_next_tbd_name()
+        
+        # Assuming that variable names starting with an uppercase letter are class names and variable names starting with a non-uppercase letter is an object
+        if self.var_name[0].isupper():
+            self.var_val = ast.Name(id=self.var_val_id, ctx=ast.Load())
+        else:
+            self.var_val = ast.Call(
+                func=ast.Name(id=self.var_val_id, ctx=ast.Load()),
+                args=[],
+                keywords=[]
+            )
+
         return True
 
     def apply_pattern(self) -> str:

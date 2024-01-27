@@ -46,9 +46,6 @@ class DefineIterableOrSubscriptable(ActionBaseClass):
         # define function __iter__(self)
         self.__define_iter()
 
-        # define function __next__(self)
-        self.__define_next()
-
         # define function __len__(self)
         self.__define_len()
 
@@ -704,86 +701,18 @@ class DefineIterableOrSubscriptable(ActionBaseClass):
         kwargs['func_args'] = [ast.arg(arg='self')]
         kwargs['func_body'] = [
             ast.Return(
-                    value=ast.Name(id='self', ctx=ast.Load()))
+              value=ast.Call(
+                func=ast.Name(id='iter', ctx=ast.Load()),
+                args=[
+                  ast.Attribute(
+                    value=ast.Name(id='self', ctx=ast.Load()),
+                    attr='containers',
+                    ctx=ast.Load())],
+                keywords=[]))
         ]
         DefineFunc(snippet=self.snippet, lineno=self.lineno, **kwargs).apply_pattern()
 
         return None
-
-    def __define_next(self) -> None:
-        kwargs = {}
-        kwargs['func_name'] = '__next__'
-        kwargs['class_scope'] = self.class_name
-        kwargs['func_args'] = [ast.arg(arg='self')]
-        kwargs['func_body'] = [
-            ast.Expr(
-                value=ast.Call(
-                    func=ast.Attribute(
-                        value=ast.Name(id='self', ctx=ast.Load()),
-                        attr='__refresh_keys',
-                        ctx=ast.Load()),
-                    args=[],
-                    keywords=[])),
-            ast.If(
-                test=ast.Compare(
-                    left=ast.Attribute(
-                        value=ast.Name(id='self', ctx=ast.Load()),
-                        attr='iter_current',
-                        ctx=ast.Load()),
-                    ops=[
-                        ast.Lt()],
-                    comparators=[
-                        ast.Call(
-                            func=ast.Name(id='len', ctx=ast.Load()),
-                            args=[
-                                ast.Attribute(
-                                    value=ast.Name(id='self', ctx=ast.Load()),
-                                    attr='keys',
-                                    ctx=ast.Load())],
-                            keywords=[])]),
-                body=[
-                    ast.Assign(
-                        targets=[
-                            ast.Name(id='ret_val', ctx=ast.Store())],
-                        value=ast.Subscript(
-                            value=ast.Attribute(
-                                value=ast.Name(id='self', ctx=ast.Load()),
-                                attr='container',
-                                ctx=ast.Load()),
-                            slice=ast.Subscript(
-                                value=ast.Attribute(
-                                    value=ast.Name(id='self', ctx=ast.Load()),
-                                    attr='keys',
-                                    ctx=ast.Load()),
-                                slice=ast.Attribute(
-                                    value=ast.Name(id='self', ctx=ast.Load()),
-                                    attr='iter_current',
-                                    ctx=ast.Load()),
-                                ctx=ast.Load()),
-                            ctx=ast.Load())),
-                    ast.AugAssign(
-                        target=ast.Attribute(
-                            value=ast.Name(id='self', ctx=ast.Load()),
-                            attr='iter_current',
-                            ctx=ast.Store()),
-                        op=ast.Add(),
-                        value=ast.Constant(value=1)),
-                    ast.Return(
-                        value=ast.Name(id='ret_val', ctx=ast.Load()))],
-                orelse=[]),
-            ast.Assign(
-                targets=[
-                    ast.Attribute(
-                        value=ast.Name(id='self', ctx=ast.Load()),
-                        attr='iter_current',
-                        ctx=ast.Store())],
-                value=ast.Constant(value=0)),
-            ast.Raise(
-                exc=ast.Name(id='StopIteration', ctx=ast.Load()))
-        ]
-        DefineFunc(snippet=self.snippet, lineno=self.lineno, **kwargs).apply_pattern()
-
-        return
 
     def __define_len(self) -> None:
         kwargs = {}

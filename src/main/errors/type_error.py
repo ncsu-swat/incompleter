@@ -17,7 +17,7 @@ class _TypeError(ErrorBaseClass):
     mappings = {
         r'\'(\S+)\' object cannot be interpreted as an integer': [ DefineInteger ],
         r'.*(?:expected|should be|must be|can only concatenate).*(?:str|string).*(?:not|got)\s[\'\"]?([^\'\"]+)[\'\"]?.*': [ DefineString ],
-        r'\'(\S+)\' object is not callable': [ DefineCallable ],
+        # r'\'(\S+)\' object is not callable': [ DefineCallable ],
         r'.*\'(\S+)\'.*not.*(mapping|iterable|subscriptable|support item assignment)': [ DefineIterableOrSubscriptable ],
         r'(?:unsupported operand type\(s\) for )?\'?([^\']+)\'?(?:\:| not supported.*) \'(\S+)\' and \'(\S+)\'': [ DefineOperator ]
     }

@@ -1,6 +1,2 @@
-class TBD0:
-    def __init__(self, *args, **kwargs):
-        pass
-
-for i in range(TBD0()):
-    pass
+foo2()
+foo2().yay1(y, z).foo(x.yay2())

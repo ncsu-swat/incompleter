@@ -9,14 +9,8 @@ class DefineKey(ActionBaseClass):
         super().__init__(snippet, lineno)
 
         self.key = int(kwargs['key']) if kwargs['key'].isnumeric() else kwargs['key']
-        self.val_id = self.snippet.get_next_tbd_name()
-        self.val = ast.Call(
-            func=ast.Name(id=self.val_id, ctx=ast.Load()),
-            args=[],
-            keywords=[])
-
-        DefineClass(snippet=self.snippet, lineno=self.lineno, class_name=self.val_id).apply_pattern()
-        # self.snippet.register_mock_definition(iter_n=self.snippet.get_current_iter(), target=self.var_name, value=self.val_id)
+        self.val_id = None
+        self.val = None
 
     def __str__(self) -> str:
         desc = super().__str__()
@@ -25,6 +19,15 @@ class DefineKey(ActionBaseClass):
         return desc
 
     def check_criteria(self) -> bool:
+        # If True
+        self.val_id = self.snippet.get_next_tbd_name()
+        self.val = ast.Call(
+            func=ast.Name(id=self.val_id, ctx=ast.Load()),
+            args=[],
+            keywords=[])
+            
+        DefineClass(snippet=self.snippet, lineno=self.lineno, class_name=self.val_id).apply_pattern()
+
         return True
 
     def apply_pattern(self) -> str:

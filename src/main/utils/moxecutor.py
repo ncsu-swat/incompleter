@@ -84,6 +84,8 @@ class Moxecutor():
                         # Carry out the action
                         if action is not None:
                             rewritten_snippet = action.apply_pattern()
+                        else:
+                            break
                     else:
                         # If there are warnings but no errors, we consider the snippet fully executed
                         executability_report[_iter] = 'Fixed'

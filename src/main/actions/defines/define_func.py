@@ -27,12 +27,8 @@ class DefineFunc(ActionBaseClass):
         if 'func_body' in kwargs: 
             self.func_body = kwargs['func_body']
         else:
-            self.ret_val_id = self.snippet.get_next_tbd_name()
-            self.func_body.append(ast.Return(value=ast.Call(
-                                                func=ast.Name(id=self.ret_val_id, ctx=ast.Load()),
-                                                args=[],
-                                                keywords=[])
-                                            ))
+            self.ret_val_id = None
+            # return statement is added in check_criteria only if check_criteria is satisfied
 
     def __str__(self) -> str:
         desc = super().__str__()
@@ -111,6 +107,14 @@ class DefineFunc(ActionBaseClass):
         func_visitor = FuncCallVisitor(func_name=self.func_name, func_vararg=self.func_vararg, func_kwarg=self.func_kwarg, func_args=self.func_args, func_keywords=self.func_keywords)
         func_visitor.visit(tree)
 
+        if func_visitor.func_found and len(self.func_body) == 0:
+            self.ret_val_id = self.snippet.get_next_tbd_name()
+            self.func_body.append(ast.Return(value=ast.Call(
+                func=ast.Name(id=self.ret_val_id, ctx=ast.Load()),
+                args=[],
+                keywords=[])
+            ))
+
         return func_visitor.func_found
 
     def apply_pattern(self) -> str:
@@ -180,6 +184,8 @@ class DefineFunc(ActionBaseClass):
                         def __init__(self, **kwargs: dict) -> None:
                             self.class_name = kwargs['class_name']
                             self.func_def = kwargs['func_def']
+
+                            self.func_def.args.args.insert(0, ast.arg(arg='self'))
 
                         def visit_ClassDef(self, node):
                             if node.name == self.class_name:

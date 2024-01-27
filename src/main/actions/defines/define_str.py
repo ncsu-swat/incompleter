@@ -45,18 +45,23 @@ class DefineString(ActionBaseClass):
     def __subclass_str(self) -> None:
         class StringSubclasser(ast.NodeTransformer):
             def __init__(self, **kwargs):
-                self.class_name = kwargs['class_name']
-                self.snippet = kwargs['snippet']
-                self.lineno = kwargs['lineno']
+              self.class_name = kwargs['class_name']
+              self.snippet = kwargs['snippet']
+              self.lineno = kwargs['lineno']
 
             @ActionBaseClass.add_to_history
+            def visit_Body(self, node):
+              for (idx, child) in enumerate(node.body):
+                node.body[idx] = self.visit(child)
+              return node
+
             def visit_ClassDef(self, node):
-                if node.name == self.class_name:
-                    node.bases.append(ast.Name(id='str', ctx=ast.Load()))
-                return node
+              if node.name == self.class_name:
+                  node.bases.append(ast.Name(id='str', ctx=ast.Load()))
+              return node
         
         tree = ast.parse(self.snippet.get_latest())
-        tree = StringSubclasser(class_name=self.class_name, snippet=self.snippet, lineno=self.lineno).visit(tree)
+        tree = StringSubclasser(class_name=self.class_name, snippet=self.snippet, lineno=self.lineno).visit_Body(tree)
 
         return None
 

@@ -40,7 +40,7 @@ class Snippet:
         self.tbd_tracker: Dict[str, str] = {} # e.g. { TBD#: identifier }
 
         # Since this function relies on the tbd_counter, we need to call the __replace_iterables_subscriptables_with_tbd function after defining tbd_counter
-        # self.__replace_iterables_subscriptables_with_tbd()
+        self.__replace_iterables_subscriptables_with_tbd()
 
     def __read_snippet(self) -> str:
         if not Path(self.snippet_path).exists(): raise FileNotFoundError('Snippet path does not exist\nSnippet path: {}\n'.format(self.snippet_path))
