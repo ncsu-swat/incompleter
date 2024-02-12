@@ -2,46 +2,19 @@
 
 # incompleter
 
-Requirements:
-* Python 3.11
+### Execution Instructions
 
-Setup:
+From the root directory of the project run the following commands.
 
-1. Installing Python 3.11 environment (optional, if you already have Python 3.11):
-   
-    ```
-    $> conda create --name myenv -c conda-forge python=3.11
-    $> conda activate myenv
-    ```
-
-2. Install the required packages using the following command:
+1. Build a docker image as follows:
    ```
-   (myenv)$> python3 -m pip install -r requirements.txt
+   user@host> docker build -t incompleter-docker .
    ```
-
-3. Clone the repository using the following command:
+2. Run the docker container and open a shell inside the container as follows:
    ```
-   (myenv)$> git clone git@github.com:ncsu-swat/incompleter.git
+   user@host> docker run -it incompleter-docker /bin/bash
    ```
-
-4. CD into `incompleter/src` repository as follows:
+3. Run incompleter inside the docker container as follows:
    ```
-   (myenv)$> cd incompleter/src
+   root@container:/app/src> python3 -m main.main lexecutor_all -c
    ```
-
-6. Include the project directory in the python path as follows:
-   ```
-   (myenv)$> PYTHONPATH=$PYTHONPATH:$PWD && export PYTHONPATH
-   ```
-
-7. Then, run the `main.main` module as follows:
-    ```
-    python3 -m main.main
-    ```
-
-<!--
-```
-$> bash create_env.sh
-$> source env/bin/activate
-```
--->
