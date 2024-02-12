@@ -1,21 +1,26 @@
 from path_config import DATA_DIR
 
-import sys
 import os
 import re
-import shutil
-import json
+import gc
+import sys
 import ast
+import json
+import shutil
+import psutil
+import signal
 
 from typing import List, Dict, Tuple, Any
 from pathlib import Path
+
+import subprocess
 from subprocess import Popen, PIPE
 
 from multiprocessing import Process, Queue
 from main.utils.session import Session
 
 class Snippet:
-    TIMEOUT = 60 #seconds
+    TIMEOUT = 120 #seconds
     timedout_counter = 0
 
     def __init__(self, snippet_path: str) -> None:
@@ -79,14 +84,14 @@ class Snippet:
                 return node
 
             def visit_List(self, node):
-                containers_tracker['TBD'+str(self.snippet.tbd_counter)] = {
+                tbd_name = self.snippet.get_next_tbd_name()
+                containers_tracker[tbd_name] = {
                     'type': 'List',
-                    'elts': ast.List(elts=[elt for elt in node.elts])
+                    'elts': ast.Dict(keys=[ast.Constant(value=idx) for idx in range(len(node.elts))], values=[elt for elt in node.elts])
                 }
-                self.snippet.tbd_counter += 1
 
                 return ast.Call(
-                    func=ast.Name(id='TBD'+str(self.snippet.tbd_counter), ctx=ast.Load()),
+                    func=ast.Name(id=tbd_name, ctx=ast.Load()),
                     args=[],
                     keywords=[])
 
@@ -101,14 +106,14 @@ class Snippet:
                 return node
 
             def visit_Tuple(self, node):
-                containers_tracker['TBD'+str(self.snippet.tbd_counter)] = {
+                tbd_name = self.snippet.get_next_tbd_name()
+                containers_tracker[tbd_name] = {
                     'type': 'Tuple',
                     'elts': ast.Tuple(elts=[elt for elt in node.elts])
                 }
-                self.snippet.tbd_counter += 1
                 
                 return ast.Call(
-                    func=ast.Name(id='TBD'+str(self.snippet.tbd_counter), ctx=ast.Load()),
+                    func=ast.Name(id=tbd_name, ctx=ast.Load()),
                     args=[],
                     keywords=[])
 
@@ -123,14 +128,14 @@ class Snippet:
                 return node
 
             def visit_Set(self, node):
-                containers_tracker['TBD'+str(self.snippet.tbd_counter)] = {
+                tbd_name = self.snippet.get_next_tbd_name()
+                containers_tracker[tbd_name] = {
                     'type': 'Set',
                     'elts': ast.Set(elts=[elt for elt in node.elts])
                 }
-                self.snippet.tbd_counter += 1
                 
                 return ast.Call(
-                    func=ast.Name(id='TBD'+str(self.snippet.tbd_counter), ctx=ast.Load()),
+                    func=ast.Name(id=tbd_name, ctx=ast.Load()),
                     args=[],
                     keywords=[])
 
@@ -145,14 +150,14 @@ class Snippet:
                 return node
 
             def visit_Dict(self, node):
-                containers_tracker['TBD'+str(self.snippet.tbd_counter)] = {
+                tbd_name = self.snippet.get_next_tbd_name()
+                containers_tracker[tbd_name] = {
                     'type': 'Dict',
                     'elts': ast.Dict(keys=[key for key in node.keys], values=[value for value in node.values])
                 }
-                self.snippet.tbd_counter += 1
                 
                 return ast.Call(
-                    func=ast.Name(id='TBD'+str(self.snippet.tbd_counter), ctx=ast.Load()),
+                    func=ast.Name(id=tbd_name, ctx=ast.Load()),
                     args=[],
                     keywords=[])
 
@@ -164,9 +169,9 @@ class Snippet:
         # tree = ast.parse(latest_code)
         # TupleReplace(snippet=self).visit_Body(tree)
         
-        latest_code = self.get_latest()
-        tree = ast.parse(latest_code)
-        SetReplace(snippet=self).visit_Body(tree)
+        # latest_code = self.get_latest()
+        # tree = ast.parse(latest_code)
+        # SetReplace(snippet=self).visit_Body(tree)
 
         latest_code = self.get_latest()
         tree = ast.parse(latest_code)
@@ -222,6 +227,14 @@ class Snippet:
 
     def get_latest(self) -> str:
         return self.history[-1]
+
+    def get_mocked_original(self) -> str:
+        all_lines = self.get_latest().split('\n')
+        start_idx = 0
+        for (idx, line) in enumerate(all_lines):
+            if '__original_start_marker' in line:
+                start_idx = idx
+        return '\n'.join(all_lines[start_idx:])
 
     def get_next_tbd_name(self) -> str:
         tbd_name = 'TBD'+str(self.tbd_counter)
@@ -289,6 +302,7 @@ class Snippet:
         try:
             proc_q = Queue()
             proc = Process(target=self.compute_latest_coverage, args=(proc_q, ))
+            proc.daemon = False
             proc.start()
             proc.join(timeout=Snippet.TIMEOUT)
             if proc.is_alive():
@@ -300,11 +314,16 @@ class Snippet:
                 err = proc_q.get()
                 stmt_cov = proc_q.get()
                 br_cov = proc_q.get()
-                return out.decode('ISO-8859-1'), err.decode('ISO-8859-1'), stmt_cov, br_cov
+
+                gc.collect()
+                return out, err, stmt_cov, br_cov
         except Exception as e:
             print('Exception: {}'.format(e))
+        finally:
+            gc.collect()
         
-        return None, None
+        gc.collect()
+        return None, None, None, None
 
     def compute_latest_coverage(self, proc_q) -> Tuple[float, float]:
         latest_code = self.get_latest()
@@ -322,10 +341,9 @@ class Snippet:
             self.__create_tmp_file(content=latest_code)
 
             proc = Popen(['coverage', 'run', '--branch', self.tmp_path], stdout=PIPE, stderr=PIPE, cwd=self.tmp_dir)
-            proc.wait()
             out, err = proc.communicate()
+
             proc = Popen(['coverage', 'json'], stdout=PIPE, stderr=PIPE, cwd=self.tmp_dir)
-            proc.wait()
             proc.communicate()
             
             stmt_cov, br_cov = None, None
@@ -345,8 +363,8 @@ class Snippet:
             # cleanup tmp_file at tmp_path after running
             self.__delete_tmp_file()
 
-            proc_q.put(out)
-            proc_q.put(err)
+            proc_q.put(out.decode('ISO-8859-1'))
+            proc_q.put(err.decode('ISO-8859-1'))
             proc_q.put(stmt_cov)
             proc_q.put(br_cov)
             return 0
@@ -358,6 +376,15 @@ class Snippet:
         proc_q.put(None)
         proc_q.put(None)
         return -1
+
+    def __kill_child_processes(self, pid):
+        try:
+            parent = psutil.Process(pid)
+            children = parent.children(recursive=True)
+            for child in children:
+                process.send_signal(signal.SIGTERM)
+        except psutil.NoSuchProcess:
+            return
 
     def add_to_err_history(self, err_line, err_type, err_msg):
         self.err_history.append(err_type + ': ' + err_msg + '~' + err_line)

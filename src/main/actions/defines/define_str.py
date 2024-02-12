@@ -25,6 +25,9 @@ class DefineString(ActionBaseClass):
         # subclass 'str' class
         self.__subclass_str()
 
+        # define function __repr__(self)
+        self.__define_repr()
+
         # define function __str__(self)
         self.__define_str()
 
@@ -68,6 +71,24 @@ class DefineString(ActionBaseClass):
     def __define_str(self) -> None:
         kwargs = {}
         kwargs['func_name'] = '__str__'
+        kwargs['class_scope'] = self.class_name
+        kwargs['func_args'] = [ast.arg(arg='self')]
+        kwargs['func_body'] = [
+            ast.Return(
+              value=ast.Attribute(
+                value=ast.Call(
+                  func=ast.Name(id='type', ctx=ast.Load()),
+                  args=[
+                    ast.Name(id='self', ctx=ast.Load())],
+                  keywords=[]),
+                attr='__name__',
+                ctx=ast.Load()))
+        ]
+        DefineFunc(snippet=self.snippet, lineno=self.lineno, **kwargs).apply_pattern()
+
+    def __define_repr(self) -> None:
+        kwargs = {}
+        kwargs['func_name'] = '__repr__'
         kwargs['class_scope'] = self.class_name
         kwargs['func_args'] = [ast.arg(arg='self')]
         kwargs['func_body'] = [

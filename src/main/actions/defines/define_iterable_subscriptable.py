@@ -2,7 +2,9 @@ from main.utils.snippet import Snippet
 from main.actions.action_base_class import ActionBaseClass
 from main.actions.defines.define_func import DefineFunc
 from typing import Any
+
 import ast
+from ast import *
 
 class DefineIterableOrSubscriptable(ActionBaseClass):
     def __init__(self, snippet: Snippet=None, lineno: int=0, **kwargs: dict) -> None:
@@ -51,12 +53,79 @@ class DefineIterableOrSubscriptable(ActionBaseClass):
 
         return
 
+    def __add_base_import(self) -> None:
+        class ImportAdder(ast.NodeTransformer):
+            def __init__(self, **kwargs):
+                self.snippet = kwargs['snippet']
+                self.lineno = kwargs['lineno']
+
+            @ActionBaseClass.add_to_history
+            def visit_Body(self, node):
+                node.body.insert(0, ast.ImportFrom(
+                    module='main.templates.iterable_or_subscriptable',
+                    names=[
+                        ast.alias(name='IterableOrSubscriptable')],
+                    level=0))
+                node.body.insert(0, ast.Expr(
+                    value=ast.Call(
+                        func=ast.Attribute(
+                        value=ast.Attribute(
+                            value=ast.Name(id='sys', ctx=ast.Load()),
+                            attr='path',
+                            ctx=ast.Load()),
+                        attr='append',
+                        ctx=ast.Load()),
+                        args=[
+                            ast.Constant(value='../../../src')],
+                        keywords=[])))
+                node.body.insert(0, ast.Import(
+                    names=[
+                        ast.alias(name='sys')]))
+                return node
+
+        tree = ast.parse(self.snippet.get_latest())
+        ImportAdder(snippet=self.snippet, lineno=self.lineno).visit_Body(tree)
+
+    def __subclass_iterable_or_subscriptable(self) -> None:
+        class IterableOrSubscriptableSubclasser(ast.NodeTransformer):
+            def __init__(self, **kwargs):
+              self.class_name = kwargs['class_name']
+              self.snippet = kwargs['snippet']
+              self.lineno = kwargs['lineno']
+
+            @ActionBaseClass.add_to_history
+            def visit_Body(self, node):
+              for (idx, child) in enumerate(node.body):
+                node.body[idx] = self.visit(child)
+              return node
+
+            def visit_ClassDef(self, node):
+              if node.name == self.class_name:
+                  node.bases.append(ast.Name(id='IterableOrSubscriptable', ctx=ast.Load()))
+              return node
+        
+        tree = ast.parse(self.snippet.get_latest())
+        tree = IterableOrSubscriptableSubclasser(class_name=self.class_name, snippet=self.snippet, lineno=self.lineno).visit_Body(tree)
+
+        return None
+
     def __redefine_init(self) -> None:
         kwargs = {}
         kwargs['func_name'] = '__init__'
         kwargs['class_scope'] = self.class_name
         kwargs['func_args'] = [ast.arg(arg='self')]
         kwargs['func_body'] = [
+            # ast.Expr(
+            #     value=ast.Call(
+            #         func=ast.Attribute(
+            #         value=ast.Call(
+            #             func=ast.Name(id='super', ctx=ast.Load()),
+            #             args=[],
+            #             keywords=[]),
+            #         attr='__init__',
+            #         ctx=ast.Load()),
+            #         args=[],
+            #         keywords=[]))
             ast.Assign(
                 targets=[
                     ast.Attribute(
@@ -122,15 +191,35 @@ class DefineIterableOrSubscriptable(ActionBaseClass):
                             args=[],
                             keywords=[])],
                     keywords=[])),
-            ast.Expr(
-                value=ast.Call(
-                    func=ast.Name(id='sorted', ctx=ast.Load()),
-                    args=[
+            ast.For(
+                target=ast.Name(id='key', ctx=ast.Store()),
+                iter=ast.Attribute(
+                    value=ast.Name(id='self', ctx=ast.Load()),
+                    attr='keys',
+                    ctx=ast.Load()),
+                body=[
+                    ast.If(
+                    test=ast.UnaryOp(
+                        op=ast.Not(),
+                        operand=ast.Call(
+                        func=ast.Name(id='isinstance', ctx=ast.Load()),
+                        args=[
+                            ast.Name(id='key', ctx=ast.Load()),
+                            ast.Name(id='int', ctx=ast.Load())],
+                        keywords=[])),
+                    body=[
+                        ast.Return()],
+                    orelse=[])],
+                orelse=[]),
+                ast.Expr(
+                    value=ast.Call(
+                        func=ast.Name(id='sorted', ctx=ast.Load()),
+                        args=[
                         ast.Attribute(
                             value=ast.Name(id='self', ctx=ast.Load()),
                             attr='keys',
                             ctx=ast.Load())],
-                    keywords=[]))
+                        keywords=[]))
         ]
         DefineFunc(snippet=self.snippet, lineno=self.lineno, **kwargs).apply_pattern()
 
@@ -296,6 +385,8 @@ class DefineIterableOrSubscriptable(ActionBaseClass):
                                     attr='step',
                                     ctx=ast.Load()),
                                 ast.Constant(value=1)])),
+                    
+                    
                     ast.If(
                         test=ast.Compare(
                             left=ast.Name(id='start', ctx=ast.Load()),
@@ -304,36 +395,291 @@ class DefineIterableOrSubscriptable(ActionBaseClass):
                             comparators=[
                                 ast.Constant(value=0)]),
                         body=[
-                            ast.Assign(
+                            ast.If(
+                            test=ast.Compare(
+                                left=ast.BinOp(
+                                left=ast.Name(id='start', ctx=ast.Load()),
+                                op=ast.Mult(),
+                                right=ast.UnaryOp(
+                                    op=ast.USub(),
+                                    operand=ast.Constant(value=1))),
+                                ops=[
+                                    ast.Gt()],
+                                comparators=[
+                                    ast.Call(
+                                        func=ast.Name(id='len', ctx=ast.Load()),
+                                        args=[
+                                            ast.Attribute(
+                                                value=ast.Name(id='self', ctx=ast.Load()),
+                                                attr='keys',
+                                                ctx=ast.Load())],
+                                            keywords=[])]),
+                            body=[
+                                ast.Assign(
                                 targets=[
-                                    ast.Name(id='start', ctx=ast.Store())],
-                                value=ast.Subscript(
-                                    value=ast.Attribute(
-                                    value=ast.Name(id='self', ctx=ast.Load()),
-                                    attr='keys',
-                                    ctx=ast.Load()),
-                                    slice=ast.Name(id='start', ctx=ast.Load()),
-                                    ctx=ast.Load()))],
+                                    ast.Name(id='diff', ctx=ast.Store())],
+                                value=ast.BinOp(
+                                    left=ast.BinOp(
+                                    left=ast.Name(id='start', ctx=ast.Load()),
+                                    op=ast.Mult(),
+                                    right=ast.UnaryOp(
+                                        op=ast.USub(),
+                                        operand=ast.Constant(value=1))),
+                                    op=ast.Sub(),
+                                    right=ast.Call(
+                                    func=ast.Name(id='len', ctx=ast.Load()),
+                                    args=[
+                                        ast.Attribute(
+                                        value=ast.Name(id='self', ctx=ast.Load()),
+                                        attr='keys',
+                                        ctx=ast.Load())],
+                                    keywords=[]))),
+                                ast.If(
+                                test=ast.Compare(
+                                    left=ast.Call(
+                                    func=ast.Name(id='len', ctx=ast.Load()),
+                                    args=[
+                                        ast.Attribute(
+                                        value=ast.Name(id='self', ctx=ast.Load()),
+                                        attr='keys',
+                                        ctx=ast.Load())],
+                                    keywords=[]),
+                                    ops=[
+                                        ast.Gt()],
+                                    comparators=[
+                                    ast.Constant(value=0)]),
+                                body=[
+                                    ast.For(
+                                    target=ast.Name(id='i', ctx=ast.Store()),
+                                    iter=ast.Call(
+                                        func=ast.Name(id='range', ctx=ast.Load()),
+                                        args=[
+                                        ast.Call(
+                                            func=ast.Name(id='max', ctx=ast.Load()),
+                                            args=[
+                                            ast.Attribute(
+                                                value=ast.Name(id='self', ctx=ast.Load()),
+                                                attr='keys',
+                                                ctx=ast.Load())],
+                                            keywords=[]),
+                                        ast.BinOp(
+                                            left=ast.BinOp(
+                                            left=ast.Call(
+                                                func=ast.Name(id='max', ctx=ast.Load()),
+                                                args=[
+                                                ast.Attribute(
+                                                    value=ast.Name(id='self', ctx=ast.Load()),
+                                                    attr='keys',
+                                                    ctx=ast.Load())],
+                                                keywords=[]),
+                                            op=ast.Add(),
+                                            right=ast.Name(id='diff', ctx=ast.Load())),
+                                            op=ast.Add(),
+                                            right=ast.Constant(value=1))],
+                                        keywords=[]),
+                                    body=[
+                                        ast.Assign(
+                                        targets=[
+                                            ast.Subscript(
+                                            value=ast.Attribute(
+                                                value=ast.Name(id='self', ctx=ast.Load()),
+                                                attr='container',
+                                                ctx=ast.Load()),
+                                            slice=ast.Name(id='i', ctx=ast.Load()),
+                                            ctx=ast.Store())],
+                                        value=ast.Constant(value=0))],
+                                    orelse=[])],
+                                orelse=[
+                                    ast.For(
+                                    target=ast.Name(id='i', ctx=ast.Store()),
+                                    iter=ast.Call(
+                                        func=ast.Name(id='range', ctx=ast.Load()),
+                                        args=[
+                                        ast.Constant(value=0),
+                                        ast.BinOp(
+                                            left=ast.Name(id='diff', ctx=ast.Load()),
+                                            op=ast.Add(),
+                                            right=ast.Constant(value=1))],
+                                        keywords=[]),
+                                    body=[
+                                        ast.Assign(
+                                        targets=[
+                                            ast.Subscript(
+                                            value=ast.Attribute(
+                                                value=ast.Name(id='self', ctx=ast.Load()),
+                                                attr='container',ctx=ast.Load()),
+                                            slice=ast.Name(id='i', ctx=ast.Load()),
+                                            ctx=ast.Store())],
+                                        value=ast.Constant(value=0))],
+                                    orelse=[])])],
+                            orelse=[]),
+                            ast.Expr(
+                            value=ast.Call(
+                                func=ast.Attribute(
+                                value=ast.Name(id='self', ctx=ast.Load()),
+                                attr='__refresh_keys',
+                                ctx=ast.Load()),
+                                args=[],
+                                keywords=[])),
+                            ast.Assign(
+                            targets=[
+                                ast.Name(id='start', ctx=ast.Store())],
+                            value=ast.Subscript(
+                                value=ast.Attribute(
+                                value=ast.Name(id='self', ctx=ast.Load()),
+                                attr='keys',
+                                ctx=ast.Load()),
+                                slice=ast.Name(id='start', ctx=ast.Load()),
+                                ctx=ast.Load()))],
                         orelse=[]),
-                    ast.If(
+                        ast.If(
                         test=ast.Compare(
                             left=ast.Name(id='stop', ctx=ast.Load()),
                             ops=[
-                                ast.Lt()],
+                            ast.Lt()],
                             comparators=[
-                                ast.Constant(value=0)]),
+                            ast.Constant(value=0)]),
                         body=[
-                            ast.Assign(
+                            ast.If(
+                            test=ast.Compare(
+                                left=ast.BinOp(
+                                left=ast.Name(id='stop', ctx=ast.Load()),
+                                op=ast.Mult(),
+                                right=ast.UnaryOp(
+                                    op=ast.USub(),
+                                    operand=ast.Constant(value=1))),
+                                ops=[
+                                ast.Gt()],
+                                comparators=[
+                                ast.Call(
+                                    func=ast.Name(id='len', ctx=ast.Load()),
+                                    args=[
+                                    ast.Attribute(
+                                        value=ast.Name(id='self', ctx=ast.Load()),
+                                        attr='keys',
+                                        ctx=ast.Load())],
+                                    keywords=[])]),
+                            body=[
+                                ast.Assign(
                                 targets=[
-                                    ast.Name(id='stop', ctx=ast.Store())],
-                                value=ast.Subscript(
-                                    value=ast.Attribute(
-                                    value=ast.Name(id='self', ctx=ast.Load()),
-                                    attr='keys',
-                                    ctx=ast.Load()),
-                                    slice=ast.Name(id='stop', ctx=ast.Load()),
-                                    ctx=ast.Load()))],
+                                    ast.Name(id='diff', ctx=ast.Store())],
+                                value=ast.BinOp(
+                                    left=ast.BinOp(
+                                    left=ast.Name(id='stop', ctx=ast.Load()),
+                                    op=ast.Mult(),
+                                    right=ast.UnaryOp(
+                                        op=ast.USub(),
+                                        operand=ast.Constant(value=1))),
+                                    op=ast.Sub(),
+                                    right=ast.Call(
+                                    func=ast.Name(id='len', ctx=ast.Load()),
+                                    args=[
+                                        ast.Attribute(
+                                        value=ast.Name(id='self', ctx=ast.Load()),
+                                        attr='keys',
+                                        ctx=ast.Load())],
+                                    keywords=[]))),
+                                ast.If(
+                                test=ast.Compare(
+                                    left=ast.Call(
+                                    func=ast.Name(id='len', ctx=ast.Load()),
+                                    args=[
+                                        ast.Attribute(
+                                        value=ast.Name(id='self', ctx=ast.Load()),
+                                        attr='keys',
+                                        ctx=ast.Load())],
+                                    keywords=[]),
+                                    ops=[
+                                    ast.Gt()],
+                                    comparators=[
+                                    ast.Constant(value=0)]),
+                                body=[
+                                    ast.For(
+                                    target=ast.Name(id='i', ctx=ast.Store()),
+                                    iter=ast.Call(
+                                        func=ast.Name(id='range', ctx=ast.Load()),
+                                        args=[
+                                        ast.Call(
+                                            func=ast.Name(id='max', ctx=ast.Load()),
+                                            args=[
+                                            ast.Attribute(
+                                                value=ast.Name(id='self', ctx=ast.Load()),
+                                                attr='keys',
+                                                ctx=ast.Load())],
+                                            keywords=[]),
+                                        ast.BinOp(
+                                            left=ast.BinOp(
+                                            left=ast.Call(
+                                                func=ast.Name(id='max', ctx=ast.Load()),
+                                                args=[
+                                                ast.Attribute(
+                                                    value=ast.Name(id='self', ctx=ast.Load()),
+                                                    attr='keys',
+                                                    ctx=ast.Load())],
+                                                keywords=[]),
+                                            op=ast.Add(),
+                                            right=ast.Name(id='diff', ctx=ast.Load())),
+                                            op=ast.Add(),
+                                            right=ast.Constant(value=1))],
+                                        keywords=[]),
+                                    body=[
+                                        ast.Assign(
+                                        targets=[
+                                    ast.Subscript(
+                                            value=ast.Attribute(
+                                                value=ast.Name(id='self', ctx=ast.Load()),
+                                                attr='container',
+                                                ctx=ast.Load()),
+                                            slice=ast.Name(id='i', ctx=ast.Load()),
+                                            ctx=ast.Store())],
+                                        value=ast.Constant(value=0))],
+                                    orelse=[])],
+                                orelse=[
+                                    ast.For(
+                                    target=ast.Name(id='i', ctx=ast.Store()),
+                                    iter=ast.Call(
+                                        func=ast.Name(id='range', ctx=ast.Load()),
+                                        args=[
+                                        ast.Constant(value=0),
+                                        ast.BinOp(
+                                            left=ast.Name(id='diff', ctx=ast.Load()),
+                                            op=ast.Add(),
+                                            right=ast.Constant(value=1))],
+                                        keywords=[]),
+                                    body=[
+                                        ast.Assign(
+                                        targets=[
+                                            ast.Subscript(
+                                            value=ast.Attribute(
+                                                value=ast.Name(id='self', ctx=ast.Load()),
+                                                attr='container',
+                                                ctx=ast.Load()),
+                                            slice=ast.Name(id='i', ctx=ast.Load()),
+                                            ctx=ast.Store())],
+                                        value=ast.Constant(value=0))],
+                                    orelse=[])])],
+                            orelse=[]),
+                            ast.Expr(
+                            value=ast.Call(
+                                func=ast.Attribute(
+                                value=ast.Name(id='self', ctx=ast.Load()),
+                                attr='__refresh_keys',
+                                ctx=ast.Load()),
+                                args=[],
+                                keywords=[])),
+                            ast.Assign(
+                            targets=[
+                                ast.Name(id='stop', ctx=ast.Store())],
+                            value=ast.Subscript(
+                                value=ast.Attribute(
+                                value=ast.Name(id='self', ctx=ast.Load()),
+                                attr='keys',
+                                ctx=ast.Load()),
+                                slice=ast.Name(id='stop', ctx=ast.Load()),
+                                ctx=ast.Load()))],
                         orelse=[]),
+                    
+                    
                     ast.For(
                         target=ast.Name(id='i', ctx=ast.Store()),
                         iter=ast.Call(
@@ -706,7 +1052,7 @@ class DefineIterableOrSubscriptable(ActionBaseClass):
                 args=[
                   ast.Attribute(
                     value=ast.Name(id='self', ctx=ast.Load()),
-                    attr='containers',
+                    attr='container',
                     ctx=ast.Load())],
                 keywords=[]))
         ]

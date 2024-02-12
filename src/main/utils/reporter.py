@@ -66,7 +66,9 @@ class Reporter():
         headers = ['iter#', 'exec(cnt)', 'stmt(%)', 'br(%)']
 
         cumm_fixed = 0
-        for _iter in range(0, max_rows):
+        cumm_stmt = -1
+        cumm_br = -1
+        for _iter in range(0, max_rows+1):
             # Report complete executablity
             cumm_fixed += self.fixed_report[_iter] if _iter in self.fixed_report.keys() else 0
             cumm_stmt = self.avg_stmt_cov[_iter] if _iter in self.avg_stmt_cov.keys() else cumm_stmt

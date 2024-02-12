@@ -24,6 +24,16 @@ class DefineVar(ActionBaseClass):
 
         return desc
 
+    def __is_class(self, var_name) -> bool:
+        all_upper = True
+        for c in var_name.split():
+            if c.islower():
+                all_upper = False
+                break
+        if not all_upper and var_name[0].isupper():
+            return True
+        return False
+
     def check_criteria(self) -> bool:
         # if len(self.class_scope) > 0:
         #     if self.class_scope == 'global' or 'TBD' in self.class_scope:
@@ -33,7 +43,7 @@ class DefineVar(ActionBaseClass):
         self.var_val_id = self.snippet.get_next_tbd_name()
         
         # Assuming that variable names starting with an uppercase letter are class names and variable names starting with a non-uppercase letter is an object
-        if self.var_name[0].isupper():
+        if self.__is_class(self.var_name):
             self.var_val = ast.Name(id=self.var_val_id, ctx=ast.Load())
         else:
             self.var_val = ast.Call(

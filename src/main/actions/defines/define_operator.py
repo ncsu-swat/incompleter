@@ -16,7 +16,7 @@ class DefineOperator(ActionBaseClass):
 
         self.operator_to_func_name = {
             '+': '__add__', '-': '__sub__', '*': '__mul__', '/': '__truediv__', '//': '__floordiv__',
-            '%': '__mod__', '**': '__pow__', '>>': '__rshift__', '<<': '__lshift__', '&': '__and__',
+            '%': '__mod__', '**': '__pow__', '>>': '__rshift__', '<<': '__lshift__', '~': '__invert__', '&': '__and__',
             '|': '__or__', '^': '__xor__', '<': '__lt__', '>': '__gt__', '<=': '__le__', '>=': '__ge__',
             '==': '__eq__', '!=': '__ne__', '-=': '__isub__', '+=': '__iadd__', '*=': '__imul__', '/=': '__idiv__',
             '//=': '__ifloordiv__', '%=': '__imod__', '**=': '__ipow__', '>>=': '__irshift__', '<<=': '__ilshift__',
@@ -35,7 +35,7 @@ class DefineOperator(ActionBaseClass):
         return False
 
     def apply_pattern(self) -> str:
-        if 'TBD' in self.class1:
+        if self.class1 is not None and 'TBD' in self.class1:
             func_name = self.operator_to_func_name[self.operator]
             class_scope = self.class1
             func_args = [ast.arg(arg='self'), ast.arg(arg='other')]
@@ -47,7 +47,7 @@ class DefineOperator(ActionBaseClass):
                 DefineString(snippet=self.snippet, lineno=self.lineno, class_name=self.class1).apply_pattern()
             
             DefineFunc(snippet=self.snippet, lineno=self.lineno, func_name=func_name, class_scope=class_scope, func_args=func_args).apply_pattern()
-        if 'TBD' in self.class2:
+        if self.class2 is not None and 'TBD' in self.class2:
             func_name = self.operator_to_func_name[self.operator]
             class_scope = self.class2
             func_args = [ast.arg(arg='self'), ast.arg(arg='other')]
