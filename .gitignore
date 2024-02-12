@@ -1,3 +1,6 @@
+# lexecutor iids.json
+src/data/new_all/logs/lexecutor/chunk*/iids.json
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
