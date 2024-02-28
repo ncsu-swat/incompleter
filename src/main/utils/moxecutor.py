@@ -3,6 +3,7 @@ from tqdm import tqdm
 
 from main.utils.snippet import Snippet
 from main.errors.error_coordinator import ErrorCoordinator
+from main.utils.unmocker import unmock_code_snippet
 
 class Moxecutor():
     def __init__(self, snippet_path: str, is_cov: bool) -> None:
@@ -35,6 +36,7 @@ class Moxecutor():
                         # If we are computing coverage then check output and error from the coverage wrapper to avoid having to run twice
                         # Compute coverage at the start of each iteration if is_cov flag is True
                         out, err, stmt_cov, br_cov = self.snippet.compute_timed_latest_coverage()
+                        # print('\n\nOutput:\n{}'.format(out))
 
                         if stmt_cov is not None:
                             for iter_idx in range(_iter, self.MAX_ITER):
@@ -104,6 +106,10 @@ class Moxecutor():
                                 for action_name, impact_dict in action_progress_report.items():
                                     action_progress_report[action_name]['f-exec'] += 1
 
+                            unmocked_snippet = unmock_code_snippet(self.snippet)
+                            print('\nLATEST SNIPPET:\n{}\n'.format(self.snippet.get_latest()))
+                            print('UNMOCKED SNIPPET:\n{}'.format(unmocked_snippet))
+
                             self.snippet.cleanup()
                             return executability_report, action_iteration_report, action_progress_report, len(self.snippet.action_sequence), coverage_report, unresolved_report
                     else:
@@ -119,6 +125,10 @@ class Moxecutor():
                             for action_name, impact_dict in action_progress_report.items():
                                 action_progress_report[action_name]['f-exec'] += 1 
                         
+                        unmocked_snippet = unmock_code_snippet(self.snippet)
+                        print('\nLATEST SNIPPET:\n{}\n'.format(self.snippet.get_latest()))
+                        print('UNMOCKED SNIPPET:\n{}'.format(unmocked_snippet))
+                        
                         self.snippet.cleanup()
                         return executability_report, action_iteration_report, action_progress_report, len(self.snippet.action_sequence), coverage_report, unresolved_report
                 
@@ -127,13 +137,16 @@ class Moxecutor():
                 except SyntaxError as e:
                     pass
                 finally:
-                    print('\nLATEST SNIPPET:\n{}\n'.format(self.snippet.get_latest()))
+                    # print('\nLATEST SNIPPET:\n{}\n'.format(self.snippet.get_latest()))
                     _iter += 1
+                    # unmocked_snippet = unmock_code_snippet(self.snippet.get_latest())
+                    # print('UNMOCKED SNIPPET:\n{}'.format(unmocked_snippet))
 
             if err_coord is not None:
                 unresolved_report[err_coord.err_type] = err_coord.err_msg + ' (' + self.snippet_name + ')'
-
+            
             self.snippet.cleanup()
+
             return executability_report, action_iteration_report, action_progress_report, len(self.snippet.action_sequence), coverage_report, unresolved_report
         
         return None, None, None, None, None, None

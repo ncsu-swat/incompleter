@@ -57,7 +57,7 @@ class DefineCallable(ActionBaseClass):
         kwargs['func_name'] = self.__find_func_name()
         kwargs['func_level'] = 'instance'
 
-        arg_finder = DefineFunc(snippet=self.snippet, lineno=self.lineno, **kwargs)
+        arg_finder = DefineFunc(snippet=self.snippet, lineno=self.lineno, override_criteria = True, **kwargs)
         if kwargs['func_name'] is not None and arg_finder.check_criteria():
             # Using check_criteria to check if we can find the signature of the function
             arg_finder.func_name = '__call__'

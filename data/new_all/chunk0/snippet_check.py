@@ -1,2 +1,10 @@
-foo2()
-foo2().yay1(y, z).foo(x.yay2())
+a[1:3] 
+a.append('blah')
+print(a)
+
+d % 4
+
+result = h + " some additional string"
+
+
+print(b['abc'])

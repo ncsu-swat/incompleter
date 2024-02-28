@@ -768,6 +768,15 @@ class DefineIterableOrSubscriptable(ActionBaseClass):
                                             slice=ast.Name(id='key', ctx=ast.Load()),
                                             ctx=ast.Load()))],
                                 orelse=[])])]),
+            # Expr(
+            #     value=Call(
+            #         func=Name(id='print', ctx=Load()),
+            #         args=[
+            #         Attribute(
+            #             value=Name(id='self', ctx=Load()),
+            #             attr='container',
+            #             ctx=Load())],
+            #         keywords=[])),
             ast.Return(
                 value=ast.Name(id='ret_val', ctx=ast.Load()))
         ]
