@@ -20,7 +20,15 @@ class CreateFile(ActionBaseClass):
         return desc
 
     def check_criteria(self) -> bool:
-        return True
+        progress = False
+        if self.snippet.fixpoint_tolerance == 1:
+            progress = self.snippet.has_progress() # this should always be True (first attempt at applying InstallModule pattern)
+            self.snippet.fixpoint_tolerance = 2    # setting 2 so that for a ModuleNotFoundError, we get a second chance to try RemoveImport. In the second try, InstallModule pattern's check_criteria will return False by comparing if we still have the exactly same ModuleNotFoundError message.
+        else:
+            self.snippet.fixpoint_tolerance = 1    # setting 1 when we have already tried InstallModule pattern and we get ModuleNotFoundError for the second time. This time, we set the tolerance to 1 and let RemoveImport take over.
+            progress = self.snippet.has_progress() # this should always be False (second attempt should not apply InstallModule again since it did not work the first time. RemoveImport pattern should be applied.)
+
+        return progress
 
     def apply_pattern(self) -> str:
         try:

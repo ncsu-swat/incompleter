@@ -10,6 +10,7 @@ from main.errors.module_not_found_error import _ModuleNotFoundError
 from main.errors.attribute_error import _AttributeError
 from main.errors.type_error import _TypeError
 from main.errors.key_error import _KeyError
+from main.errors.value_error import _ValueError
 
 class ErrorCoordinator(ErrorBaseClass):
     mappings = {
@@ -18,7 +19,8 @@ class ErrorCoordinator(ErrorBaseClass):
         'ModuleNotFoundError': _ModuleNotFoundError,
         'AttributeError': _AttributeError,
         'TypeError': _TypeError,
-        'KeyError': _KeyError
+        'KeyError': _KeyError,
+        'ValueError': _ValueError
     }
 
     def __init__(self, path: str, snippet: Snippet, stack_trace: str) -> None:
