@@ -58,12 +58,15 @@ class DefineCallable(ActionBaseClass):
         kwargs['func_level'] = 'instance'
 
         arg_finder = DefineFunc(snippet=self.snippet, lineno=self.lineno, override_criteria = True, **kwargs)
+
         if kwargs['func_name'] is not None and arg_finder.check_criteria():
             # Using check_criteria to check if we can find the signature of the function
             arg_finder.func_name = '__call__'
             # arg_finder.func_args.insert(0, ast.arg(arg='self'))
             arg_finder.apply_pattern()
         else:
+            arg_finder.check_criteria() # arg_finder.check_criteria will return False here because the function name was not found. But, we call check_criteria anyway to ensure that the function being defined has a body with a return TBD#() statement
+            
             # At this point, we could not statically analyze the function's signature requirements statically from the function call (e.g. scenario 1. x = foo() --> foo() returns TBD# object --> x(arg0, arg1 ...) --> TBD# object was supposed to be a callable --> We need data flow analysis to realize that TBD# callable object is associate with the identifier x; scenario 2. function might be a decorating function which has not explicit calling signature --> @x\ndef foo(): ...). So, we go with a generic function signature that takes an arbitrary number of positional args (i.e. *args) and arbitrary number of keyword args (i.e. **kwargs). This is a fallback option which limits our ability to infer a more accurate function declaration syntax (which could have been later used to map to existing popular package functions).
             arg_finder.func_name = '__call__'
             # arg_finder.func_args.insert(0, ast.arg(arg='self'))

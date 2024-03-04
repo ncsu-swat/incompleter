@@ -137,7 +137,7 @@ class Moxecutor():
                 except SyntaxError as e:
                     pass
                 finally:
-                    # print('\nLATEST SNIPPET:\n{}\n'.format(self.snippet.get_latest()))
+                    print('\nLATEST SNIPPET:\n{}\n'.format(self.snippet.get_latest()))
                     _iter += 1
                     # unmocked_snippet = unmock_code_snippet(self.snippet.get_latest())
                     # print('UNMOCKED SNIPPET:\n{}'.format(unmocked_snippet))

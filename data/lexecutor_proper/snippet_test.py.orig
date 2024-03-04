@@ -1,0 +1,12 @@
+from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
+
+# Replace with any valid datetime object
+start_date = datetime.now()   # e.g., today's date
+
+# Replace with desired delta in months
+delta_period = 4              # e.g., adding 4 months
+
+end_date = start_date + relativedelta(months=delta_period)
+print("Start Date:", start_date)
+print("End Date:", end_date)
