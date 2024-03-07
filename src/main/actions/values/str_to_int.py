@@ -6,7 +6,7 @@ import ast
 
 from pathlib import Path
 
-class StrToFloat(ActionBaseClass):
+class StrToInt(ActionBaseClass):
     def __init__(self, snippet: Snippet=None, lineno: int=0, **kwargs: dict) -> None:
         super().__init__(snippet, lineno)
 
@@ -66,7 +66,7 @@ class StrToFloat(ActionBaseClass):
                         attr='__new__',
                         ctx=ast.Load(),
                     ),
-                    args=[ast.Name(id='cls', ctx=ast.Load()), ast.Constant(value="0.0")],
+                    args=[ast.Name(id='cls', ctx=ast.Load()), ast.Constant(value="0")],
                     keywords=[],
                 )
                 
