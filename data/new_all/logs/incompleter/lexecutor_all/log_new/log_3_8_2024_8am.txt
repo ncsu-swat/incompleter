@@ -1,0 +1,961 @@
+count_row = df.shape[0]
+count_col = df.shape[1]
+(r, c) = df.shape
+
+
+Snippet#: 92 -- Iter 1 -- AttributeError: 'TBD0' object has no attribute 'shape'
+
+Traceback (most recent call last):
+  File "/mnt/c/Users/aramis/git/incompleter/data/tmp/8859c41b-aaf5-458f-9e93-174402956f2a/snippet_92.py.orig", line 7, in <module>
+    count_row = df.shape[0]
+AttributeError: 'TBD0' object has no attribute 'shape'
+
+Moxecution (mock+execution) Progress:  98%|█████████████████████████████████████████████████████████████████████▊ | 238/242 [49:09<00:54, 13.52s/it]
+
+ACTION TO APPLY: DefineVar
+
+LATEST SNIPPET:
+class TBD1:
+
+    def __init__(self, *args, **kwargs):
+        pass
+
+class TBD0:
+
+    def __init__(self, *args, **kwargs):
+        self.shape = TBD1()
+        pass
+df = TBD0()
+__original_start_marker = None # pragma: no cover
+count_row = df.shape[0]
+count_col = df.shape[1]
+(r, c) = df.shape
+
+
+Snippet#: 92 -- Iter 2 -- TypeError: 'TBD1' object is not subscriptable
+
+Traceback (most recent call last):
+  File "/mnt/c/Users/aramis/git/incompleter/data/tmp/8859c41b-aaf5-458f-9e93-174402956f2a/snippet_92.py.orig", line 13, in <module>
+    count_row = df.shape[0]
+TypeError: 'TBD1' object is not subscriptable
+
+Moxecution (mock+execution) Progress:  98%|█████████████████████████████████████████████████████████████████████▊ | 238/242 [49:11<00:54, 13.52s/it]
+
+ACTION TO APPLY: DefineIterableOrSubscriptable
+
+LATEST SNIPPET:
+class TBD1:
+
+    def __init__(self):
+        self.container = {}
+        self.keys = list(self.container.keys())
+        self.iter_current = 0
+
+    def __refresh_keys(self):
+        self.keys = list(self.container.keys())
+        for key in self.keys:
+            if not isinstance(key, int):
+                return
+        sorted(self.keys)
+
+    def __str__(self):
+        self.__refresh_keys()
+        ret_str = ''
+        ret_str += '[ '
+        for (idx, (key, val)) in enumerate(self.container.items()):
+            ret_str += str(val)
+            if idx < len(self.keys) - 1:
+                ret_str += ', '
+        ret_str += ' ]'
+        return ret_str
+
+    def __getitem__(self, key):
+        self.__refresh_keys()
+        ret_val = None
+        if isinstance(key, slice):
+            list_to_return = []
+            start = key.start or 0
+            stop = key.stop or len(self.container)
+            step = key.step or 1
+            if start < 0:
+                if start * -1 > len(self.keys):
+                    diff = start * -1 - len(self.keys)
+                    if len(self.keys) > 0:
+                        for i in range(max(self.keys), max(self.keys) + diff + 1):
+                            self.container[i] = 0
+                    else:
+                        for i in range(0, diff + 1):
+                            self.container[i] = 0
+                self.__refresh_keys()
+                start = self.keys[start]
+            if stop < 0:
+                if stop * -1 > len(self.keys):
+                    diff = stop * -1 - len(self.keys)
+                    if len(self.keys) > 0:
+                        for i in range(max(self.keys), max(self.keys) + diff + 1):
+                            self.container[i] = 0
+                    else:
+                        for i in range(0, diff + 1):
+                            self.container[i] = 0
+                self.__refresh_keys()
+                stop = self.keys[stop]
+            for i in range(start, stop, step):
+                list_to_return.append(self.container[i])
+            ret_val = list_to_return
+        elif isinstance(key, int):
+            if key < 0:
+                key = self.keys[key]
+            ret_val = self.container[key]
+        elif isinstance(key, str):
+            ret_val = self.container[key]
+        return ret_val
+
+    def __setitem__(self, key, val):
+        self.__refresh_keys()
+        if isinstance(key, slice):
+            start = key.start or 0
+            stop = key.stop or len(self.container)
+            step = key.step or 1
+            if start < 0:
+                start = self.keys[start]
+            if stop < 0:
+                stop = self.keys[stop]
+            for i in range(0, stop, step):
+                if i not in self.keys:
+                    self.container[i] = 0
+            for i in range(start, stop, step):
+                self.container[i] = val
+            return True
+        elif isinstance(key, int):
+            if key < 0:
+                key = self.keys[key]
+            for i in range(0, key):
+                if i not in self.keys:
+                    self.container[i] = 0
+            self.container[key] = val
+            return True
+        elif isinstance(key, str):
+            self.container[key] = val
+            return True
+        self.__refresh_keys()
+        return False
+
+    def __iter__(self):
+        return iter(self.container)
+
+    def __len__(self):
+        return len(self.keys)
+
+class TBD0:
+
+    def __init__(self, *args, **kwargs):
+        self.shape = TBD1()
+        pass
+df = TBD0()
+__original_start_marker = None # pragma: no cover
+count_row = df.shape[0]
+count_col = df.shape[1]
+(r, c) = df.shape
+
+
+Snippet#: 92 -- Iter 3 -- KeyError: 0
+
+Traceback (most recent call last):
+  File "/mnt/c/Users/aramis/git/incompleter/data/tmp/8859c41b-aaf5-458f-9e93-174402956f2a/snippet_92.py.orig", line 110, in <module>
+    count_row = df.shape[0]
+  File "/mnt/c/Users/aramis/git/incompleter/data/tmp/8859c41b-aaf5-458f-9e93-174402956f2a/snippet_92.py.orig", line 62, in __getitem__
+    ret_val = self.container[key] # pragma: no cover
+KeyError: 0
+
+Moxecution (mock+execution) Progress:  98%|█████████████████████████████████████████████████████████████████████▊ | 238/242 [49:14<00:54, 13.52s/it]
+
+ACTION TO APPLY: DefineKey
+
+LATEST SNIPPET:
+class TBD2:
+
+    def __init__(self, *args, **kwargs):
+        pass
+
+class TBD1:
+
+    def __init__(self):
+        self.container = {0: TBD2()}
+        self.keys = list(self.container.keys())
+        self.iter_current = 0
+
+    def __refresh_keys(self):
+        self.keys = list(self.container.keys())
+        for key in self.keys:
+            if not isinstance(key, int):
+                return
+        sorted(self.keys)
+
+    def __str__(self):
+        self.__refresh_keys()
+        ret_str = ''
+        ret_str += '[ '
+        for (idx, (key, val)) in enumerate(self.container.items()):
+            ret_str += str(val)
+            if idx < len(self.keys) - 1:
+                ret_str += ', '
+        ret_str += ' ]'
+        return ret_str
+
+    def __getitem__(self, key):
+        self.__refresh_keys()
+        ret_val = None
+        if isinstance(key, slice):
+            list_to_return = []
+            start = key.start or 0
+            stop = key.stop or len(self.container)
+            step = key.step or 1
+            if start < 0:
+                if start * -1 > len(self.keys):
+                    diff = start * -1 - len(self.keys)
+                    if len(self.keys) > 0:
+                        for i in range(max(self.keys), max(self.keys) + diff + 1):
+                            self.container[i] = 0
+                    else:
+                        for i in range(0, diff + 1):
+                            self.container[i] = 0
+                self.__refresh_keys()
+                start = self.keys[start]
+            if stop < 0:
+                if stop * -1 > len(self.keys):
+                    diff = stop * -1 - len(self.keys)
+                    if len(self.keys) > 0:
+                        for i in range(max(self.keys), max(self.keys) + diff + 1):
+                            self.container[i] = 0
+                    else:
+                        for i in range(0, diff + 1):
+                            self.container[i] = 0
+                self.__refresh_keys()
+                stop = self.keys[stop]
+            for i in range(start, stop, step):
+                list_to_return.append(self.container[i])
+            ret_val = list_to_return
+        elif isinstance(key, int):
+            if key < 0:
+                key = self.keys[key]
+            ret_val = self.container[key]
+        elif isinstance(key, str):
+            ret_val = self.container[key]
+        return ret_val
+
+    def __setitem__(self, key, val):
+        self.__refresh_keys()
+        if isinstance(key, slice):
+            start = key.start or 0
+            stop = key.stop or len(self.container)
+            step = key.step or 1
+            if start < 0:
+                start = self.keys[start]
+            if stop < 0:
+                stop = self.keys[stop]
+            for i in range(0, stop, step):
+                if i not in self.keys:
+                    self.container[i] = 0
+            for i in range(start, stop, step):
+                self.container[i] = val
+            return True
+        elif isinstance(key, int):
+            if key < 0:
+                key = self.keys[key]
+            for i in range(0, key):
+                if i not in self.keys:
+                    self.container[i] = 0
+            self.container[key] = val
+            return True
+        elif isinstance(key, str):
+            self.container[key] = val
+            return True
+        self.__refresh_keys()
+        return False
+
+    def __iter__(self):
+        return iter(self.container)
+
+    def __len__(self):
+        return len(self.keys)
+
+class TBD0:
+
+    def __init__(self, *args, **kwargs):
+        self.shape = TBD1()
+        pass
+df = TBD0()
+__original_start_marker = None # pragma: no cover
+count_row = df.shape[0]
+count_col = df.shape[1]
+(r, c) = df.shape
+
+
+Snippet#: 92 -- Iter 4 -- KeyError: 1
+
+Traceback (most recent call last):
+  File "/mnt/c/Users/aramis/git/incompleter/data/tmp/8859c41b-aaf5-458f-9e93-174402956f2a/snippet_92.py.orig", line 116, in <module>
+    count_col = df.shape[1]
+  File "/mnt/c/Users/aramis/git/incompleter/data/tmp/8859c41b-aaf5-458f-9e93-174402956f2a/snippet_92.py.orig", line 67, in __getitem__
+    ret_val = self.container[key] # pragma: no cover
+KeyError: 1
+
+Moxecution (mock+execution) Progress:  98%|█████████████████████████████████████████████████████████████████████▊ | 238/242 [49:16<00:54, 13.52s/it]
+
+ACTION TO APPLY: DefineKey
+
+LATEST SNIPPET:
+class TBD3:
+
+    def __init__(self, *args, **kwargs):
+        pass
+
+class TBD2:
+
+    def __init__(self, *args, **kwargs):
+        pass
+
+class TBD1:
+
+    def __init__(self):
+        self.container = {0: TBD2(), 1: TBD3()}
+        self.keys = list(self.container.keys())
+        self.iter_current = 0
+
+    def __refresh_keys(self):
+        self.keys = list(self.container.keys())
+        for key in self.keys:
+            if not isinstance(key, int):
+                return
+        sorted(self.keys)
+
+    def __str__(self):
+        self.__refresh_keys()
+        ret_str = ''
+        ret_str += '[ '
+        for (idx, (key, val)) in enumerate(self.container.items()):
+            ret_str += str(val)
+            if idx < len(self.keys) - 1:
+                ret_str += ', '
+        ret_str += ' ]'
+        return ret_str
+
+    def __getitem__(self, key):
+        self.__refresh_keys()
+        ret_val = None
+        if isinstance(key, slice):
+            list_to_return = []
+            start = key.start or 0
+            stop = key.stop or len(self.container)
+            step = key.step or 1
+            if start < 0:
+                if start * -1 > len(self.keys):
+                    diff = start * -1 - len(self.keys)
+                    if len(self.keys) > 0:
+                        for i in range(max(self.keys), max(self.keys) + diff + 1):
+                            self.container[i] = 0
+                    else:
+                        for i in range(0, diff + 1):
+                            self.container[i] = 0
+                self.__refresh_keys()
+                start = self.keys[start]
+            if stop < 0:
+                if stop * -1 > len(self.keys):
+                    diff = stop * -1 - len(self.keys)
+                    if len(self.keys) > 0:
+                        for i in range(max(self.keys), max(self.keys) + diff + 1):
+                            self.container[i] = 0
+                    else:
+                        for i in range(0, diff + 1):
+                            self.container[i] = 0
+                self.__refresh_keys()
+                stop = self.keys[stop]
+            for i in range(start, stop, step):
+                list_to_return.append(self.container[i])
+            ret_val = list_to_return
+        elif isinstance(key, int):
+            if key < 0:
+                key = self.keys[key]
+            ret_val = self.container[key]
+        elif isinstance(key, str):
+            ret_val = self.container[key]
+        return ret_val
+
+    def __setitem__(self, key, val):
+        self.__refresh_keys()
+        if isinstance(key, slice):
+            start = key.start or 0
+            stop = key.stop or len(self.container)
+            step = key.step or 1
+            if start < 0:
+                start = self.keys[start]
+            if stop < 0:
+                stop = self.keys[stop]
+            for i in range(0, stop, step):
+                if i not in self.keys:
+                    self.container[i] = 0
+            for i in range(start, stop, step):
+                self.container[i] = val
+            return True
+        elif isinstance(key, int):
+            if key < 0:
+                key = self.keys[key]
+            for i in range(0, key):
+                if i not in self.keys:
+                    self.container[i] = 0
+            self.container[key] = val
+            return True
+        elif isinstance(key, str):
+            self.container[key] = val
+            return True
+        self.__refresh_keys()
+        return False
+
+    def __iter__(self):
+        return iter(self.container)
+
+    def __len__(self):
+        return len(self.keys)
+
+class TBD0:
+
+    def __init__(self, *args, **kwargs):
+        self.shape = TBD1()
+        pass
+df = TBD0()
+__original_start_marker = None # pragma: no cover
+count_row = df.shape[0]
+count_col = df.shape[1]
+(r, c) = df.shape
+
+TBD3: {'deductions': ['no specific type patterns recognized'], 'type': 'object', 'base_classes': []}
+TBD2: {'deductions': ['no specific type patterns recognized'], 'type': 'object', 'base_classes': []}
+TBD1: {'deductions': ['key structure suggests list-like behavior'], 'type': 'list', 'base_classes': []}
+TBD0: {'deductions': ['no specific type patterns recognized'], 'type': 'object', 'base_classes': []}
+
+LATEST SNIPPET (UNMOCKED):
+
+
+class TBD3():
+
+    def __init__(self, *args, **kwargs):
+        pass
+
+class TBD2():
+
+    def __init__(self, *args, **kwargs):
+        pass
+
+class TBD0():
+
+    def __init__(self, *args, **kwargs):
+        self.shape = [TBD2(), TBD3()]
+        pass
+df = TBD0()
+__original_start_marker = None
+count_row = df.shape[0]
+count_col = df.shape[1]
+(r, c) = df.shape
+
+
+
+LATEST SNIPPET:
+
+
+class TBD3():
+
+    def __init__(self, *args, **kwargs):
+        pass
+
+class TBD2():
+
+    def __init__(self, *args, **kwargs):
+        pass
+
+class TBD0():
+
+    def __init__(self, *args, **kwargs):
+        self.shape = [TBD2(), TBD3()]
+        pass
+df = TBD0()
+__original_start_marker = None
+count_row = df.shape[0]
+count_col = df.shape[1]
+(r, c) = df.shape
+
+
+
+Snippet#: 95
+
+Moxecution (mock+execution) Progress:  99%|██████████████████████████████████████████████████████████████████████ | 239/242 [49:18<00:41, 13.67s/it]TBD1: {'deductions': ['key structure suggests dict-like behavior'], 'type': 'dict', 'base_classes': []}
+TBD0: {'deductions': ['key structure suggests dict-like behavior'], 'type': 'dict', 'base_classes': []}
+MyException: {'deductions': ['no specific type patterns recognized'], 'type': 'object', 'base_classes': ['Exception']}
+MyError: {'deductions': ['no specific type patterns recognized'], 'type': 'object', 'base_classes': ['Exception']}
+
+LATEST SNIPPET (UNMOCKED):
+
+__original_start_marker = None
+
+class MyException(Exception):
+    pass
+raise MyException('My hovercraft is full of eels')
+raise MyException({'message': 'My hovercraft is full of animals', 'animal': 'eels'})
+try:
+    raise MyException({'message': 'My hovercraft is full of animals', 'animal': 'eels'})
+except MyException as e:
+    details = e.args[0]
+    print(details['animal'])
+
+
+
+LATEST SNIPPET:
+
+__original_start_marker = None
+
+class MyException(Exception):
+    pass
+raise MyException('My hovercraft is full of eels')
+raise MyException({'message': 'My hovercraft is full of animals', 'animal': 'eels'})
+try:
+    raise MyException({'message': 'My hovercraft is full of animals', 'animal': 'eels'})
+except MyException as e:
+    details = e.args[0]
+    print(details['animal'])
+
+
+
+Snippet#: 98
+
+
+Snippet#: 98 -- Iter 0 -- NameError: name 'sys' is not defined
+
+Traceback (most recent call last):
+  File "/mnt/c/Users/aramis/git/incompleter/data/tmp/8859c41b-aaf5-458f-9e93-174402956f2a/snippet_98.py.orig", line 2, in <module>
+    (print >> sys.stderr, 'spam')
+NameError: name 'sys' is not defined
+
+Moxecution (mock+execution) Progress:  99%|██████████████████████████████████████████████████████████████████████▍| 240/242 [49:26<00:22, 11.30s/it]
+
+ACTION TO APPLY: AddImport
+
+LATEST SNIPPET:
+import sys
+__original_start_marker = None # pragma: no cover
+(print >> sys.stderr, 'spam')
+print('spam', file=sys.stderr)
+
+
+Snippet#: 98 -- Iter 1 -- TypeError: unsupported operand type(s) for >>: 'builtin_function_or_method' and '_io.TextIOWrapper'. Did you mean "print(<message>, file=<output_stream>)"?
+
+Traceback (most recent call last):
+  File "/mnt/c/Users/aramis/git/incompleter/data/tmp/8859c41b-aaf5-458f-9e93-174402956f2a/snippet_98.py.orig", line 3, in <module>
+    (print >> sys.stderr, 'spam')
+TypeError: unsupported operand type(s) for >>: 'builtin_function_or_method' and '_io.TextIOWrapper'. Did you mean "print(<message>, file=<output_stream>)"?
+
+Moxecution (mock+execution) Progress:  99%|██████████████████████████████████████████████████████████████████████▍| 240/242 [49:29<00:22, 11.30s/it]
+
+ACTION TO APPLY: DefineOperator
+
+LATEST SNIPPET:
+import sys
+__original_start_marker = None # pragma: no cover
+(print >> sys.stderr, 'spam')
+print('spam', file=sys.stderr)
+
+
+Snippet#: 98 -- Iter 2 -- TypeError: unsupported operand type(s) for >>: 'builtin_function_or_method' and '_io.TextIOWrapper'. Did you mean "print(<message>, file=<output_stream>)"?
+
+Traceback (most recent call last):
+  File "/mnt/c/Users/aramis/git/incompleter/data/tmp/8859c41b-aaf5-458f-9e93-174402956f2a/snippet_98.py.orig", line 3, in <module>
+    (print >> sys.stderr, 'spam')
+TypeError: unsupported operand type(s) for >>: 'builtin_function_or_method' and '_io.TextIOWrapper'. Did you mean "print(<message>, file=<output_stream>)"?
+
+Moxecution (mock+execution) Progress:  99%|██████████████████████████████████████████████████████████████████████▍| 240/242 [49:32<00:22, 11.30s/it]
+LATEST SNIPPET:
+import sys
+__original_start_marker = None # pragma: no cover
+(print >> sys.stderr, 'spam')
+print('spam', file=sys.stderr)
+
+
+Snippet#: test
+
+Moxecution (mock+execution) Progress: 100%|██████████████████████████████████████████████████████████████████████▋| 241/242 [49:32<00:10, 10.38s/it]
+LATEST SNIPPET (UNMOCKED):
+
+__original_start_marker = None
+from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
+start_date = datetime.now()
+delta_period = 4
+end_date = (start_date + relativedelta(months=delta_period))
+print('Start Date:', start_date)
+print('End Date:', end_date)
+
+
+
+LATEST SNIPPET:
+
+__original_start_marker = None
+from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
+start_date = datetime.now()
+delta_period = 4
+end_date = (start_date + relativedelta(months=delta_period))
+print('Start Date:', start_date)
+print('End Date:', end_date)
+
+
+Moxecution (mock+execution) Progress: 100%|███████████████████████████████████████████████████████████████████████| 242/242 [49:34<00:00, 12.29s/it]
+
+
+==========================================
+ Total errors at the beginning: 240
+==========================================
+
+
+
+==========================================
+ Total timed out: 0
+==========================================
+
+
+
+====================================================
+ TABLE I. Cumulative Metrics (Total Snippets 240):
+====================================================
+
+This table shows a cumulative measure of full executability, statement coverage, and branch coverage from one iteration to the next. The percentange of snippets with 100% statement coverage is 40.0%. The percentage of snippets with 100% branch coverage is 42.5%.
+
+| iter#   |   exec(cnt) |   stmt(%) |   br(%) |
+|---------|-------------|-----------|---------|
+| Iter#0  |          10 |        26 |      13 |
+| Iter#1  |          54 |        26 |      13 |
+| Iter#2  |          90 |        26 |      14 |
+| Iter#3  |         115 |        27 |      14 |
+| Iter#4  |         123 |        27 |      15 |
+| Iter#5  |         127 |        33 |      21 |
+| Iter#6  |         131 |        33 |      21 |
+| Iter#7  |         132 |        33 |      21 |
+| Iter#8  |         133 |        33 |      21 |
+| Iter#9  |         134 |        33 |      21 |
+| Iter#10 |         134 |        33 |      21 |
+| Iter#11 |         136 |        33 |      21 |
+| Iter#12 |         137 |        33 |      21 |
+| Iter#13 |         137 |        33 |      21 |
+| Iter#14 |         137 |        33 |      21 |
+| Iter#15 |         137 |        33 |      21 |
+| Iter#16 |         137 |        33 |      21 |
+| Iter#17 |         137 |        33 |      21 |
+| Iter#18 |         137 |        33 |      21 |
+| Iter#19 |         137 |        33 |      21 |
+| Iter#20 |         137 |        33 |      21 |
+| Iter#21 |         137 |        33 |      21 |
+| Iter#22 |         137 |        33 |      21 |
+| Iter#23 |         137 |        33 |      21 |
+| Iter#24 |         137 |        33 |      21 |
+
+
+
+====================================
+ TABLE II. Error Type vs. Iteration:
+====================================
+
+This table shows a list of error types and the number of times they occur at each iteration. This table shows the gradual resolution of certain error types and the gradual appearance of others. The gradual appearance of other error types can be attributed to side-effects from some prior applied action pattern. Or, if an action pattern was able to execute a previously erroneous statement, other error types could originate from the following statements in the code.
+
+| error-type                                                                                                      |   0 |   1 |   2 |   3 |   4 | ...   |   20 |   21 |   22 |   23 |   24 |
+|-----------------------------------------------------------------------------------------------------------------|-----|-----|-----|-----|-----|-------|------|------|------|------|------|
+| NameError                                                                                                       | 170 |  39 |  25 |  13 |   9 | ...   |    0 |    0 |    0 |    0 |    0 |
+| TypeError                                                                                                       |   9 |  53 |  34 |  19 |  16 | ...   |    8 |    8 |    8 |    8 |    8 |
+| ModuleNotFoundError                                                                                             |   8 |   9 |   2 |   1 |   2 | ...   |    0 |    0 |    0 |    0 |    0 |
+| AttributeError                                                                                                  |   6 |  49 |  28 |  22 |  15 | ...   |    8 |    8 |    8 |    8 |    8 |
+| FileNotFoundError                                                                                               |  18 |   8 |   9 |   7 |   7 | ...   |    7 |    7 |    7 |    7 |    7 |
+| ValueError                                                                                                      |   5 |   2 |   3 |   1 |   0 | ...   |    0 |    0 |    0 |    0 |    0 |
+| ImportError                                                                                                     |   5 |   0 |   1 |   0 |   0 | ...   |    0 |    0 |    0 |    0 |    0 |
+| PermissionError                                                                                                 |   1 |   0 |   0 |   0 |   0 | ...   |    0 |    0 |    0 |    0 |    0 |
+| KeyError                                                                                                        |   4 |   2 |   8 |   6 |   6 | ...   |    2 |    2 |    2 |    2 |    2 |
+| pytz.exceptions.UnknownTimeZoneError                                                                            |   1 |   0 |   0 |   0 |   0 | ...   |    0 |    0 |    0 |    0 |    0 |
+| pandas._config.config.OptionError                                                                               |   0 |   1 |   0 |   0 |   0 | ...   |    0 |    0 |    0 |    0 |    0 |
+| IndexError                                                                                                      |   1 |   0 |   0 |   1 |   1 | ...   |    0 |    0 |    0 |    0 |    0 |
+| ZeroDivisionError                                                                                               |   1 |   0 |   0 |   0 |   0 | ...   |    0 |    0 |    0 |    0 |    0 |
+| _csv.Error                                                                                                      |   0 |   1 |   0 |   0 |   0 | ...   |    0 |    0 |    0 |    0 |    0 |
+| SyntaxError                                                                                                     |   0 |   1 |   0 |   0 |   0 | ...   |    0 |    0 |    0 |    0 |    0 |
+| OSError                                                                                                         |   0 |   0 |   1 |   0 |   0 | ...   |    0 |    0 |    0 |    0 |    0 |
+| requests.exceptions.HTTPError                                                                                   |   1 |   0 |   0 |   0 |   0 | ...   |    0 |    0 |    0 |    0 |    0 |
+| json.decoder.JSONDecodeError                                                                                    |   0 |   0 |   0 |   0 |   1 | ...   |    0 |    0 |    0 |    0 |    0 |
+| pandas.errors.EmptyDataError                                                                                    |   0 |   0 |   1 |   0 |   0 | ...   |    0 |    0 |    0 |    0 |    0 |
+| [/mnt/c/Users/aramis/git/incompleter/data/tmp/8859c41b-aaf5-458f-9e93-174402956f2a/snippet_704.py.orig] - Error |   0 |   1 |   0 |   0 |   0 | ...   |    0 |    0 |    0 |    0 |    0 |
+
+
+
+=========================================
+ TABLE III. Action Pattern vs. Iteration:
+=========================================
+
+This table shows a list of action patterns and the number of times they had been applied at each iteration. This metric could be a proxy for the impact of an action pattern since an action pattern is likely to be impactful if it has been applied a large number of times.
+
+| action-pattern                |   0 |   1 |   2 |   3 |   4 | ...   |   20 |   21 |   22 |   23 |   24 |
+|-------------------------------|-----|-----|-----|-----|-----|-------|------|------|------|------|------|
+| AddImport                     |  37 |   6 |   3 |   4 |   3 | ...   |    0 |    0 |    0 |    0 |    0 |
+| Unmocked                      |  10 |  45 |  41 |  26 |   9 | ...   |    0 |    0 |    0 |    0 |    0 |
+| DefineVar                     | 116 |  41 |  25 |  12 |  10 | ...   |    0 |    0 |    0 |    0 |    0 |
+| DefineIterableOrSubscriptable |   0 |  28 |  11 |   4 |   2 | ...   |    0 |    0 |    0 |    0 |    0 |
+| InstallModule                 |   8 |   1 |   1 |   0 |   2 | ...   |    0 |    0 |    0 |    0 |    0 |
+| RemoveImport                  |   0 |   8 |   1 |   1 |   0 | ...   |    0 |    0 |    0 |    0 |    0 |
+| DefineFunc                    |  23 |  37 |  21 |  15 |   7 | ...   |    0 |    0 |    0 |    0 |    0 |
+| CreateFile                    |  18 |   3 |   1 |   0 |   0 | ...   |    0 |    0 |    0 |    0 |    0 |
+| NoneType                      |  20 |  17 |  12 |   4 |   3 | ...   |    0 |    0 |    0 |    0 |    0 |
+| DefineOperator                |   1 |   7 |   4 |   1 |   3 | ...   |    0 |    0 |    0 |    0 |    0 |
+| DefineInteger                 |   1 |   0 |   2 |   1 |   2 | ...   |    0 |    0 |    0 |    0 |    0 |
+| DefineKey                     |   4 |   1 |   7 |   5 |   5 | ...   |    1 |    1 |    1 |    1 |    1 |
+| DefineLength                  |   0 |   1 |   0 |   1 |   0 | ...   |    0 |    0 |    0 |    0 |    0 |
+| DefineString                  |   2 |   3 |   2 |   2 |   0 | ...   |    0 |    0 |    0 |    0 |    0 |
+| DefineCallable                |   0 |   2 |   2 |   1 |   0 | ...   |    0 |    0 |    0 |    0 |    0 |
+
+
+
+==================================
+ TABLE IV. Action Pattern Impact:
+==================================
+
+This table shows the impact of each action pattern. The column f-exec represents the number of snippets where a certain action pattern contributed towards full executability. Let's define an action sequence as the sequence of action patterns that had been applied to a snippet. If a certain action pattern was part of the action sequence for a fully executable sequence, we increment f-exec by 1 (regardless of how many times the action pattern appears in the action sequence). On the other hand, p-exec (partial executability) represents the number of times a certain action pattern advanced the execution beyond a previously erroneous statement. However, p-exec has no association with full executability.
+
+| action-pattern                |   f-exec |   p-exec |
+|-------------------------------|----------|----------|
+| AddImport                     |       26 |       54 |
+| Unmocked                      |      127 |      127 |
+| DefineVar                     |       99 |      225 |
+| DefineIterableOrSubscriptable |       34 |       57 |
+| InstallModule                 |       10 |       13 |
+| RemoveImport                  |       10 |       13 |
+| DefineFunc                    |       54 |      119 |
+| CreateFile                    |       11 |       15 |
+| DefineOperator                |       12 |       20 |
+| DefineInteger                 |        6 |       12 |
+| DefineKey                     |        9 |       50 |
+| DefineLength                  |        2 |        5 |
+| DefineString                  |        1 |        7 |
+| DefineCallable                |        3 |        5 |
+
+
+
+==================================
+ TABLE V. Action Sequence Length:
+==================================
+
+This table shows the average action sequence length for different sets of snippets. The row for the total set represents the average length of action sequences for all snippets. The row for fexec set represents the average action sequence length for snippets that were fully executed. The row for pexec set represents the average action sequence length for snippets that were partially executed.
+
+| set    | avg-action-seq-len   |
+|--------|----------------------|
+| total  | 3 actions            |
+| f-exec | 3 actions            |
+| p-exec | 3 actions            |
+
+
+
+==================================
+ TABLE VI. UNRESOLVED ERRORS:
+==================================
+
+  ------------------------------------------------
+   ValueErrors (12 count):
+  ------------------------------------------------
+     0. can't have unbuffered text I/O (snippet_118.py.orig)
+     1. Shape of passed values is (1, 1), indices imply (1, 4) (snippet_321.py.orig)
+     2. Invalid email address. (snippet_324.py.orig)
+     3. No objects to concatenate (snippet_379.py.orig)
+     4. Index Unnamed: 0 invalid (snippet_392.py.orig)
+     5. min() arg is an empty sequence (snippet_413.py.orig)
+     6. can't have unbuffered text I/O (snippet_454.py.orig)
+     7. invalid literal for int() with base 10: TBD1 (snippet_536.py.orig)
+     8. cannot reshape array of size 0 into shape (100,100,100) (snippet_563.py.orig)
+     9. could not convert string 'column1' to float64 at row 0, column 1. (snippet_569.py.orig)
+     10. Expected object or value (snippet_647.py.orig)
+     11. If using all scalar values, you must pass an index (snippet_679.py.orig)
+
+  ------------------------------------------------
+   ImportErrors (6 count):
+  ------------------------------------------------
+     0. attempted relative import with no known parent package (snippet_121.py.orig)
+     1. cannot import name 'app' from 'app' (/home/aramis/.local/lib/python3.10/site-packages/app/__init__.py) (snippet_151.py.orig)
+     2. cannot import name 'ifilterfalse' from 'itertools' (unknown location) (snippet_261.py.orig)
+     3. attempted relative import with no known parent package (snippet_341.py.orig)
+     4. attempted relative import with no known parent package (snippet_350.py.orig)
+     5. cannot import name 'B' from 'b' (/home/aramis/.local/lib/python3.10/site-packages/b.py) (snippet_582.py.orig)
+
+  ------------------------------------------------
+   TypeErrors (35 count):
+  ------------------------------------------------
+     0. isinstance() arg 2 must be a type, a tuple of types, or a union (snippet_123.py.orig)
+     1. package must be a string (snippet_131.py.orig)
+     2. encoding without a string argument (snippet_140.py.orig)
+     3. download() missing 1 required positional argument: 'urls' (snippet_206.py.orig)
+     4. unsupported operand type(s) for >>: 'DataFrame' and 'TBD2' (snippet_274.py.orig)
+     5. TBD2.__invert__() missing 1 required positional argument: 'other' (snippet_338.py.orig)
+     6. 'str' object cannot be interpreted as an integer (snippet_354.py.orig)
+     7. expected string or bytes-like object (snippet_362.py.orig)
+     8. 'module' object is not callable (snippet_416.py.orig)
+     9. unsupported operand type(s) for -: 'str' and 'str' (snippet_421.py.orig)
+     10. 'type' object does not support item deletion (snippet_48.py.orig)
+     11. 'zip' object is not subscriptable (snippet_507.py.orig)
+     12. cannot unpack non-iterable TBD0 object (snippet_516.py.orig)
+     13. 'list' object is not callable (snippet_583.py.orig)
+     14. read_csv() got an unexpected keyword argument 'error_bad_lines' (snippet_586.py.orig)
+     15. can only concatenate list (not "str") to list (snippet_593.py.orig)
+     16. Population must be a sequence.  For dicts or sets, use sorted(d). (snippet_62.py.orig)
+     17. 'module' object is not callable (snippet_623.py.orig)
+     18. isinstance() arg 2 must be a type, a tuple of types, or a union (snippet_632.py.orig)
+     19. expected string or bytes-like object (snippet_650.py.orig)
+     20. expected string or bytes-like object (snippet_681.py.orig)
+     21. expected str, bytes or os.PathLike object, not int (snippet_7.py.orig)
+     22. 'list' object is not callable (snippet_718.py.orig)
+     23. <class '__main__.TBD1'> is not convertible to datetime, at position 0 (snippet_735.py.orig)
+     24. 'foo' is an invalid keyword argument for print() (snippet_743.py.orig)
+     25. float() argument must be a string or a real number, not 'ellipsis' (snippet_744.py.orig)
+     26. Object of type TBD0 is not JSON serializable (snippet_759.py.orig)
+     27. 'TBD9' object does not support item deletion (snippet_763.py.orig)
+     28. type.__new__() argument 3 must be dict, not TBD0 (snippet_777.py.orig)
+     29. isinstance() arg 2 must be a type, a tuple of types, or a union (snippet_779.py.orig)
+     30. Object of type TBD0 is not JSON serializable (snippet_788.py.orig)
+     31. cannot unpack non-iterable PathCollection object (snippet_793.py.orig)
+     32. 'function' object is not iterable (snippet_812.py.orig)
+     33. type of foo must be a list; got __main__.TBD1 instead (snippet_90.py.orig)
+     34. unsupported operand type(s) for >>: 'builtin_function_or_method' and '_io.TextIOWrapper'. Did you mean "print(<message>, file=<output_stream>)"? (snippet_98.py.orig)
+
+  ------------------------------------------------
+   AttributeErrors (10 count):
+  ------------------------------------------------
+     0. 'list' object has no attribute 'tolist' (snippet_125.py.orig)
+     1. 'list' object has no attribute 'values' (snippet_332.py.orig)
+     2. 'dict' object has no attribute 'iteritems' (snippet_339.py.orig)
+     3. module 'matplotlib' has no attribute 'pyplot' (snippet_39.py.orig)
+     4. module 'sys' has no attribute 'exc_clear' (snippet_571.py.orig)
+     5. 'str' object has no attribute 'decode'. Did you mean: 'encode'? (snippet_685.py.orig)
+     6. 'NoneType' object has no attribute 'astype' (snippet_748.py.orig)
+     7. 'builtin_function_or_method' object has no attribute 'equal' (snippet_780.py.orig)
+     8. 'function' object has no attribute 'getPumps' (snippet_792.py.orig)
+     9. 'function' object has no attribute 'get' (snippet_823.py.orig)
+
+  ------------------------------------------------
+   PermissionErrors (1 count):
+  ------------------------------------------------
+     0. [Errno 13] Permission denied: '/my' (snippet_126.py.orig)
+
+  ------------------------------------------------
+   KeyErrors (2 count):
+  ------------------------------------------------
+     0. 27 (snippet_160.py.orig)
+     1. '[1] not in index' (snippet_400.py.orig)
+
+  ------------------------------------------------
+   pytz.exceptions.UnknownTimeZoneErrors (1 count):
+  ------------------------------------------------
+     0. 'Asia/India' (snippet_17.py.orig)
+
+  ------------------------------------------------
+   pandas._config.config.OptionErrors (1 count):
+  ------------------------------------------------
+     0. No such keys(s): 'display.height' (snippet_196.py.orig)
+
+  ------------------------------------------------
+   FileNotFoundErrors (10 count):
+  ------------------------------------------------
+     0. [Errno 2] No such file or directory: TBD0 (snippet_287.py.orig)
+     1. [Errno 2] No such file or directory: TBD0 (snippet_405.py.orig)
+     2. [Errno 2] No such file or directory: 'C:\\Python27\\Lib\\genericpath.py' (snippet_406.py.orig)
+     3. [Errno 2] No such file or directory: '/pythonwork/thefile_subset11.csv' (snippet_409.py.orig)
+     4. [Errno 2] No such file or directory: 'C:\\Users\\System-Pc\\Desktop\\ybear.jpg' (snippet_485.py.orig)
+     5. [Errno 2] No such file or directory: '/path/to/file/on/local/machine' (snippet_520.py.orig)
+     6. [Errno 2] No such file or directory (snippet_638.py.orig)
+     7. [Errno 2] No such file or directory: '/path/to/somefile.py' (snippet_738.py.orig)
+     8. [Errno 2] No such file or directory: '/Users/tedfuller/Desktop/prank/' (snippet_768.py.orig)
+     9. [Errno 2] No such file or directory: 'C:\\Users\\Bob\\SecretPasswordFile.txt' (snippet_798.py.orig)
+
+  ------------------------------------------------
+   ZeroDivisionErrors (1 count):
+  ------------------------------------------------
+     0. division by zero (snippet_391.py.orig)
+
+  ------------------------------------------------
+   _csv.Errors (1 count):
+  ------------------------------------------------
+     0. iterable expected, not TBD0 (snippet_417.py.orig)
+
+  ------------------------------------------------
+   SyntaxErrors (1 count):
+  ------------------------------------------------
+     0. invalid syntax (snippet_435.py.orig)
+
+  ------------------------------------------------
+   OSErrors (1 count):
+  ------------------------------------------------
+     0. No file or directory found at my_model.h5 (snippet_447.py.orig)
+
+  ------------------------------------------------
+   requests.exceptions.HTTPErrors (1 count):
+  ------------------------------------------------
+     0. 403 Client Error: Forbidden for url: http://lorempixel.com/400/200 (snippet_620.py.orig)
+
+  ------------------------------------------------
+   json.decoder.JSONDecodeErrors (1 count):
+  ------------------------------------------------
+     0. Expecting value: line 1 column 1 (char 0) (snippet_678.py.orig)
+
+  ------------------------------------------------
+   pandas.errors.EmptyDataErrors (1 count):
+  ------------------------------------------------
+     0. No columns to parse from file (snippet_692.py.orig)
+
+  ------------------------------------------------
+   [/mnt/c/Users/aramis/git/incompleter/data/tmp/8859c41b-aaf5-458f-9e93-174402956f2a/snippet_704.py.orig] - Errors (1 count):
+  ------------------------------------------------
+     0. Your Python interpreter must be 2.7 or greater (within major version 2) (snippet_704.py.orig)
+
+  ------------------------------------------------
+   IndexErrors (2 count):
+  ------------------------------------------------
+     0. list index out of range (snippet_712.py.orig)
+     1. list index out of range (snippet_770.py.orig)
+
+
+
+
+
+=======================================
+ TABLE VII. VENN DIAGRAM STATISTICS:
+=======================================
+
+This table shows the venn diagram statistics between LExecutor and incompleter.
+
+| Set                |   snippet_cnt(%) |
+|--------------------|------------------|
+| (only) lexecutor   |             0.17 |
+| (only) incompleter |             0.2  |
+| (both) common      |             0.37 |
+| (none) unsolved    |             0.26 |
+
+
+
+  ----------------------------
+   Only LExecutor
+  ----------------------------
+
+   {'718', '650', '140', '792', '678', '151', '413', '746', '516', '582', '708', '685', '681', '780', '571', '593', '632', '80', '692', '777', '196', '206', '362', '39', '416', '759', '392', '350', '445', '12', '679', '62', '665', '565', '400', '321', '121', '770', '586', '823', '341'}
+
+  ----------------------------
+   Only Incompleter
+  ----------------------------
+
+   {'610', '431', 'test', '92', '492', '162', '309', '806', '166', '45', '505', '642', '264', '701', '669', '124', '690', '774', '286', '673', '158', '403', '251', '102', '772', '548', '764', '684', '714', '47', '318', '107', '645', '482', '602', '706', '740', '100', '466', '634', '601', '23', '467', '429', '758', '716', '331', '75'}
+
+  ----------------------------
+   Common
+  ----------------------------
+
+   {'24', '299', '453', '15', '233', '723', '134', '618', '646', '95', '434', '115', '786', '639', '668', '589', '291', '452', '657', '268', '479', '382', '159', '749', '541', '317', '359', '130', '711', '14', '355', '446', '710', '237', '389', '351', '713', '607', '478', '499', '462', '211', '224', '587', '775', '303', '138', '490', '481', '340', '629', '316', '688', '209', '381', '804', '652', '150', '38', '271', '267', '30', '698', '797', '817', '292', '353', '60', '426', '682', '177', '750', '501', '491', '687', '175', '561', '700', '239', '369', '71', '36', '756', '313', '813', '190', '231', '105', '322'}
+
+  ----------------------------
+   None
+  ----------------------------
+
+   {'515', '748', '123', '779', '704', '536', '520', '354', '406', '125', '623', '620', '131', '339', '391', '647', '660', '722', '563', '638', '485', '379', '274', '48', '712', '447', '454', '763', '738', '421', '798', '621', '793', '98', '17', '743', '435', '7', '324', '335', '417', '559', '332', '118', '735', '583', '768', '287', '405', '507', '409', '653', '160', '126', '744', '420', '569', '90', '812', '375', '788', '261', '338'}      
