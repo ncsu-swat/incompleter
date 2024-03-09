@@ -1,6 +1,8 @@
 import ast
 import astunparse
 from main.utils.snippet import Snippet
+from main.errors.error_coordinator import ErrorCoordinator
+
 # Infers the type of a class based on several deductions
 class TypeInferrer(ast.NodeVisitor):
     def __init__(self):
@@ -180,6 +182,84 @@ def apply_replacements_and_remove_classes(code_snippet, unroll_dict, class_conta
     
     return astunparse.unparse(tree)
 
+def apply_single_replacement(code_snippet, class_name, type_info, class_container_init):
+    """
+    Apply a single replacement based on the inferred type information.
+    Args:
+        code_snippet (str): The current state of the code snippet.
+        class_name (str): The name of the class to replace.
+        type_info (dict): The inferred type information for the class.
+        class_container_init (dict): Initializations of class containers.
+    
+    Returns:
+        (str, bool): Tuple of the updated code snippet and a flag indicating success.
+    """
+    # Determine the replacement based on the inferred type
+    if type_info['type'] in ['list', 'dict', 'set']:
+        replacement = extract_initialization_expression(class_container_init.get(class_name, ast.Dict()), type_info['type'])
+    elif type_info['type'] == 'int':
+        replacement = '0'
+    elif type_info['type'] == 'str':
+        replacement = '""'
+    else:
+        return code_snippet, False 
+    
+    updated_code_snippet = code_snippet.replace(f"{class_name}()", replacement)
+
+    return updated_code_snippet
+
+def remove_unused_classes(code_snippet):
+    """
+    Remove class definitions that are no longer needed in the code snippet.
+    
+    Args:
+        code_snippet (str): The current state of the code snippet after replacements.
+    
+    Returns:
+        str: The cleaned-up code snippet.
+    """
+    tree = ast.parse(code_snippet)
+    tracker = InstantiationTracker()
+    tracker.visit(tree)
+    new_body = [node for node in tree.body if not (isinstance(node, ast.ClassDef) and node.name not in tracker.instantiated_classes)]
+    tree.body = new_body
+    
+    return astunparse.unparse(tree)
+
+def test_snippet(snippet_obj, updated_code_snippet):
+    """
+    Test the updated code snippet for functionality.
+    
+    Args:
+        snippet_obj (Snippet): The Snippet object being tested.
+        updated_code_snippet (str): The updated code snippet after applying a single replacement.
+    
+    Returns:
+        bool: True if the snippet runs successfully (no errors), False otherwise.
+    """
+    snippet_obj.history[-1] = updated_code_snippet
+    
+    try:
+        out, err, stmt_cov, br_cov = snippet_obj.compute_timed_latest_coverage()
+        
+        # Check if there are errors in the execution
+        if err is None:
+            # Timeout
+            return False
+        else:
+            if len(err) > 0:
+                err_coord = ErrorCoordinator(path=snippet_obj.snippet_path, snippet=snippet_obj, stack_trace=err)
+                if len(err_coord.err_type):
+                    return False
+                else:
+                    return True
+            else:
+                return True
+    except Exception as e:
+        return False
+    finally:
+        snippet_obj.history.pop()
+
 def unmock_code_snippet(snippet_obj):
     """
     Analyzes the given code snippet, applies type deductions to replace class instantiations,
@@ -190,14 +270,65 @@ def unmock_code_snippet(snippet_obj):
 
     Returns:
         str: The updated code snippet.
+        dict: deduction tally of what deductions were successful
     """
-
+    print('\nSTARTED UNMOCKING\n')
     code_snippet = snippet_obj.get_latest()
     unroll_dict, class_container_init = analyze_code_to_unroll_dict(code_snippet)
-    updated_code_snippet = apply_replacements_and_remove_classes(code_snippet, unroll_dict, class_container_init)
-    for var, info in unroll_dict.items():
-        print(f"{var}: {info}")
-    return updated_code_snippet
+    
+    # Initialize tally for deductions
+    deductions_tally = {'list': 0, 'dict': 0, 'set': 0, 'int': 0, 'str': 0, 'total': 0}
+    
+    for class_name, info in unroll_dict.items():
+        # Backup the current state before applying the change
+        original_code_snippet = code_snippet
+        
+        if info['type'] in ['list', 'dict', 'set', 'int', 'str']:
+            # Apply one change at a time
+            updated_code_snippet = apply_single_replacement(code_snippet, class_name, info, class_container_init)
+
+            success = test_snippet(snippet_obj, updated_code_snippet)
+            
+            if success:
+                # If the change is successful, update the code_snippet
+                # print('\nUNMOCKER: SUCCESSFUL SNIPPET:\n{}\n'.format(code_snippet))
+                code_snippet = updated_code_snippet
+                deductions_tally[info['type']] += 1
+                deductions_tally['total'] += 1
+            else:
+                # If not successful, revert to original
+                code_snippet = original_code_snippet
+                deductions_tally['total'] += 1
+        else:
+            continue  
+
+    final_code_snippet = remove_unused_classes(code_snippet)
+    
+    # print(deductions_tally)
+    # for var, info in unroll_dict.items():
+    #     print(f"{var}: {info}")
+    
+    return final_code_snippet, deductions_tally
+
+
+# def unmock_code_snippet(snippet_obj):
+#     """
+#     Analyzes the given code snippet, applies type deductions to replace class instantiations,
+#     and removes unused class definitions.
+
+#     Args:
+#         snippet_obj (Snippet): The Snippet object to analyze and update.
+
+#     Returns:
+#         str: The updated code snippet.
+#     """
+
+#     code_snippet = snippet_obj.get_latest()
+#     unroll_dict, class_container_init = analyze_code_to_unroll_dict(code_snippet)
+#     updated_code_snippet = apply_replacements_and_remove_classes(code_snippet, unroll_dict, class_container_init)
+#     for var, info in unroll_dict.items():
+#         print(f"{var}: {info}")
+#     return updated_code_snippet
 
 # To run directly for testing
 if __name__ == "__main__":

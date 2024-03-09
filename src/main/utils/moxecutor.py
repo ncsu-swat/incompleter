@@ -106,7 +106,7 @@ class Moxecutor():
                                 for action_name, impact_dict in action_progress_report.items():
                                     action_progress_report[action_name]['f-exec'] += 1
 
-                            _iter, coverage_report, executability_report, action_progress_report, action_iteration_report = self.unmocked_snippet_report(
+                            _iter, coverage_report, executability_report, action_progress_report, action_iteration_report, deductions_tally = self.unmocked_snippet_report(
                                 _iter,
                                 coverage_report,
                                 executability_report,
@@ -114,10 +114,10 @@ class Moxecutor():
                                 action_iteration_report
                             )
 
-                            print('\nLATEST SNIPPET (UNMOCKED):\n{}\n'.format(self.snippet.get_latest()))
+                            # print('\nLATEST SNIPPET (UNMOCKED):\n{}\n'.format(self.snippet.get_latest()))
 
                             self.snippet.cleanup()
-                            return executability_report, action_iteration_report, action_progress_report, len(self.snippet.action_sequence), coverage_report, unresolved_report
+                            return executability_report, action_iteration_report, action_progress_report, len(self.snippet.action_sequence), coverage_report, unresolved_report, deductions_tally
                     else:
                         # If there are no warnings and errors, we consider the snippet fully executed
                         executability_report[_iter] = 'Fixed'
@@ -131,7 +131,7 @@ class Moxecutor():
                             for action_name, impact_dict in action_progress_report.items():
                                 action_progress_report[action_name]['f-exec'] += 1 
                         
-                        _iter, coverage_report, executability_report, action_progress_report, action_iteration_report = self.unmocked_snippet_report(
+                        _iter, coverage_report, executability_report, action_progress_report, action_iteration_report, deductions_tally = self.unmocked_snippet_report(
                                 _iter,
                                 coverage_report,
                                 executability_report,
@@ -139,10 +139,10 @@ class Moxecutor():
                                 action_iteration_report
                             )
                         
-                        print('\nLATEST SNIPPET (UNMOCKED):\n{}\n'.format(self.snippet.get_latest()))
+                        # print('\nLATEST SNIPPET (UNMOCKED):\n{}\n'.format(self.snippet.get_latest()))
                         
                         self.snippet.cleanup()
-                        return executability_report, action_iteration_report, action_progress_report, len(self.snippet.action_sequence), coverage_report, unresolved_report
+                        return executability_report, action_iteration_report, action_progress_report, len(self.snippet.action_sequence), coverage_report, unresolved_report, deductions_tally
                 
                 except IndentationError as e:
                     pass
@@ -159,15 +159,15 @@ class Moxecutor():
             
             self.snippet.cleanup()
 
-            return executability_report, action_iteration_report, action_progress_report, len(self.snippet.action_sequence), coverage_report, unresolved_report
+            return executability_report, action_iteration_report, action_progress_report, len(self.snippet.action_sequence), coverage_report, unresolved_report, None
         
-        return None, None, None, None, None, None
+        return None, None, None, None, None, None, None
     
 
     def unmocked_snippet_report(self, _iter, coverage_report, executability_report, action_progress_report, action_iteration_report):
 
         # _iter = _iter + 1
-        self.snippet.history[-1] = unmock_code_snippet(self.snippet)
+        self.snippet.history[-1], deductions_tally = unmock_code_snippet(self.snippet)
 
         out, err, stmt_cov, br_cov = self.snippet.compute_timed_latest_coverage()
         if stmt_cov is not None:
@@ -190,9 +190,6 @@ class Moxecutor():
         if len(err) > 0:
             err_coord = ErrorCoordinator(path=self.snippet.snippet_path, snippet=self.snippet, stack_trace=err)
             if len(err_coord.err_type):
-                # remove the mocked snippet since it doesn't work. 
-                # self.snippet.history.pop()
-
                 # Report executability
                 executability_report[_iter] = err_coord.err_type
                 action_iteration_report[_iter] = 'Unmocked'
@@ -203,8 +200,6 @@ class Moxecutor():
             add_unmock_action = True
         
         if(add_unmock_action):
-            # If there are warnings but no errors, we consider the snippet fully executed
-            # executability_report[_iter] = 'Fixed and Unmocked'
             action_iteration_report[_iter] = 'Unmocked'
             self.snippet.add_to_action_sequence("Unmocked")
             # # After achieving full executability, we can say that all the action patterns that had been applied to this snippet, had contribution(s) towards full executability.
@@ -215,5 +210,5 @@ class Moxecutor():
                 action_progress_report[prior_action]['p-exec'] += 1
                 action_progress_report[prior_action]['f-exec'] += 1
 
-        return _iter, coverage_report, executability_report, action_progress_report, action_iteration_report
+        return _iter, coverage_report, executability_report, action_progress_report, action_iteration_report, deductions_tally
 
