@@ -25,6 +25,9 @@ class DefineString(ActionBaseClass):
         # subclass 'str' class
         self.__subclass_str()
 
+        # define function __new__(self)
+        self.__create_new_method_ast()
+
         # define function __repr__(self)
         self.__define_repr()
 
@@ -67,6 +70,35 @@ class DefineString(ActionBaseClass):
         tree = StringSubclasser(class_name=self.class_name, snippet=self.snippet, lineno=self.lineno).visit_Body(tree)
 
         return None
+
+    def __create_new_method_ast(self):
+        kwargs = {}
+        kwargs['func_name'] = '__new__'
+        kwargs['class_scope'] = self.class_name
+        kwargs['func_args'] = [ast.arg(arg='self')]
+        kwargs['func_body'] = [
+            ast.Return(value=ast.Call(
+              func=ast.Attribute(
+                  value=ast.Call(
+                      func=ast.Name(id='super', ctx=ast.Load()),
+                      args=[],
+                      keywords=[],
+                  ),
+                  attr='__new__',
+                  ctx=ast.Load(),
+              ),
+              args=[
+                ast.Name(id='self', ctx=ast.Load()),
+                ast.Attribute(
+                  value=ast.Name(id='self', ctx=ast.Load()),
+                  attr='__name__',
+                  ctx=ast.Load()
+                  )
+                ],
+              keywords=[],
+          ))
+        ]
+        DefineFunc(snippet=self.snippet, lineno=self.lineno, **kwargs).apply_pattern()
 
     def __define_str(self) -> None:
         kwargs = {}
