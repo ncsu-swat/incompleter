@@ -277,7 +277,7 @@ def unmock_code_snippet(snippet_obj):
     unroll_dict, class_container_init = analyze_code_to_unroll_dict(code_snippet)
     
     # Initialize tally for deductions
-    deductions_tally = {'list': 0, 'dict': 0, 'set': 0, 'int': 0, 'str': 0, 'total': 0}
+    deductions_tally = {'list': 0, 'dict': 0, 'set': 0, 'int': 0, 'str': 0, 'object': 0, 'total': 0}
     
     for class_name, info in unroll_dict.items():
         # Backup the current state before applying the change
@@ -300,6 +300,7 @@ def unmock_code_snippet(snippet_obj):
                 code_snippet = original_code_snippet
                 deductions_tally['total'] += 1
         else:
+            deductions_tally['object'] += 1
             continue  
 
     final_code_snippet = remove_unused_classes(code_snippet)
