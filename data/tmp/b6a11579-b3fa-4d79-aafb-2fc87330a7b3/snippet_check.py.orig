@@ -1,0 +1,16 @@
+class TBD2: # pragma: no cover
+ # pragma: no cover
+    def __init__(self, *args, **kwargs): # pragma: no cover
+        pass # pragma: no cover
+ # pragma: no cover
+class TBD1: # pragma: no cover
+ # pragma: no cover
+    def __init__(self, *args, **kwargs): # pragma: no cover
+        pass # pragma: no cover
+ # pragma: no cover
+    def __call__(self, *args, **kwargs): # pragma: no cover
+        return TBD2() # pragma: no cover
+TBD0 = TBD1() # pragma: no cover
+df = TBD0() # pragma: no cover
+__original_start_marker = None # pragma: no cover
+print(df['abc'])

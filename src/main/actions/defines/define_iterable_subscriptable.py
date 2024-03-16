@@ -16,9 +16,11 @@ class DefineIterableOrSubscriptable(ActionBaseClass):
 
         self.container_values = None
         if 'container_values' in kwargs:
-            self.container_values = kwargs['container_values']
+            self.container_values = ast.unparse(ast.fix_missing_locations(kwargs['container_values']))
+            # self.container_values = kwargs['container_values']
         else:
-            self.container_values = ast.Dict(keys=[], values=[])
+            self.container_values = r'{}'
+            # self.container_values = ast.Dict(keys=[], values=[])
 
     def __str__(self) -> str:
         desc = super().__str__()
@@ -29,29 +31,56 @@ class DefineIterableOrSubscriptable(ActionBaseClass):
     def check_criteria(self) -> bool:
         return True
 
+    @ActionBaseClass.add_to_history
     def apply_pattern(self) -> str:
-        # define attributes inside __init__(self)
-        self.__redefine_init()
+        class RemoveExistingClass(ast.NodeTransformer):
+            def __init__(self, **kwargs):
+                self.snippet = kwargs['snippet']
+                self.lineno = kwargs['lineno']
+                self.class_name = kwargs['class_name']
 
-        # define function __refresh_keys(self)
-        self.__define_refresh_keys()
+            @ActionBaseClass.add_to_history
+            def visit_Body(self, node):
+                for (idx, child) in enumerate(node.body):
+                    node.body[idx] = self.visit(child)         
+                node.body.remove(None)
+                return node
 
-        # define function __str__(self)
-        self.__define_str()
+            def visit_ClassDef(self, node):
+                if node.name == self.class_name:
+                    return None
+                return node
 
-        # define function __getitem__(self, key)
-        self.__define_getitem()
+        with open('main/templates/template_iterable_or_subscriptable.txt', 'r') as template_file:
+            template = template_file.read()
+            template = template.replace('<class_name>', self.class_name)
+            template = template.replace('<container_value>', self.container_values)
 
-        # define function __setitem__(self, key, val)
-        self.__define_setitem()
+            tree = ast.parse(self.snippet.get_latest())
+            RemoveExistingClass(snippet=self.snippet, lineno=self.lineno, class_name=self.class_name).visit_Body(tree)
 
-        # define function __iter__(self)
-        self.__define_iter()
+            return ast.parse(template + '\n\n' + self.snippet.get_latest())
 
-        # define function __len__(self)
-        self.__define_len()
+        # # define attributes inside __init__(self)
+        # self.__redefine_init()
 
-        return
+        # # define function __refresh_keys(self)
+        # self.__define_refresh_keys()
+
+        # # define function __str__(self)
+        # self.__define_str()
+
+        # # define function __getitem__(self, key)
+        # self.__define_getitem()
+
+        # # define function __setitem__(self, key, val)
+        # self.__define_setitem()
+
+        # # define function __iter__(self)
+        # self.__define_iter()
+
+        # # define function __len__(self)
+        # self.__define_len()
 
     def __add_base_import(self) -> None:
         class ImportAdder(ast.NodeTransformer):
@@ -767,7 +796,9 @@ class DefineIterableOrSubscriptable(ActionBaseClass):
                                             ctx=ast.Load()),
                                             slice=ast.Name(id='key', ctx=ast.Load()),
                                             ctx=ast.Load()))],
-                                orelse=[])])]),
+                                orelse=[
+
+                                ])])]),
             # Expr(
             #     value=Call(
             #         func=Name(id='print', ctx=Load()),

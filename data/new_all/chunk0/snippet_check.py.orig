@@ -1,3 +1,1 @@
-from statsmodels.tsa.seasonal import seasonal_decompose
-
-decomposition = seasonal_decompose(ident)
+print(df['abc'])

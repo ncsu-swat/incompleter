@@ -2163,7 +2163,8 @@ Error:
 03/09/2024 11:44:33 PM Line 5: Executed
 03/09/2024 11:44:33 PM Line 5: Executed
 03/09/2024 11:44:33 PM Line 5: Executed
-  0%|          | 0/64 [00:00<?, ?it/s]03/09/2024 11:44:33 PM Line 6: Executed
+
+  0%|          | 0/64 [00:00<?, ?it/s]03/09/2024 11:44:33 PM Line 6: Executed
 03/09/2024 11:44:33 PM Line 5: Executed
 03/09/2024 11:44:33 PM Line 6: Executed
 03/09/2024 11:44:33 PM Line 5: Executed
@@ -2232,7 +2233,8 @@ Error:
 03/09/2024 11:44:34 PM Line 5: Executed
 03/09/2024 11:44:34 PM Line 8: Executed
 03/09/2024 11:44:34 PM Line 8: Executed
-  0%|          | 0/64 [00:01<?, ?it/s]
+
+  0%|          | 0/64 [00:01<?, ?it/s]
 03/09/2024 11:44:34 PM Line 8: Executed
 03/09/2024 11:44:34 PM Line 8: Executed
 03/09/2024 11:44:35 PM Line 8: Executed
@@ -8758,5 +8760,23 @@ Total stmt cov: 168.60199336805508
 Total hundred stmt counter: 66
 Total br cov: 153.76309009617842
 Total hundred br counter: 101
+
+Type Prediction Distribution:
+Total predictions: 527
+None: 1
+True: 2
+False: 0
+Integer: 17
+Float: 4
+String: 35
+List: 21
+Dictionary: 12
+Set: 1
+Tuple: 7
+Callable: 193
+Resource: 2
+Object: 232
+
+
 
 

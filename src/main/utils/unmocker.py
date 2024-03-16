@@ -52,9 +52,9 @@ class TypeInferrer(ast.NodeVisitor):
         container_node = self.class_container_init.get(class_name, None)
         if container_node and isinstance(container_node, ast.Dict):
             # Extract keys from the dictionary assignment
-            keys = [ast.literal_eval(key) for key in container_node.keys]
+            keys = [key.value for key in container_node.keys if isinstance(key, ast.Constant)]
             return keys
-        return None 
+        return None
 
     def is_collection(self, class_name):
         essential_methods = ['__init__', '__iter__', '__len__', '__getitem__', '__setitem__']
