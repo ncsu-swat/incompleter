@@ -2,6 +2,9 @@ import ast
 import astunparse
 from main.utils.snippet import Snippet
 from main.errors.error_coordinator import ErrorCoordinator
+import json
+import os
+import re
 
 # Infers the type of a class based on several deductions
 class TypeInferrer(ast.NodeVisitor):
@@ -140,48 +143,6 @@ class InstantiationTracker(ast.NodeVisitor):
             self.instantiated_classes.add(node.func.id)
         self.generic_visit(node)
 
-def apply_replacements_and_remove_classes(code_snippet, unroll_dict, class_container_init):
-    replaced_classes = set()
-
-    for class_name, info in unroll_dict.items():
-        if info['type'] in ['list', 'dict', 'set']:
-            # Container types
-            replacement = extract_initialization_expression(class_container_init.get(class_name, ast.Dict()), info['type'] )
-        elif info['type'] == 'int':
-            # Set Integers to 0
-            replacement = '0'
-        elif info['type'] == 'str':
-            # Set strings to an empty string
-            replacement = '""'
-        else:
-            # If no specific type was recognized, skip replacement
-            continue
-        
-        # Perform the replacement in the code snippet
-        code_snippet = code_snippet.replace(f"{class_name}()", replacement)
-        replaced_classes.add(class_name)
-
-    # Removes classes that were identified as a type like str
-    tree = ast.parse(code_snippet)
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Module):
-            node.body = [n for n in node.body if not (isinstance(n, ast.ClassDef) and n.name in replaced_classes)]
-
-    # Removes classes that are leftover object classes
-    tracker = InstantiationTracker()
-    tracker.visit(tree)
-
-    new_body = []
-    for node in tree.body:
-        if isinstance(node, ast.ClassDef):
-            # Keep the class def only if it's instantiated
-            if node.name not in tracker.instantiated_classes:
-                continue 
-        new_body.append(node)
-    tree.body = new_body
-    
-    return astunparse.unparse(tree)
-
 def apply_single_replacement(code_snippet, class_name, type_info, class_container_init):
     """
     Apply a single replacement based on the inferred type information.
@@ -260,6 +221,92 @@ def test_snippet(snippet_obj, updated_code_snippet):
     finally:
         snippet_obj.history.pop()
 
+class TBDAssociationFinder(ast.NodeVisitor):
+    """
+    This AST Node Visitor will find associations with TBD objects for record keeping
+    """
+    def __init__(self, preprocessed_tbds=[]):
+        self.associations = {}
+        self.preprocessed_tbds = preprocessed_tbds  
+
+    def visit_Assign(self, node):
+        for target in node.targets:
+            if isinstance(target, ast.Attribute) and isinstance(target.value, ast.Name) and target.value.id == 'self':
+                attribute_name = target.attr
+                value_str = ast.unparse(node.value).strip()
+                tbd_matches = re.findall(r'TBD\d+', value_str)
+                for tbd_name in tbd_matches:
+                    if tbd_name not in self.preprocessed_tbds:  # Check if TBD is preprocessed
+                        self.associations[attribute_name] = {'type': 'object', 'tbd_name': tbd_name}
+            elif isinstance(target, ast.Name):
+                value_str = ast.unparse(node.value).strip()
+                tbd_matches = re.findall(r'TBD\d+', value_str)
+                for tbd_name in tbd_matches:
+                    # print("PREPROCESSED TBDS")
+                    # print(self.preprocessed_tbds)
+                    # print("TBD NAME")
+                    # print(tbd_name)
+                    if tbd_name not in self.preprocessed_tbds:  # Check if TBD is preprocessed
+                        self.associations[target.id] = {'type': 'object', 'tbd_name': tbd_name}
+        self.generic_visit(node)
+
+    def visit_FunctionDef(self, node):
+        for stmt in node.body:
+            if isinstance(stmt, ast.Return) and stmt.value:
+                return_str = ast.unparse(stmt.value).strip()
+                tbd_matches = re.findall(r'TBD\d+', return_str)
+                for tbd_name in tbd_matches:
+                    if tbd_name not in self.preprocessed_tbds: 
+                        self.associations[node.name] = {'type': 'callable', 'tbd_name': tbd_name}
+        self.generic_visit(node)
+
+def find_tbd_associations(code_snippet, preprocessed_tbds):
+    tree = ast.parse(code_snippet)
+    finder = TBDAssociationFinder(preprocessed_tbds=preprocessed_tbds)
+    finder.visit(tree)
+    return finder.associations
+
+def update_incompleter_info(snippets_info, associations):
+    """
+    Updates the incompleter_predicted_type in snippets_info based on associations found.
+    """
+    for identifier, associated_type in associations.items():
+        for snippet in snippets_info:
+            if identifier in snippet['identifiers']:
+                snippet['identifiers'][identifier]['incompleter_predicted_type'] = associated_type
+            else:
+                snippet['identifiers'][identifier] = {
+                    "lexecutor_predicted_type": "did not implement",
+                    "incompleter_predicted_type": associated_type
+                }
+
+def find_associations_types(current_snippet_info, associations, unroll_dict):
+    """
+    Updates the incompleter_predicted_type in current_snippet_info based on associations and unroll_dict.
+    """
+    for identifier, info in associations.items():
+        tbd_name = info['tbd_name'].replace('()', '').strip()  # Remove parentheses for matching
+
+        if tbd_name in unroll_dict:
+            inferred_type = unroll_dict[tbd_name]['type'].capitalize()
+
+            if info['type'] == 'callable':
+                inferred_type = "Callable"
+            elif inferred_type == "Object" and info['type'] == 'object':
+                inferred_type = "Object"
+
+            if identifier in current_snippet_info['identifiers']:
+                current_snippet_info['identifiers'][identifier]['incompleter_predicted_type'] = inferred_type
+            else:
+                current_snippet_info['identifiers'][identifier] = {
+                    "lexecutor_predicted_type": "did not implement",
+                    "incompleter_predicted_type": inferred_type
+                }
+        else:
+            current_snippet_info['identifiers'][identifier]['incompleter_predicted_type'] = "does not deduce this"
+
+
+
 def unmock_code_snippet(snippet_obj):
     """
     Analyzes the given code snippet, applies type deductions to replace class instantiations,
@@ -275,13 +322,42 @@ def unmock_code_snippet(snippet_obj):
     print('\nSTARTED UNMOCKING\n')
     code_snippet = snippet_obj.get_latest()
     unroll_dict, class_container_init = analyze_code_to_unroll_dict(code_snippet)
-    
+    tbd_associations = find_tbd_associations(code_snippet, snippet_obj.preprocessed_tbds)
+
+    # print("ASSOCIATIONS")
+    # print(tbd_associations)
+
     # Initialize tally for deductions
     deductions_tally = {'list': 0, 'dict': 0, 'set': 0, 'int': 0, 'str': 0, 'object': 0, 'total': 0}
+
+    snippets_info_path = "../data/package_meta/snippets_info.json"
+    snippets_info_incompleter_path = "../data/package_meta/snippets_info_incompleter.json"
+    current_snippet_info = None
+    
+    if os.path.exists(snippets_info_path):
+        with open(snippets_info_path, 'r') as file:
+            snippets_info = json.load(file)
+        
+        # Extract the snippet number from the snippet name (e.g., "snippet_748.py" -> "748")
+        snippet_no = snippet_obj.snippet_name.split('_')[-1].split('.')[0]
+        
+        # Find the dictionary for the current snippet
+        for snippet_info in snippets_info:
+            if snippet_info["snippet_no"] == snippet_no:
+                current_snippet_info = snippet_info
+                break
+
+    # if current_snippet_info is not None:
+    #     print(f"Current snippet info retrieved: {current_snippet_info}")
+    # else:
+    #     print("Current snippet info not found or the JSON file does not exist.")
+    
     
     for class_name, info in unroll_dict.items():
         # Backup the current state before applying the change
         original_code_snippet = code_snippet
+
+        is_preprocessed_tbd = class_name in snippet_obj.preprocessed_tbds
         
         if info['type'] in ['list', 'dict', 'set', 'int', 'str']:
             # Apply one change at a time
@@ -293,17 +369,31 @@ def unmock_code_snippet(snippet_obj):
                 # If the change is successful, update the code_snippet
                 # print('\nUNMOCKER: SUCCESSFUL SNIPPET:\n{}\n'.format(code_snippet))
                 code_snippet = updated_code_snippet
-                deductions_tally[info['type']] += 1
-                deductions_tally['total'] += 1
+
+                if not is_preprocessed_tbd:
+                    deductions_tally[info['type']] += 1
+                    deductions_tally['total'] += 1
             else:
                 # If not successful, revert to original
                 code_snippet = original_code_snippet
-                deductions_tally['total'] += 1
+                if not is_preprocessed_tbd:
+                    deductions_tally['total'] += 1
         else:
-            deductions_tally['object'] += 1
+            if not is_preprocessed_tbd:
+                deductions_tally['object'] += 1
             continue  
 
     final_code_snippet = remove_unused_classes(code_snippet)
+
+    if os.path.exists(snippets_info_incompleter_path) and current_snippet_info is not None:
+        with open(snippets_info_incompleter_path, 'r') as file:
+            existing_snippets_info = json.load(file)
+
+        find_associations_types(current_snippet_info, tbd_associations, unroll_dict)
+        existing_snippets_info.append(current_snippet_info)
+        
+        with open(snippets_info_incompleter_path, 'w') as file:
+            json.dump(existing_snippets_info, file, indent=4)
     
     # print(deductions_tally)
     # for var, info in unroll_dict.items():
@@ -312,31 +402,12 @@ def unmock_code_snippet(snippet_obj):
     return final_code_snippet, deductions_tally
 
 
-# def unmock_code_snippet(snippet_obj):
-#     """
-#     Analyzes the given code snippet, applies type deductions to replace class instantiations,
-#     and removes unused class definitions.
-
-#     Args:
-#         snippet_obj (Snippet): The Snippet object to analyze and update.
-
-#     Returns:
-#         str: The updated code snippet.
-#     """
-
-#     code_snippet = snippet_obj.get_latest()
-#     unroll_dict, class_container_init = analyze_code_to_unroll_dict(code_snippet)
-#     updated_code_snippet = apply_replacements_and_remove_classes(code_snippet, unroll_dict, class_container_init)
-#     for var, info in unroll_dict.items():
-#         print(f"{var}: {info}")
-#     return updated_code_snippet
-
 # To run directly for testing
 if __name__ == "__main__":
     code_snippet = """ 
     """
     unroll_dict, class_container_init = analyze_code_to_unroll_dict(code_snippet)
-    updated_code_snippet = apply_replacements_and_remove_classes(code_snippet, unroll_dict, class_container_init)
+    # updated_code_snippet = apply_replacements_and_remove_classes(code_snippet, unroll_dict, class_container_init)
     for var, info in unroll_dict.items():
         print(f"{var}: {info}")
-    print(updated_code_snippet)
+    # print(updated_code_snippet)
