@@ -8,6 +8,7 @@ from main.errors.name_error import _NameError
 from main.errors.file_not_found_error import _FileNotFoundError
 from main.errors.not_a_directory_error import _NotADirectoryError
 from main.errors.module_not_found_error import _ModuleNotFoundError
+from main.errors.import_error import _ImportError
 from main.errors.attribute_error import _AttributeError
 from main.errors.type_error import _TypeError
 from main.errors.key_error import _KeyError
@@ -19,6 +20,7 @@ class ErrorCoordinator(ErrorBaseClass):
         'FileNotFoundError': _FileNotFoundError,
         'NotADirectoryError': _NotADirectoryError,
         'ModuleNotFoundError': _ModuleNotFoundError,
+        'ImportError': _ImportError,
         'AttributeError': _AttributeError,
         'TypeError': _TypeError,
         'KeyError': _KeyError,

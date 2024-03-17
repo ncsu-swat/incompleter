@@ -41,9 +41,21 @@ Case Study:\
 	b. lexecutor predicts that are object and more as objects unnecessarily\
 7. snippet 292\
 	a. incompleter predicts s1 as object (hopefully will become a list with Adam's update), i as an object\
-	b. lexecutor predicts s1 as a list, i as an integer (whereas from looking at the snippet, i could be anything)\
-\
-\
+	b. lexecutor predicts s1 as a list, i as an integer (whereas from looking at the snippet, i could be anything)
+\f0\fs26 \
+\pard\pardeftab560\slleading20\partightenfactor0
+\cf0 8. snippet 341\
+	  
+\f1\fs24 a. incompleter gets stuck with an import error\
+	  b. lexecutor (sneakily) bypasses the same import error and gets a false positive execution\
+9. snippet 350\
+	  a. incompleter gets stuck with an import error\
+	  b. lexecutor (sneakily) bypasses the same import error and gets a false positive execution\
+10. snippet 121\
+	  a. incompleter gets stuck with an import error\
+	  b. lexecutor (sneakily) bypasses the same import error and gets a false positive execution\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardeftab560\pardirnatural\partightenfactor0
+\cf0 \
 \
 Cases where lexecutor covers up ImportErrors:\
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab560\pardirnatural\partightenfactor0
