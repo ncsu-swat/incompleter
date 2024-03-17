@@ -1,9 +1,13 @@
 from typing import Tuple
 from tqdm import tqdm
+import re
 
 from main.utils.snippet import Snippet
+from main.utils.messenger import Messenger
 from main.errors.error_coordinator import ErrorCoordinator
 from main.utils.unmocker import unmock_code_snippet
+
+from main.actions.defines.define_key import DefineKey
 
 class Moxecutor():
     def __init__(self, snippet_path: str, is_cov: bool) -> None:
@@ -14,6 +18,8 @@ class Moxecutor():
             self.snippet_path = snippet_path
             self.snippet_name = snippet_path.split('/')[-1]
             self.snippet = Snippet(snippet_path)
+
+            self.messenger = Messenger(snippet=self.snippet)
 
             # self.is_infinite = self.snippet.is_infinite()
             # if self.is_infinite:
@@ -37,6 +43,9 @@ class Moxecutor():
                         # Compute coverage at the start of each iteration if is_cov flag is True
                         out, err, stmt_cov, br_cov = self.snippet.compute_timed_latest_coverage()
                         # print('\n\nOutput:\n{}'.format(out))
+
+                        # Dispatching communication received from child process (Inner-world)
+                        self.messenger.dispatch(msg=out)
 
                         if stmt_cov is not None:
                             for iter_idx in range(_iter, self.MAX_ITER):
@@ -90,7 +99,7 @@ class Moxecutor():
 
                             # Carry out the action
                             if action is not None:
-                                rewritten_snippet = action.apply_pattern()
+                                action.apply_pattern()
                             else:
                                 break
                         else:

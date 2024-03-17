@@ -60,8 +60,14 @@ class <class_name>:
                 key = self.keys[key]
             ret_val = self.container[key]
         elif isinstance(key, str):
+            if key not in self.container.keys():
+                self.container[key] = key
+                print('[FROM INNER-WORLD], [ADD STR-KEY], [TGT {}], [ADDING (KEY, VALUE): ({}, {})]'.format(type(self).__name__, key, 'TBD'))
             ret_val = self.container[key]
         else:
+            if key not in self.container.keys():
+                self.container[key] = key
+                print('[FROM INNER-WORLD], [ADD OBJ-KEY], [TGT {}], [ADDING (KEY, VALUE): ({}, {})]'.format(type(self).__name__, type(key).__name__, 'TBD'))
             ret_val = self.container[key]
         return ret_val
 
