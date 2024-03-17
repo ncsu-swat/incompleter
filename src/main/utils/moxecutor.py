@@ -156,7 +156,9 @@ class Moxecutor():
 
             if err_coord is not None:
                 unresolved_report[err_coord.err_type] = err_coord.err_msg + ' (' + self.snippet_name + ')'
-            
+
+            # unmock_code_snippet(self.snippet, executability=False)
+
             self.snippet.cleanup()
 
             return executability_report, action_iteration_report, action_progress_report, len(self.snippet.action_sequence), coverage_report, unresolved_report, None

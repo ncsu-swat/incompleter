@@ -67,8 +67,8 @@ class TypeInferrer(ast.NodeVisitor):
         deductions = self.unroll_dict[class_name]['deductions']
 
         # Check if essential methods are implemented
-        if not all(method in methods for method in essential_methods):
-            return
+        # if not all(method in methods for method in essential_methods):
+        #     return
 
         # Retrieve the keys from the 'container' attribute, if it exists
         container_keys = self.mock_container_keys(class_name)
@@ -94,15 +94,23 @@ class TypeInferrer(ast.NodeVisitor):
             else:
                 deductions.append('key structure suggests dict-like behavior')
                 self.unroll_dict[class_name]['type'] = 'dict'
-        else:
+        elif all(method in methods for method in essential_methods):
             deductions.append('defaulting to dict due to general format and absence of unique collection methods')
             self.unroll_dict[class_name]['type'] = 'dict'
+        else:
+            return
 
+    def is_callable(self, class_name):
+        if '__call__' in self.class_methods[class_name]:
+            self.unroll_dict[class_name]['deductions'].append(f'{class_name} implements __call__, marking as callable')
+            self.unroll_dict[class_name]['type'] = 'callable'
 
     def infer_class_type(self, class_name):
         self.is_primitive(class_name)
         if self.unroll_dict[class_name]['type'] == 'unknown':
             self.is_collection(class_name)
+        if self.unroll_dict[class_name]['type'] == 'unknown':
+            self.is_callable(class_name)
         if self.unroll_dict[class_name]['type'] == 'unknown':
             self.unroll_dict[class_name]['deductions'].append('no specific type patterns recognized')
             self.unroll_dict[class_name]['type'] = 'object'
@@ -113,27 +121,50 @@ def analyze_code_to_unroll_dict(code):
     inferrer.visit(tree)
     return inferrer.unroll_dict, inferrer.class_container_init
 
+# def extract_initialization_expression(node, type_str):
+#     if isinstance(node, ast.Dict):
+#         if type_str == 'dict':
+#             keys = [astunparse.unparse(k).strip() for k in node.keys]
+#             values = [astunparse.unparse(v).strip() for v in node.values]
+#             items = [f"{k}: {v}" for k, v in zip(keys, values)]
+#             return "{" + ", ".join(items) + "}"
+#         elif type_str in ['list', 'set']:
+#             values = [astunparse.unparse(v).strip() for v in node.values]
+#             if type_str == 'list':
+#                 return "[" + ", ".join(values) + "]"
+#             else:  # set
+#                 return "{" + ", ".join(values) + "}"
+#     # Empty structures to be safe
+#     if type_str == 'dict':
+#         return "{}"
+#     elif type_str == 'list':
+#         return "[]"
+#     elif type_str == 'set':
+#         return "set()"
+
 def extract_initialization_expression(node, type_str):
-    if isinstance(node, ast.Dict):
-        if type_str == 'dict':
-            keys = [astunparse.unparse(k).strip() for k in node.keys]
-            values = [astunparse.unparse(v).strip() for v in node.values]
+    if type_str == 'dict':
+        keys = [astunparse.unparse(k).strip() for k in getattr(node, 'keys', []) if k is not None]
+        values = [astunparse.unparse(v).strip() for v in getattr(node, 'values', []) if v is not None]
+        
+        if keys and values and len(keys) == len(values):
             items = [f"{k}: {v}" for k, v in zip(keys, values)]
             return "{" + ", ".join(items) + "}"
-        elif type_str in ['list', 'set']:
-            values = [astunparse.unparse(v).strip() for v in node.values]
-            if type_str == 'list':
-                return "[" + ", ".join(values) + "]"
-            else:  # set
-                return "{" + ", ".join(values) + "}"
-    # Empty structures to be safe
+        else:
+            return "{}"
+    elif type_str in ['list', 'set']:
+        values = [astunparse.unparse(v).strip() for v in getattr(node, 'values', []) if v is not None]
+        
+        if type_str == 'list':
+            return "[" + ", ".join(values) + "]"
+        else:  
+            return "{" + ", ".join(values) + "}"
     if type_str == 'dict':
         return "{}"
     elif type_str == 'list':
         return "[]"
     elif type_str == 'set':
         return "set()"
-
 class InstantiationTracker(ast.NodeVisitor):
     def __init__(self):
         self.instantiated_classes = set()
@@ -307,7 +338,7 @@ def find_associations_types(current_snippet_info, associations, unroll_dict):
 
 
 
-def unmock_code_snippet(snippet_obj):
+def unmock_code_snippet(snippet_obj, executability=True):
     """
     Analyzes the given code snippet, applies type deductions to replace class instantiations,
     and removes unused class definitions.
@@ -324,14 +355,14 @@ def unmock_code_snippet(snippet_obj):
     unroll_dict, class_container_init = analyze_code_to_unroll_dict(code_snippet)
     tbd_associations = find_tbd_associations(code_snippet, snippet_obj.preprocessed_tbds)
 
-    # print("ASSOCIATIONS")
-    # print(tbd_associations)
+    print("ASSOCIATIONS")
+    print(tbd_associations)
 
     # Initialize tally for deductions
     deductions_tally = {'list': 0, 'dict': 0, 'set': 0, 'int': 0, 'str': 0, 'object': 0, 'total': 0}
 
-    snippets_info_path = "../data/package_meta/snippets_info.json"
-    snippets_info_incompleter_path = "../data/package_meta/snippets_info_incompleter.json"
+    snippets_info_path = "../data/type_inference/snippets_info.json"
+    snippets_info_incompleter_path = "../data/type_inference/snippets_info_incompleter.json"
     current_snippet_info = None
     
     if os.path.exists(snippets_info_path):
@@ -351,41 +382,46 @@ def unmock_code_snippet(snippet_obj):
     #     print(f"Current snippet info retrieved: {current_snippet_info}")
     # else:
     #     print("Current snippet info not found or the JSON file does not exist.")
-    
-    
-    for class_name, info in unroll_dict.items():
-        # Backup the current state before applying the change
-        original_code_snippet = code_snippet
+    final_code_snippet = code_snippet
 
-        is_preprocessed_tbd = class_name in snippet_obj.preprocessed_tbds
-        
-        if info['type'] in ['list', 'dict', 'set', 'int', 'str']:
-            # Apply one change at a time
-            updated_code_snippet = apply_single_replacement(code_snippet, class_name, info, class_container_init)
+    if(executability):
+        for class_name, info in unroll_dict.items():
+            # Backup the current state before applying the change
+            original_code_snippet = code_snippet
 
-            success = test_snippet(snippet_obj, updated_code_snippet)
+            is_preprocessed_tbd = class_name in snippet_obj.preprocessed_tbds
             
-            if success:
-                # If the change is successful, update the code_snippet
-                # print('\nUNMOCKER: SUCCESSFUL SNIPPET:\n{}\n'.format(code_snippet))
-                code_snippet = updated_code_snippet
+            if info['type'] in ['list', 'dict', 'set', 'int', 'str']:
+                # Apply one change at a time
+                updated_code_snippet = apply_single_replacement(code_snippet, class_name, info, class_container_init)
 
-                if not is_preprocessed_tbd:
-                    deductions_tally[info['type']] += 1
-                    deductions_tally['total'] += 1
+                success = test_snippet(snippet_obj, updated_code_snippet)
+                
+                if success:
+                    # If the change is successful, update the code_snippet
+                    # print('\nUNMOCKER: SUCCESSFUL SNIPPET:\n{}\n'.format(code_snippet))
+                    code_snippet = updated_code_snippet
+
+                    if not is_preprocessed_tbd:
+                        deductions_tally[info['type']] += 1
+                        deductions_tally['total'] += 1
+                else:
+                    # If not successful, revert to original
+                    code_snippet = original_code_snippet
+                    if not is_preprocessed_tbd:
+                        deductions_tally['total'] += 1
             else:
-                # If not successful, revert to original
-                code_snippet = original_code_snippet
                 if not is_preprocessed_tbd:
-                    deductions_tally['total'] += 1
-        else:
-            if not is_preprocessed_tbd:
-                deductions_tally['object'] += 1
-            continue  
+                    deductions_tally['object'] += 1
+                continue  
 
-    final_code_snippet = remove_unused_classes(code_snippet)
+        final_code_snippet = remove_unused_classes(code_snippet)
 
     if os.path.exists(snippets_info_incompleter_path) and current_snippet_info is not None:
+        # tbd_associations = find_tbd_associations(final_code_snippet, snippet_obj.preprocessed_tbds)
+
+        # print("ASSOCIATIONS AGAIN")
+        # print(tbd_associations)
         with open(snippets_info_incompleter_path, 'r') as file:
             existing_snippets_info = json.load(file)
 
@@ -396,8 +432,8 @@ def unmock_code_snippet(snippet_obj):
             json.dump(existing_snippets_info, file, indent=4)
     
     # print(deductions_tally)
-    # for var, info in unroll_dict.items():
-    #     print(f"{var}: {info}")
+    for var, info in unroll_dict.items():
+        print(f"{var}: {info}")
     
     return final_code_snippet, deductions_tally
 
