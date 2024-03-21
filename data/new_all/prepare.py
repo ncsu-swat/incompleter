@@ -121,7 +121,7 @@ def process_files(directory, input_file_path, specific_file=None):
             visitor = Visitor()
             modified_tree = visitor.visit_Body(tree)
             modified_code = ast.unparse(ast.fix_missing_locations(modified_tree))
-            print(modified_code)
+            # print(modified_code)
 
             with open('tmp.py', 'w') as tmp_file:
                 tmp_file.write(modified_code)
@@ -133,7 +133,7 @@ def process_files(directory, input_file_path, specific_file=None):
                 continue  
 
             vars_and_types = parse_output(output)
-            print(vars_and_types)
+            # print(vars_and_types)
             if len(vars_and_types) > 50:
                 print(f"Error: More than 50 assignments in {filename}. Something might be wrong.")
                 sys.exit(1)
