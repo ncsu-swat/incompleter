@@ -1,3 +1,0 @@
-# Extracted from https://stackoverflow.com/questions/5041008/how-to-find-elements-by-class
-soup.find_all("html_element", class_="your_class_name")
-

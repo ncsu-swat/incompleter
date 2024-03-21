@@ -43,7 +43,8 @@ class DefineIterableOrSubscriptable(ActionBaseClass):
             def visit_Body(self, node):
                 for (idx, child) in enumerate(node.body):
                     node.body[idx] = self.visit(child)         
-                node.body.remove(None)
+                if None in node.body:
+                    node.body.remove(None)
                 return node
 
             def visit_ClassDef(self, node):

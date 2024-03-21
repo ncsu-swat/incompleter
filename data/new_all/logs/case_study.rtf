@@ -16,7 +16,7 @@
 {\listtext	3.	}Authors of some snippets might intentionally inject fault in the snippets to demonstrate some code concepts (chunk1/snippet_736.py.orig) (lexecutor_all/snippet_391.py.orig)\
 {\listtext	4.	}Question of generality --> we are still outperforming Lexecutor on the larger dataset\
 {\listtext	5.	}Snippets containing windows-styled paths are not considered since we ran our experiments on a Unix-based machine.\
-{\listtext	6.	}Some code snippets have infinite loops (e.g. while True: ...), input requirements from user which timeouts the execution. (chunk1/snippet_378.py.orig)\
+{\listtext	6.	}Some code snippets have infinite loops (e.g. while True: ...), input requirements from user which times out the execution. (chunk1/snippet_378.py.orig)\
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardeftab560\pardirnatural\partightenfactor0
 
 \f1\fs24 \cf0 \
@@ -44,16 +44,8 @@ Case Study:\
 	b. lexecutor predicts s1 as a list, i as an integer (whereas from looking at the snippet, i could be anything)
 \f0\fs26 \
 \pard\pardeftab560\slleading20\partightenfactor0
-\cf0 8. snippet 341\
-	  
-\f1\fs24 a. incompleter gets stuck with an import error\
-	  b. lexecutor (sneakily) bypasses the same import error and gets a false positive execution\
-9. snippet 350\
-	  a. incompleter gets stuck with an import error\
-	  b. lexecutor (sneakily) bypasses the same import error and gets a false positive execution\
-10. snippet 121\
-	  a. incompleter gets stuck with an import error\
-	  b. lexecutor (sneakily) bypasses the same import error and gets a false positive execution\
+
+\f1\fs24 \cf0 \
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardeftab560\pardirnatural\partightenfactor0
 \cf0 \
 \

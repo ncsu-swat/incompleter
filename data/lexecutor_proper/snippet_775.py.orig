@@ -1,4 +1,0 @@
-# Extracted from https://stackoverflow.com/questions/455580/json-datetime-between-python-and-javascript
-r = json.dumps(your_json_data, default=str)
-your_json_data = json.loads(r)
-
