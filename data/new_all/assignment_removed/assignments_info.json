@@ -1,0 +1,37 @@
+[
+    {
+        "snippet_name": "snippet_2146_0.py",
+        "variable": "r",
+        "type": "int",
+        "line_no": "25",
+        "contains_imports": true
+    },
+    {
+        "snippet_name": "snippet_2146_1.py",
+        "variable": "n",
+        "type": "int",
+        "line_no": "14",
+        "contains_imports": true
+    },
+    {
+        "snippet_name": "snippet_2146_2.py",
+        "variable": "n",
+        "type": "int",
+        "line_no": "7",
+        "contains_imports": true
+    },
+    {
+        "snippet_name": "snippet_2146_3.py",
+        "variable": "n",
+        "type": "int",
+        "line_no": "23",
+        "contains_imports": true
+    },
+    {
+        "snippet_name": "snippet_2146_4.py",
+        "variable": "a",
+        "type": "list",
+        "line_no": "30",
+        "contains_imports": true
+    }
+]
