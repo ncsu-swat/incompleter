@@ -1,0 +1,2 @@
+__original_start_marker = None # pragma: no cover
+mylist.append(str(today))

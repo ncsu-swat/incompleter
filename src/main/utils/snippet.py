@@ -44,6 +44,8 @@ class Snippet:
         self.tbd_counter = 0
         self.tbd_tracker: Dict[str, str] = {} # e.g. { TBD#: identifier }
 
+        self.preprocessed_tbds = set()
+
         # Since this function relies on the tbd_counter, we need to call the __replace_iterables_subscriptables_with_tbd function after defining tbd_counter
         self.__replace_iterables_subscriptables_with_tbd()
 
@@ -85,6 +87,9 @@ class Snippet:
 
             def visit_List(self, node):
                 tbd_name = self.snippet.get_next_tbd_name()
+
+                self.snippet.preprocessed_tbds.add(tbd_name)
+                
                 containers_tracker[tbd_name] = {
                     'type': 'List',
                     'elts': ast.Dict(keys=[ast.Constant(value=idx) for idx in range(len(node.elts))], values=[elt for elt in node.elts])
@@ -151,6 +156,9 @@ class Snippet:
 
             def visit_Dict(self, node):
                 tbd_name = self.snippet.get_next_tbd_name()
+
+                self.snippet.preprocessed_tbds.add(tbd_name)
+                
                 containers_tracker[tbd_name] = {
                     'type': 'Dict',
                     'elts': ast.Dict(keys=[key for key in node.keys], values=[value for value in node.values])

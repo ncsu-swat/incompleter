@@ -6,12 +6,13 @@ from main.utils.reporter import Reporter
 
 import os
 import sys
-
+import json
 import argparse
 from glob import glob
 from tqdm import tqdm
 
 report_aggregate = {}
+aggregate_deductions = defaultdict(int)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -28,13 +29,21 @@ if __name__ == '__main__':
         file_path = os.path.join(path, file_name)
         
         mox = Moxecutor(snippet_path=file_path, is_cov=args.cov)
-        executability_report, action_iteration_report, action_progress_report, action_sequence_length, coverage_report, unresolved_report = mox.moxecute()
+        executability_report, action_iteration_report, action_progress_report, action_sequence_length, coverage_report, unresolved_report, deductions_tally = mox.moxecute()
 
         if executability_report is not None and action_iteration_report is not None and action_progress_report is not None and action_sequence_length is not None and coverage_report is not None and unresolved_report is not None:
             reporter.collect_report(file_name, executability_report, action_iteration_report, action_progress_report, action_sequence_length, coverage_report, unresolved_report)
 
+        if deductions_tally is not None:
+            for key, value in deductions_tally.items():
+                aggregate_deductions[key] += value
+
     reporter.sort()
     reporter.compute_venn()
     print(reporter)
+
+    print("\nAggregated Deductions Tally:")
+    for key, value in aggregate_deductions.items():
+        print(f"{key}: {value}")
 
     sys.exit(0)

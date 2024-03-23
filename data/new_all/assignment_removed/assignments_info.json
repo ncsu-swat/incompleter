@@ -317,7 +317,7 @@
     {
         "snippet_name": "snippet_1019_0.py",
         "variable": "tot_missing_vals",
-        "type": "int64",
+        "type": "int",
         "line_no": "15",
         "contains_imports": true
     },
@@ -408,7 +408,7 @@
     {
         "snippet_name": "snippet_1024_1.py",
         "variable": "cbrt",
-        "type": "float64",
+        "type": "float",
         "line_no": "3",
         "contains_imports": true
     },
@@ -485,21 +485,21 @@
     {
         "snippet_name": "snippet_1032_1.py",
         "variable": "var",
-        "type": "float64",
+        "type": "float",
         "line_no": "10",
         "contains_imports": true
     },
     {
         "snippet_name": "snippet_1032_2.py",
         "variable": "mean",
-        "type": "float64",
+        "type": "float",
         "line_no": "4",
         "contains_imports": true
     },
     {
         "snippet_name": "snippet_1032_3.py",
         "variable": "std",
-        "type": "float64",
+        "type": "float",
         "line_no": "7",
         "contains_imports": true
     },
@@ -1297,7 +1297,7 @@
     {
         "snippet_name": "snippet_1083_1.py",
         "variable": "result",
-        "type": "int64",
+        "type": "int",
         "line_no": "5",
         "contains_imports": true
     },
@@ -2858,7 +2858,7 @@
     {
         "snippet_name": "snippet_118_0.py",
         "variable": "result",
-        "type": "float64",
+        "type": "float",
         "line_no": "3",
         "contains_imports": true
     },
@@ -2879,7 +2879,7 @@
     {
         "snippet_name": "snippet_118_3.py",
         "variable": "result1",
-        "type": "float64",
+        "type": "float",
         "line_no": "7",
         "contains_imports": true
     },
@@ -3782,7 +3782,7 @@
     {
         "snippet_name": "snippet_1232_0.py",
         "variable": "index",
-        "type": "int64",
+        "type": "int",
         "line_no": "8",
         "contains_imports": true
     },
@@ -6190,7 +6190,7 @@
     {
         "snippet_name": "snippet_1383_0.py",
         "variable": "r1",
-        "type": "float64",
+        "type": "float",
         "line_no": "5",
         "contains_imports": true
     },
@@ -7338,28 +7338,28 @@
     {
         "snippet_name": "snippet_1465_0.py",
         "variable": "r1",
-        "type": "float64",
+        "type": "float",
         "line_no": "9",
         "contains_imports": true
     },
     {
         "snippet_name": "snippet_1465_1.py",
         "variable": "r2",
-        "type": "float64",
+        "type": "float",
         "line_no": "14",
         "contains_imports": true
     },
     {
         "snippet_name": "snippet_1465_2.py",
         "variable": "r1",
-        "type": "float64",
+        "type": "float",
         "line_no": "13",
         "contains_imports": true
     },
     {
         "snippet_name": "snippet_1465_3.py",
         "variable": "r1",
-        "type": "float64",
+        "type": "float",
         "line_no": "5",
         "contains_imports": true
     },
@@ -7373,14 +7373,14 @@
     {
         "snippet_name": "snippet_1465_5.py",
         "variable": "r2",
-        "type": "float64",
+        "type": "float",
         "line_no": "10",
         "contains_imports": true
     },
     {
         "snippet_name": "snippet_1465_6.py",
         "variable": "r2",
-        "type": "float64",
+        "type": "float",
         "line_no": "6",
         "contains_imports": true
     },
@@ -8584,7 +8584,7 @@
     {
         "snippet_name": "snippet_1527_1.py",
         "variable": "row3_mean",
-        "type": "float64",
+        "type": "float",
         "line_no": "16",
         "contains_imports": true
     },
@@ -8598,7 +8598,7 @@
     {
         "snippet_name": "snippet_1527_3.py",
         "variable": "column1_mean",
-        "type": "float64",
+        "type": "float",
         "line_no": "23",
         "contains_imports": true
     },
@@ -8612,28 +8612,28 @@
     {
         "snippet_name": "snippet_1527_5.py",
         "variable": "column3_mean",
-        "type": "float64",
+        "type": "float",
         "line_no": "29",
         "contains_imports": true
     },
     {
         "snippet_name": "snippet_1527_6.py",
         "variable": "row1_mean",
-        "type": "float64",
+        "type": "float",
         "line_no": "10",
         "contains_imports": true
     },
     {
         "snippet_name": "snippet_1527_7.py",
         "variable": "row2_mean",
-        "type": "float64",
+        "type": "float",
         "line_no": "13",
         "contains_imports": true
     },
     {
         "snippet_name": "snippet_1527_8.py",
         "variable": "column2_mean",
-        "type": "float64",
+        "type": "float",
         "line_no": "26",
         "contains_imports": true
     },
@@ -8878,7 +8878,7 @@
     {
         "snippet_name": "snippet_1539_3.py",
         "variable": "product",
-        "type": "int64",
+        "type": "int",
         "line_no": "7",
         "contains_imports": true
     },
@@ -10187,7 +10187,7 @@
     {
         "snippet_name": "snippet_1605_1.py",
         "variable": "det",
-        "type": "float64",
+        "type": "float",
         "line_no": "12",
         "contains_imports": true
     },
@@ -10348,7 +10348,7 @@
     {
         "snippet_name": "snippet_1616_1.py",
         "variable": "number",
-        "type": "int64",
+        "type": "int",
         "line_no": "9",
         "contains_imports": true
     },
@@ -11286,7 +11286,7 @@
     {
         "snippet_name": "snippet_1668_0.py",
         "variable": "out_num",
-        "type": "int64",
+        "type": "int",
         "line_no": "9",
         "contains_imports": true
     },
@@ -12357,7 +12357,7 @@
     {
         "snippet_name": "snippet_1722_0.py",
         "variable": "geek",
-        "type": "int64",
+        "type": "int",
         "line_no": "8",
         "contains_imports": true
     },
@@ -12574,7 +12574,7 @@
     {
         "snippet_name": "snippet_1738_1.py",
         "variable": "dist",
-        "type": "float64",
+        "type": "float",
         "line_no": "16",
         "contains_imports": true
     },
@@ -14086,7 +14086,7 @@
     {
         "snippet_name": "snippet_1808_1.py",
         "variable": "geeks",
-        "type": "int64",
+        "type": "int",
         "line_no": "8",
         "contains_imports": true
     },
@@ -15185,7 +15185,7 @@
     {
         "snippet_name": "snippet_1857_0.py",
         "variable": "trace",
-        "type": "int64",
+        "type": "int",
         "line_no": "14",
         "contains_imports": true
     },
@@ -15948,7 +15948,7 @@
     {
         "snippet_name": "snippet_1899_0.py",
         "variable": "med_odd",
-        "type": "float64",
+        "type": "float",
         "line_no": "12",
         "contains_imports": true
     },
@@ -16228,7 +16228,7 @@
     {
         "snippet_name": "snippet_1917_0.py",
         "variable": "result",
-        "type": "float64",
+        "type": "float",
         "line_no": "11",
         "contains_imports": true
     },
@@ -16277,7 +16277,7 @@
     {
         "snippet_name": "snippet_1920_0.py",
         "variable": "geeks",
-        "type": "float64",
+        "type": "float",
         "line_no": "8",
         "contains_imports": true
     },
@@ -16746,7 +16746,7 @@
     {
         "snippet_name": "snippet_1939_0.py",
         "variable": "vec_norm",
-        "type": "float64",
+        "type": "float",
         "line_no": "10",
         "contains_imports": true
     },
@@ -19469,14 +19469,14 @@
     {
         "snippet_name": "snippet_2103_0.py",
         "variable": "alpha",
-        "type": "float64",
+        "type": "float",
         "line_no": "10",
         "contains_imports": true
     },
     {
         "snippet_name": "snippet_2103_1.py",
         "variable": "sqrtFive",
-        "type": "float64",
+        "type": "float",
         "line_no": "9",
         "contains_imports": true
     },
@@ -19497,7 +19497,7 @@
     {
         "snippet_name": "snippet_2103_4.py",
         "variable": "beta",
-        "type": "float64",
+        "type": "float",
         "line_no": "11",
         "contains_imports": true
     },
@@ -19742,7 +19742,7 @@
     {
         "snippet_name": "snippet_2114_1.py",
         "variable": "geeks",
-        "type": "int64",
+        "type": "int",
         "line_no": "8",
         "contains_imports": true
     },
@@ -19987,7 +19987,7 @@
     {
         "snippet_name": "snippet_2123_1.py",
         "variable": "out_ind",
-        "type": "int64",
+        "type": "int",
         "line_no": "14",
         "contains_imports": true
     },
@@ -31432,7 +31432,7 @@
     {
         "snippet_name": "snippet_338_2.py",
         "variable": "n",
-        "type": "float64",
+        "type": "float",
         "line_no": "4",
         "contains_imports": true
     },
@@ -32671,7 +32671,7 @@
     {
         "snippet_name": "snippet_412_0.py",
         "variable": "result",
-        "type": "int64",
+        "type": "int",
         "line_no": "13",
         "contains_imports": true
     },
@@ -34260,7 +34260,7 @@
     {
         "snippet_name": "snippet_496_1.py",
         "variable": "result",
-        "type": "float64",
+        "type": "float",
         "line_no": "5",
         "contains_imports": true
     },
@@ -36157,7 +36157,7 @@
     {
         "snippet_name": "snippet_611_2.py",
         "variable": "d",
-        "type": "float64",
+        "type": "float",
         "line_no": "4",
         "contains_imports": true
     },
@@ -36241,7 +36241,7 @@
     {
         "snippet_name": "snippet_620_1.py",
         "variable": "result",
-        "type": "int64",
+        "type": "int",
         "line_no": "7",
         "contains_imports": true
     },
@@ -37172,7 +37172,7 @@
     {
         "snippet_name": "snippet_678_3.py",
         "variable": "result",
-        "type": "int64",
+        "type": "int",
         "line_no": "8",
         "contains_imports": true
     },
@@ -38670,7 +38670,7 @@
     {
         "snippet_name": "snippet_765_0.py",
         "variable": "x",
-        "type": "int64",
+        "type": "int",
         "line_no": "6",
         "contains_imports": true
     },
@@ -39006,7 +39006,7 @@
     {
         "snippet_name": "snippet_786_1.py",
         "variable": "result",
-        "type": "float64",
+        "type": "float",
         "line_no": "5",
         "contains_imports": true
     },
@@ -39062,7 +39062,7 @@
     {
         "snippet_name": "snippet_789_1.py",
         "variable": "result",
-        "type": "int64",
+        "type": "int",
         "line_no": "15",
         "contains_imports": true
     },
@@ -40140,7 +40140,7 @@
     {
         "snippet_name": "snippet_862_2.py",
         "variable": "ts",
-        "type": "float64",
+        "type": "float",
         "line_no": "7",
         "contains_imports": true
     },
@@ -40469,7 +40469,7 @@
     {
         "snippet_name": "snippet_885_0.py",
         "variable": "p",
-        "type": "float64",
+        "type": "float",
         "line_no": "10",
         "contains_imports": true
     },
@@ -40483,14 +40483,14 @@
     {
         "snippet_name": "snippet_885_2.py",
         "variable": "p",
-        "type": "float64",
+        "type": "float",
         "line_no": "7",
         "contains_imports": true
     },
     {
         "snippet_name": "snippet_885_3.py",
         "variable": "p",
-        "type": "float64",
+        "type": "float",
         "line_no": "4",
         "contains_imports": true
     },
@@ -41995,7 +41995,7 @@
     {
         "snippet_name": "snippet_966_1.py",
         "variable": "result",
-        "type": "int64",
+        "type": "int",
         "line_no": "7",
         "contains_imports": true
     },

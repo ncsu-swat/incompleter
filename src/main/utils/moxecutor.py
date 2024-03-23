@@ -115,12 +115,18 @@ class Moxecutor():
                                 for action_name, impact_dict in action_progress_report.items():
                                     action_progress_report[action_name]['f-exec'] += 1
 
-                            unmocked_snippet = unmock_code_snippet(self.snippet)
-                            print('\nLATEST SNIPPET:\n{}\n'.format(self.snippet.get_latest()))
-                            print('UNMOCKED SNIPPET:\n{}'.format(unmocked_snippet))
+                            _iter, coverage_report, executability_report, action_progress_report, action_iteration_report, deductions_tally = self.unmocked_snippet_report(
+                                _iter,
+                                coverage_report,
+                                executability_report,
+                                action_progress_report,
+                                action_iteration_report
+                            )
+
+                            # print('\nLATEST SNIPPET (UNMOCKED):\n{}\n'.format(self.snippet.get_latest()))
 
                             self.snippet.cleanup()
-                            return executability_report, action_iteration_report, action_progress_report, len(self.snippet.action_sequence), coverage_report, unresolved_report
+                            return executability_report, action_iteration_report, action_progress_report, len(self.snippet.action_sequence), coverage_report, unresolved_report, deductions_tally
                     else:
                         # If there are no warnings and errors, we consider the snippet fully executed
                         executability_report[_iter] = 'Fixed'
@@ -134,12 +140,18 @@ class Moxecutor():
                             for action_name, impact_dict in action_progress_report.items():
                                 action_progress_report[action_name]['f-exec'] += 1 
                         
-                        unmocked_snippet = unmock_code_snippet(self.snippet)
-                        print('\nLATEST SNIPPET:\n{}\n'.format(self.snippet.get_latest()))
-                        print('UNMOCKED SNIPPET:\n{}'.format(unmocked_snippet))
+                        _iter, coverage_report, executability_report, action_progress_report, action_iteration_report, deductions_tally = self.unmocked_snippet_report(
+                                _iter,
+                                coverage_report,
+                                executability_report,
+                                action_progress_report,
+                                action_iteration_report
+                            )
+                        
+                        # print('\nLATEST SNIPPET (UNMOCKED):\n{}\n'.format(self.snippet.get_latest()))
                         
                         self.snippet.cleanup()
-                        return executability_report, action_iteration_report, action_progress_report, len(self.snippet.action_sequence), coverage_report, unresolved_report
+                        return executability_report, action_iteration_report, action_progress_report, len(self.snippet.action_sequence), coverage_report, unresolved_report, deductions_tally
                 
                 except IndentationError as e:
                     pass
@@ -153,10 +165,61 @@ class Moxecutor():
 
             if err_coord is not None:
                 unresolved_report[err_coord.err_type] = err_coord.err_msg + ' (' + self.snippet_name + ')'
-            
+
+            # unmock_code_snippet(self.snippet, executability=False)
+
             self.snippet.cleanup()
 
-            return executability_report, action_iteration_report, action_progress_report, len(self.snippet.action_sequence), coverage_report, unresolved_report
+            return executability_report, action_iteration_report, action_progress_report, len(self.snippet.action_sequence), coverage_report, unresolved_report, None
         
-        return None, None, None, None, None, None
-            
+        return None, None, None, None, None, None, None
+    
+
+    def unmocked_snippet_report(self, _iter, coverage_report, executability_report, action_progress_report, action_iteration_report):
+
+        # _iter = _iter + 1
+        self.snippet.history[-1], deductions_tally = unmock_code_snippet(self.snippet)
+
+        out, err, stmt_cov, br_cov = self.snippet.compute_timed_latest_coverage()
+        if stmt_cov is not None:
+            for iter_idx in range(_iter, self.MAX_ITER):
+                if iter_idx not in coverage_report.keys():
+                    coverage_report[iter_idx] = { 'stmt': 0, 'br': 0 }
+                coverage_report[iter_idx]['stmt'] = stmt_cov
+        if br_cov is not None:
+            for iter_idx in range(_iter, self.MAX_ITER):
+                if iter_idx not in coverage_report.keys():
+                    coverage_report[iter_idx] = { 'stmt': 0, 'br': 0 }
+                coverage_report[iter_idx]['br'] = br_cov
+        
+        if err is None:
+            executability_report[_iter] = 'Timedout'
+            tqdm.write('\n\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\nSnippet#: {} -- Potentially Timed Out\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n'.format(str(self.snippet_path.split('/')[-1].split('.')[0].split('snippet_')[-1])))
+        
+        add_unmock_action = False
+
+        if len(err) > 0:
+            err_coord = ErrorCoordinator(path=self.snippet.snippet_path, snippet=self.snippet, stack_trace=err)
+            if len(err_coord.err_type):
+                # Report executability
+                executability_report[_iter] = err_coord.err_type
+                action_iteration_report[_iter] = 'Unmocked'
+                self.snippet.add_to_action_sequence("Unmocked")
+            else:
+                add_unmock_action = True 
+        else:
+            add_unmock_action = True
+        
+        if(add_unmock_action):
+            action_iteration_report[_iter] = 'Unmocked'
+            self.snippet.add_to_action_sequence("Unmocked")
+            # # After achieving full executability, we can say that all the action patterns that had been applied to this snippet, had contribution(s) towards full executability.
+            if _iter > 0:
+                prior_action = action_iteration_report[_iter]
+                if prior_action not in action_progress_report.keys():
+                    action_progress_report[prior_action] = { 'f-exec': 0, 'p-exec': 0 }
+                action_progress_report[prior_action]['p-exec'] += 1
+                action_progress_report[prior_action]['f-exec'] += 1
+
+        return _iter, coverage_report, executability_report, action_progress_report, action_iteration_report, deductions_tally
+
