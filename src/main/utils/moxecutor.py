@@ -1,8 +1,13 @@
 from typing import Tuple
 from tqdm import tqdm
+import re
 
 from main.utils.snippet import Snippet
+from main.utils.messenger import Messenger
 from main.errors.error_coordinator import ErrorCoordinator
+from main.utils.unmocker import unmock_code_snippet
+
+from main.actions.defines.define_key import DefineKey
 
 class Moxecutor():
     def __init__(self, snippet_path: str, is_cov: bool) -> None:
@@ -13,6 +18,8 @@ class Moxecutor():
             self.snippet_path = snippet_path
             self.snippet_name = snippet_path.split('/')[-1]
             self.snippet = Snippet(snippet_path)
+
+            self.messenger = Messenger(snippet=self.snippet)
 
             # self.is_infinite = self.snippet.is_infinite()
             # if self.is_infinite:
@@ -35,6 +42,10 @@ class Moxecutor():
                         # If we are computing coverage then check output and error from the coverage wrapper to avoid having to run twice
                         # Compute coverage at the start of each iteration if is_cov flag is True
                         out, err, stmt_cov, br_cov = self.snippet.compute_timed_latest_coverage()
+                        # print('\n\nOutput:\n{}'.format(out))
+
+                        # Dispatching communication received from child process (Inner-world)
+                        self.messenger.dispatch(msg=out)
 
                         if stmt_cov is not None:
                             for iter_idx in range(_iter, self.MAX_ITER):
@@ -88,7 +99,7 @@ class Moxecutor():
 
                             # Carry out the action
                             if action is not None:
-                                rewritten_snippet = action.apply_pattern()
+                                action.apply_pattern()
                             else:
                                 break
                         else:
@@ -103,6 +114,10 @@ class Moxecutor():
                                 action_progress_report[prior_action]['p-exec'] += 1
                                 for action_name, impact_dict in action_progress_report.items():
                                     action_progress_report[action_name]['f-exec'] += 1
+
+                            unmocked_snippet = unmock_code_snippet(self.snippet)
+                            print('\nLATEST SNIPPET:\n{}\n'.format(self.snippet.get_latest()))
+                            print('UNMOCKED SNIPPET:\n{}'.format(unmocked_snippet))
 
                             self.snippet.cleanup()
                             return executability_report, action_iteration_report, action_progress_report, len(self.snippet.action_sequence), coverage_report, unresolved_report
@@ -119,6 +134,10 @@ class Moxecutor():
                             for action_name, impact_dict in action_progress_report.items():
                                 action_progress_report[action_name]['f-exec'] += 1 
                         
+                        unmocked_snippet = unmock_code_snippet(self.snippet)
+                        print('\nLATEST SNIPPET:\n{}\n'.format(self.snippet.get_latest()))
+                        print('UNMOCKED SNIPPET:\n{}'.format(unmocked_snippet))
+                        
                         self.snippet.cleanup()
                         return executability_report, action_iteration_report, action_progress_report, len(self.snippet.action_sequence), coverage_report, unresolved_report
                 
@@ -129,11 +148,14 @@ class Moxecutor():
                 finally:
                     print('\nLATEST SNIPPET:\n{}\n'.format(self.snippet.get_latest()))
                     _iter += 1
+                    # unmocked_snippet = unmock_code_snippet(self.snippet.get_latest())
+                    # print('UNMOCKED SNIPPET:\n{}'.format(unmocked_snippet))
 
             if err_coord is not None:
                 unresolved_report[err_coord.err_type] = err_coord.err_msg + ' (' + self.snippet_name + ')'
-
+            
             self.snippet.cleanup()
+
             return executability_report, action_iteration_report, action_progress_report, len(self.snippet.action_sequence), coverage_report, unresolved_report
         
         return None, None, None, None, None, None

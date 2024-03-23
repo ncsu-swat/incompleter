@@ -1,0 +1,10 @@
+selenium==4.11.2
+pandas
+webdriver_manager
+python-dotenv==1.0.0
+psycopg2-binary==2.9.7
+lingua-language-detector
+openpyxl
+langid
+cachetools
+

@@ -60,9 +60,8 @@ class DefineOperator(ActionBaseClass):
             elif self.class1 in [ 'str' ]:
                 DefineString(snippet=self.snippet, lineno=self.lineno, class_name=self.class2).apply_pattern()
             
-            def_func = DefineFunc(snippet=self.snippet, lineno=self.lineno, func_name=func_name, class_scope=class_scope, func_args=func_args, override_criteria=True).apply_pattern()
+            def_func = DefineFunc(snippet=self.snippet, lineno=self.lineno, func_name=func_name, class_scope=class_scope, func_args=func_args, override_criteria=True)
             def_func.check_criteria()
             def_func.apply_pattern()
         
         return
-

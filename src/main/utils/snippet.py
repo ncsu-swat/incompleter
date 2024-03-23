@@ -300,6 +300,8 @@ class Snippet:
 
     def compute_timed_latest_coverage(self) -> Tuple[float, float]:
         try:
+            os.environ['TBD#'] = str(self.tbd_counter)
+
             proc_q = Queue()
             proc = Process(target=self.compute_latest_coverage, args=(proc_q, ))
             proc.daemon = False

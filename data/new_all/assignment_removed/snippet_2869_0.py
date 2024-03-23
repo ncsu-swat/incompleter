@@ -1,0 +1,1 @@
+print('Your Enter String is:', len(str))

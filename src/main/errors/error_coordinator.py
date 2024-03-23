@@ -6,19 +6,25 @@ from main.actions.action_base_class import ActionBaseClass
 from main.errors.error_base_class import ErrorBaseClass
 from main.errors.name_error import _NameError
 from main.errors.file_not_found_error import _FileNotFoundError
+from main.errors.not_a_directory_error import _NotADirectoryError
 from main.errors.module_not_found_error import _ModuleNotFoundError
+from main.errors.import_error import _ImportError
 from main.errors.attribute_error import _AttributeError
 from main.errors.type_error import _TypeError
 from main.errors.key_error import _KeyError
+from main.errors.value_error import _ValueError
 
 class ErrorCoordinator(ErrorBaseClass):
     mappings = {
         'NameError': _NameError,
         'FileNotFoundError': _FileNotFoundError,
+        'NotADirectoryError': _NotADirectoryError,
         'ModuleNotFoundError': _ModuleNotFoundError,
+        'ImportError': _ImportError,
         'AttributeError': _AttributeError,
         'TypeError': _TypeError,
-        'KeyError': _KeyError
+        'KeyError': _KeyError,
+        'ValueError': _ValueError
     }
 
     def __init__(self, path: str, snippet: Snippet, stack_trace: str) -> None:
