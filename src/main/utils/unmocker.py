@@ -361,8 +361,8 @@ def unmock_code_snippet(snippet_obj, executability=True):
     # Initialize tally for deductions
     deductions_tally = {'list': 0, 'dict': 0, 'set': 0, 'int': 0, 'str': 0, 'object': 0, 'total': 0}
 
-    snippets_info_path = "../data/type_inference/snippets_info.json"
-    snippets_info_incompleter_path = "../data/type_inference/snippets_info_incompleter.json"
+    snippets_info_path = "../data/type_inference/snippets_info_chunk100.json"
+    snippets_info_incompleter_path = "../data/type_inference/snippets_info_chunk100_incompleter.json"
     current_snippet_info = None
     
     if os.path.exists(snippets_info_path):

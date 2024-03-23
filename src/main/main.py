@@ -22,12 +22,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     path=os.path.join(DATA_DIR, args.dir)
-    
-    # Clean out json for type reporting
-    snippets_info_incompleter_path = os.path.join(DATA_DIR, "type_inference", "snippets_info_incompleter.json")
-    with open(snippets_info_incompleter_path, 'w') as file:
-        json.dump([], file) 
-
     reporter = Reporter(chunk_num=args.dir.split('/')[-1], is_cov=args.cov)
     
     print()

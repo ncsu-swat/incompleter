@@ -8,27 +8,27 @@ def classify_predicted_type(predicted_str):
     if "None" in predicted_str:
         return "NoneType"
     elif "True" in predicted_str or "False" in predicted_str:
-        return "Boolean"
+        return "bool"
     elif "-1.0" == predicted_str or "0.0" == predicted_str or "1.0" == predicted_str:
-        return "Float"
+        return "float"
     elif "-1" == predicted_str or "0" == predicted_str or "1" == predicted_str:
-        return "Integer"
+        return "int"
     elif "a" == predicted_str or "" == predicted_str: 
-        return "String"
+        return "str"
     elif "[<" in predicted_str or "[]" in predicted_str:
-        return "List"
+        return "list"
     elif "{<" in predicted_str:
-        return "Set"
+        return "set"
     elif "{'a'" in predicted_str:
-        return "Dict"
+        return "dict"
     elif "(<" in predicted_str:
-        return "Tuple"
+        return "tuple"
     elif "<class 'lexecutor.ValueAbstraction.DummyObject'>" in predicted_str:
-        return "Callable"
+        return "callable"
     elif "<lexecutor.ValueAbstraction.DummyObject" in predicted_str:
-        return "Object"
+        return "object"
     elif "<lexecutor.ValueAbstraction.DummyResource" in predicted_str:
-        return "Resource"
+        return "resource"
     else:
         raise ValueError(f"Unknown type detected: {predicted_str}")
 

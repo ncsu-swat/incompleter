@@ -156,6 +156,9 @@ class Snippet:
 
             def visit_Dict(self, node):
                 tbd_name = self.snippet.get_next_tbd_name()
+
+                self.snippet.preprocessed_tbds.add(tbd_name)
+                
                 containers_tracker[tbd_name] = {
                     'type': 'Dict',
                     'elts': ast.Dict(keys=[key for key in node.keys], values=[value for value in node.values])
