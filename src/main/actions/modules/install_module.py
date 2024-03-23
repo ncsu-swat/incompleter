@@ -43,7 +43,6 @@ class InstallModule(ActionBaseClass):
 
         return progress
 
-
     def apply_pattern(self) -> str:
         installer = Popen([sys.executable, '-m', 'pip', 'install', self.module_name], stdout=DEVNULL, stderr=DEVNULL)
         installer.wait()

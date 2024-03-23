@@ -1,3 +1,0 @@
-# Extracted from https://stackoverflow.com/questions/11041405/why-dict-getkey-instead-of-dictkey
-dictionary.get("Name",'harry')
-

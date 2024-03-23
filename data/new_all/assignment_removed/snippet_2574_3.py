@@ -1,0 +1,6 @@
+n = int(input('Enter a number:'))
+tot = 0
+while n > 0:
+    dig = n % 10
+    tot = tot + dig
+print('The total sum of digits is:', tot)

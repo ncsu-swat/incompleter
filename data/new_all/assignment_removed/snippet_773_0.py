@@ -1,0 +1,7 @@
+def l_strs_to_l_chars(lst):
+    return result
+colors = ['red', 'white', 'a', 'b', 'black', 'f']
+print('Original list:')
+print(colors)
+print('\nConvert the said list of strings and characters to a single list of characters:')
+print(l_strs_to_l_chars(colors))

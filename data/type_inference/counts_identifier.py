@@ -39,7 +39,8 @@ def extract_snippet_info(log_file_path):
     with open(log_file_path, 'r') as file:
         log_content = file.read()
 
-    snippet_pattern = re.compile(r"LExecuting file: snippet_(\d+)\.py.*?(?=(LExecuting file: snippet_|$))", re.DOTALL)
+    # snippet_pattern = re.compile(r"LExecuting file: snippet_(\d+)\.py.*?(?=(LExecuting file: snippet_|$))", re.DOTALL)
+    snippet_pattern = re.compile(r"LExecuting file: snippet_(\d+)_(\d+)\.py.*?(?=(LExecuting file: snippet_|$))", re.DOTALL)
     # prediction_pattern = re.compile(r": Predicting for (name|attribute) (.*?):\s*([^\r\n]*)")
     prediction_pattern = re.compile(r": Predicting for (name|attribute) (.*?):(.*)")
 
@@ -47,7 +48,9 @@ def extract_snippet_info(log_file_path):
     snippets_info = []
 
     for snippet_match in snippet_pattern.finditer(log_content):
-        snippet_no = snippet_match.group(1)
+        # snippet_no = snippet_match.group(1)
+        snippet_no = snippet_match.group(1) + "_" + snippet_match.group(2)
+
         snippet_text = snippet_match.group(0)
         predictions = prediction_pattern.findall(snippet_text)
 
@@ -70,13 +73,13 @@ def extract_snippet_info(log_file_path):
 
     return snippets_info
 
-
-def save_snippets_info(snippets_info, output_file_path="snippets_info.json"):
+chunk_num = 'chunk100'
+def save_snippets_info(snippets_info, output_file_path="snippets_info_{}.json".format(chunk_num)):
     with open(output_file_path, 'w') as file:
         json.dump(snippets_info, file, indent=4)
 
 def main():
-    log_file_path = 'log.txt'
+    log_file_path = '../new_all/logs/lexecutor/{}/log.txt'.format(chunk_num)
     snippets_info = extract_snippet_info(log_file_path)
     save_snippets_info(snippets_info)
 

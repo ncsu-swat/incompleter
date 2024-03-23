@@ -8,7 +8,8 @@ class RemoveImport(ActionBaseClass):
     def __init__(self, snippet: Snippet=None, lineno: int=0, **kwargs: dict) -> None:
         super().__init__(snippet, lineno)
 
-        self.module_name = kwargs['module_name']
+        if 'module_name' in kwargs.keys():
+            self.module_name = kwargs['module_name']
 
     def __str__(self) -> str:
         desc = super().__str__()

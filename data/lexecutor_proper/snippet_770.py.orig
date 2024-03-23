@@ -1,3 +1,0 @@
-# Extracted from https://stackoverflow.com/questions/30362391/how-do-you-find-the-first-key-in-a-dictionary
-list(my_dict.keys())[0]
-

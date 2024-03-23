@@ -1,8 +1,1 @@
-print(a[0])
-print(a[1]+5)
-a[2] = a[1]
-
-print(a)
-
-print(b['a'])
-print(b[0])
+print(df['abc'])

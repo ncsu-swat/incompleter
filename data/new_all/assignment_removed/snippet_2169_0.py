@@ -1,0 +1,1 @@
+print('Upper case String is:', str.upper())
