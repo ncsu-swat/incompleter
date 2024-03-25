@@ -336,6 +336,23 @@ def find_associations_types(current_snippet_info, associations, unroll_dict):
         else:
             current_snippet_info['identifiers'][identifier]['incompleter_predicted_type'] = "does not deduce this"
 
+def fuzz(snippet_obj, code_snippet, class_name, info, class_container_init, unroll_dict):
+    original_type = info['type']
+    if original_type == 'dict':
+        # Temporarily change to list for the fuzz attempt
+        info['type'] = 'list'
+        updated_code_snippet = apply_single_replacement(code_snippet, class_name, info, class_container_init)
+        success = test_snippet(snippet_obj, updated_code_snippet)
+        if success:
+            # Keep list type change
+            unroll_dict[class_name] = info
+            info['deductions'] = ['fuzzed from dict to list']
+            return True, updated_code_snippet
+        else:
+            # Revert changes if unsuccessful
+            info['type'] = original_type
+            unroll_dict[class_name] = info
+    return False, None
 
 
 def unmock_code_snippet(snippet_obj, executability=True):
@@ -406,10 +423,19 @@ def unmock_code_snippet(snippet_obj, executability=True):
                         deductions_tally[info['type']] += 1
                         deductions_tally['total'] += 1
                 else:
-                    # If not successful, revert to original
-                    code_snippet = original_code_snippet
-                    if not is_preprocessed_tbd:
-                        deductions_tally['total'] += 1
+                    # If not successful, fuzz it!
+                    fuzz_success, fuzzed_snippet = fuzz(snippet_obj, code_snippet, class_name, info, class_container_init, unroll_dict)
+                    if fuzz_success:
+                        code_snippet = fuzzed_snippet
+                        if not is_preprocessed_tbd:
+                            deductions_tally[info['type']] += 1
+                            deductions_tally['total'] += 1
+                    else:
+                        # If not successful, revert to original
+                        code_snippet = original_code_snippet
+                        if not is_preprocessed_tbd:
+                            deductions_tally['total'] += 1
+                    
             else:
                 if not is_preprocessed_tbd:
                     deductions_tally['object'] += 1
