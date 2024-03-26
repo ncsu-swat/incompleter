@@ -1,0 +1,212 @@
+[
+    {
+        "snippet_no": "12_0",
+        "identifiers": {
+            "nums": {
+                "lexecutor_predicted_type": "list",
+                "incompleter_predicted_type": "todo"
+            }
+        }
+    },
+    {
+        "snippet_no": "9_2",
+        "identifiers": {
+            "arr1": {
+                "lexecutor_predicted_type": "object",
+                "incompleter_predicted_type": "todo"
+            }
+        }
+    },
+    {
+        "snippet_no": "6_1",
+        "identifiers": {
+            "str_list1": {
+                "lexecutor_predicted_type": "list",
+                "incompleter_predicted_type": "todo"
+            }
+        }
+    },
+    {
+        "snippet_no": "7_0",
+        "identifiers": {
+            "fib_series": {
+                "lexecutor_predicted_type": "callable",
+                "incompleter_predicted_type": "todo"
+            }
+        }
+    },
+    {
+        "snippet_no": "8_3",
+        "identifiers": {
+            "n": {
+                "lexecutor_predicted_type": "int",
+                "incompleter_predicted_type": "todo"
+            }
+        }
+    },
+    {
+        "snippet_no": "12_1",
+        "identifiers": {
+            "p": {
+                "lexecutor_predicted_type": "int",
+                "incompleter_predicted_type": "todo"
+            }
+        }
+    },
+    {
+        "snippet_no": "6_0",
+        "identifiers": {
+            "l": {
+                "lexecutor_predicted_type": "int",
+                "incompleter_predicted_type": "todo"
+            }
+        }
+    },
+    {
+        "snippet_no": "8_2",
+        "identifiers": {
+            "chars": {
+                "lexecutor_predicted_type": "str",
+                "incompleter_predicted_type": "todo"
+            }
+        }
+    },
+    {
+        "snippet_no": "14_0",
+        "identifiers": {
+            "items": {
+                "lexecutor_predicted_type": "object",
+                "incompleter_predicted_type": "todo"
+            },
+            "sort": {
+                "lexecutor_predicted_type": "object",
+                "incompleter_predicted_type": "todo"
+            }
+        }
+    },
+    {
+        "snippet_no": "15_1",
+        "identifiers": {
+            "idx": {
+                "lexecutor_predicted_type": "tuple",
+                "incompleter_predicted_type": "todo"
+            }
+        }
+    },
+    {
+        "snippet_no": "1_0",
+        "identifiers": {
+            "x": {
+                "lexecutor_predicted_type": "object",
+                "incompleter_predicted_type": "todo"
+            }
+        }
+    },
+    {
+        "snippet_no": "15_0",
+        "identifiers": {
+            "date_of_birth": {
+                "lexecutor_predicted_type": "str",
+                "incompleter_predicted_type": "todo"
+            }
+        }
+    },
+    {
+        "snippet_no": "3_0",
+        "identifiers": {
+            "num": {
+                "lexecutor_predicted_type": "int",
+                "incompleter_predicted_type": "todo"
+            },
+            "sort": {
+                "lexecutor_predicted_type": "callable",
+                "incompleter_predicted_type": "todo"
+            }
+        }
+    },
+    {
+        "snippet_no": "15_2",
+        "identifiers": {
+            "df": {
+                "lexecutor_predicted_type": "object",
+                "incompleter_predicted_type": "todo"
+            },
+            "insert": {
+                "lexecutor_predicted_type": "callable",
+                "incompleter_predicted_type": "todo"
+            }
+        }
+    },
+    {
+        "snippet_no": "3_1",
+        "identifiers": {
+            "new_num": {
+                "lexecutor_predicted_type": "list",
+                "incompleter_predicted_type": "todo"
+            }
+        }
+    },
+    {
+        "snippet_no": "9_0",
+        "identifiers": {
+            "num": {
+                "lexecutor_predicted_type": "int",
+                "incompleter_predicted_type": "todo"
+            }
+        }
+    },
+    {
+        "snippet_no": "12_2",
+        "identifiers": {
+            "new_nums": {
+                "lexecutor_predicted_type": "object",
+                "incompleter_predicted_type": "todo"
+            }
+        }
+    },
+    {
+        "snippet_no": "8_1",
+        "identifiers": {
+            "nums": {
+                "lexecutor_predicted_type": "list",
+                "incompleter_predicted_type": "todo"
+            }
+        }
+    },
+    {
+        "snippet_no": "4_1",
+        "identifiers": {
+            "y": {
+                "lexecutor_predicted_type": "object",
+                "incompleter_predicted_type": "todo"
+            }
+        }
+    },
+    {
+        "snippet_no": "4_0",
+        "identifiers": {
+            "x": {
+                "lexecutor_predicted_type": "object",
+                "incompleter_predicted_type": "todo"
+            }
+        }
+    },
+    {
+        "snippet_no": "9_1",
+        "identifiers": {
+            "result": {
+                "lexecutor_predicted_type": "object",
+                "incompleter_predicted_type": "todo"
+            }
+        }
+    },
+    {
+        "snippet_no": "8_0",
+        "identifiers": {
+            "x": {
+                "lexecutor_predicted_type": "str",
+                "incompleter_predicted_type": "todo"
+            }
+        }
+    }
+]

@@ -154,7 +154,7 @@ class Moxecutor():
                         
                         # print('\nLATEST SNIPPET (UNMOCKED):\n{}\n'.format(self.snippet.get_latest()))
                         
-                        self.snippet.cleanup()
+                        # self.snippet.cleanup()
                         return executability_report, action_iteration_report, action_progress_report, len(self.snippet.action_sequence), coverage_report, unresolved_report, deductions_tally
                 
                 except IndentationError as e:
@@ -228,7 +228,6 @@ class Moxecutor():
                 action_progress_report[prior_action]['f-exec'] += 1
 
         return _iter, coverage_report, executability_report, action_progress_report, action_iteration_report, deductions_tally
-
 
     def append_data_row(self, data_file_name, original_snippet, unmocked_snippet, var, tbd, type):
         data_file_path = os.path.join(DATA_DIR, 'new_all', 'nn_dataset', data_file_name)

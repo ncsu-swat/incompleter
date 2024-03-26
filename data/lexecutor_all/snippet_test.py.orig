@@ -1,1 +1,3 @@
-a = 1 + b
+# somelist[:] = filter((lambda tup: (not determine(tup))), somelist)
+somelist[:] = list(ifilterfalse(determine, somelist))
+__cov_tracker = None

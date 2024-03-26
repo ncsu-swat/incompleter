@@ -95,8 +95,8 @@ class TypeInferrer(ast.NodeVisitor):
                 deductions.append('key structure suggests dict-like behavior')
                 self.unroll_dict[class_name]['type'] = 'dict'
         elif all(method in methods for method in essential_methods):
-            deductions.append('defaulting to dict due to general format and absence of unique collection methods')
-            self.unroll_dict[class_name]['type'] = 'dict'
+            deductions.append('defaulting to list due to general format and absence of unique collection methods')
+            self.unroll_dict[class_name]['type'] = 'list'
         else:
             return
 
@@ -338,15 +338,15 @@ def find_associations_types(current_snippet_info, associations, unroll_dict):
 
 def fuzz(snippet_obj, code_snippet, class_name, info, class_container_init, unroll_dict):
     original_type = info['type']
-    if original_type == 'dict':
+    if original_type == 'list':
         # Temporarily change to list for the fuzz attempt
-        info['type'] = 'list'
+        info['type'] = 'dict'
         updated_code_snippet = apply_single_replacement(code_snippet, class_name, info, class_container_init)
         success = test_snippet(snippet_obj, updated_code_snippet)
         if success:
             # Keep list type change
             unroll_dict[class_name] = info
-            info['deductions'] = ['fuzzed from dict to list']
+            info['deductions'] = ['fuzzed from list to dict']
             return True, updated_code_snippet
         else:
             # Revert changes if unsuccessful
