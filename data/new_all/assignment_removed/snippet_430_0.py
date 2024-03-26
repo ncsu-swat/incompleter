@@ -1,1 +1,0 @@
-print('\n'.join([str(lst) for lst in colors]))

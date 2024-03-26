@@ -319,12 +319,12 @@ def find_associations_types(current_snippet_info, associations, unroll_dict):
         tbd_name = info['tbd_name'].replace('()', '').strip()  # Remove parentheses for matching
 
         if tbd_name in unroll_dict:
-            inferred_type = unroll_dict[tbd_name]['type'].capitalize()
+            inferred_type = unroll_dict[tbd_name]['type']
 
             if info['type'] == 'callable':
-                inferred_type = "Callable"
-            elif inferred_type == "Object" and info['type'] == 'object':
-                inferred_type = "Object"
+                inferred_type = "callable"
+            elif inferred_type == "object" and info['type'] == 'object':
+                inferred_type = "object"
 
             if identifier in current_snippet_info['identifiers']:
                 current_snippet_info['identifiers'][identifier]['incompleter_predicted_type'] = inferred_type
@@ -369,7 +369,7 @@ def unmock_code_snippet(snippet_obj, executability=True):
         with open(snippets_info_path, 'r') as file:
             snippets_info = json.load(file)
         
-        # Extract the snippet number from the snippet name (e.g., "snippet_748.py" -> "748")
+        # Extract the snippet number from the snippet name (e.g., "snippet_748-3.py" -> "748")
         snippet_no = snippet_obj.snippet_name.split('_')[-1].split('.')[0]
         
         # Find the dictionary for the current snippet

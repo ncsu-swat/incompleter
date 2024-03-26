@@ -1,1 +1,0 @@
-print(string.startswith('w3r'))

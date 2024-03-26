@@ -50,6 +50,8 @@ class AddImport(ActionBaseClass):
                     for alias in import_ast.names:
                         if alias.name in self.package_list:
                             return True
+                        elif alias.name.split('.')[0] in self.package_list:
+                            return True
 
             # If self.module_name is directly not present in the import_dict keys, check if the alias name of the corresponding ast of the entry is the self.module_name
             for module, import_ast in self.import_dict.items():

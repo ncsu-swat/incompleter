@@ -1,1 +1,0 @@
-print('Lower case String is:', str.lower())

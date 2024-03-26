@@ -1,6 +1,8 @@
 from typing import Tuple
 from tqdm import tqdm
-import re
+import csv, re, os
+
+from path_config import DATA_DIR
 
 from main.utils.snippet import Snippet
 from main.utils.messenger import Messenger
@@ -10,10 +12,11 @@ from main.utils.unmocker import unmock_code_snippet
 from main.actions.defines.define_key import DefineKey
 
 class Moxecutor():
-    def __init__(self, snippet_path: str, is_cov: bool) -> None:
+    def __init__(self, snippet_path: str, is_cov: bool, type_dict = None) -> None:
         try:
             self.MAX_ITER = 25
             self.is_cov = is_cov
+            self.type_dict = type_dict
 
             self.snippet_path = snippet_path
             self.snippet_name = snippet_path.split('/')[-1]
@@ -37,7 +40,7 @@ class Moxecutor():
             tqdm.write('\nSnippet#: {}\n'.format(str(self.snippet_path.split('/')[-1].split('.')[0].split('snippet_')[-1])))
             while _iter < self.MAX_ITER: # Fix-point loop
                 try:
-                    out, err = None, None
+                    err_coord, out, err = None, None, None
                     if self.is_cov:
                         # If we are computing coverage then check output and error from the coverage wrapper to avoid having to run twice
                         # Compute coverage at the start of each iteration if is_cov flag is True
@@ -45,7 +48,8 @@ class Moxecutor():
                         # print('\n\nOutput:\n{}'.format(out))
 
                         # Dispatching communication received from child process (Inner-world)
-                        self.messenger.dispatch(msg=out)
+                        if out is not None:
+                            self.messenger.dispatch(msg=out)
 
                         if stmt_cov is not None:
                             for iter_idx in range(_iter, self.MAX_ITER):
@@ -173,12 +177,14 @@ class Moxecutor():
             return executability_report, action_iteration_report, action_progress_report, len(self.snippet.action_sequence), coverage_report, unresolved_report, None
         
         return None, None, None, None, None, None, None
-    
 
     def unmocked_snippet_report(self, _iter, coverage_report, executability_report, action_progress_report, action_iteration_report):
-
         # _iter = _iter + 1
         self.snippet.history[-1], deductions_tally = unmock_code_snippet(self.snippet)
+        if self.type_dict is not None and self.type_dict['variable'] in self.snippet.mocked_values.keys():
+            self.append_data_row('nn_dataset.tsv', '\n'.join(self.snippet.history[0].split('\n')[1:]).strip(), self.snippet.history[-1].strip(), self.type_dict['variable'], self.snippet.mocked_values[self.type_dict['variable']], self.type_dict['type'])
+        elif self.type_dict is not None:
+            self.append_data_row('nn_dataset.tsv', '\n'.join(self.snippet.history[0].split('\n')[1:]).strip(), self.snippet.history[-1].strip(), self.type_dict['variable'], '', self.type_dict['type'])
 
         out, err, stmt_cov, br_cov = self.snippet.compute_timed_latest_coverage()
         if stmt_cov is not None:
@@ -223,3 +229,13 @@ class Moxecutor():
 
         return _iter, coverage_report, executability_report, action_progress_report, action_iteration_report, deductions_tally
 
+
+    def append_data_row(self, data_file_name, original_snippet, unmocked_snippet, var, tbd, type):
+        data_file_path = os.path.join(DATA_DIR, 'new_all', 'nn_dataset', data_file_name)
+        
+        if not os.path.exists(data_file_path):
+            with open(data_file_path, 'w+') as data_file:
+                csv.writer(data_file, delimiter='\t').writerow(['original_snippet', 'mocked_snippet', 'var', 'tbd', 'type'])
+
+        with open(data_file_path, 'a+') as data_file:
+            csv.writer(data_file, delimiter='\t').writerow([repr(original_snippet), repr(unmocked_snippet), var, tbd, type])

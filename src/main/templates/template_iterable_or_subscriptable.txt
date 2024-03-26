@@ -102,7 +102,7 @@ class <class_name>:
         return False
 
     def __iter__(self):
-        return iter(self.container)
+        return iter(self.container.values())
 
     def __len__(self):
         return len(self.keys)

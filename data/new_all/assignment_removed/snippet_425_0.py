@@ -1,1 +1,0 @@
-print('The examination will start from : %i / %i / %i' % exam_st_date)

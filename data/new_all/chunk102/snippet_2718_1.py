@@ -1,9 +1,0 @@
-str = input('Enter the String:')
-newStr = ''
-for i in range(len(str)):
-    if i == 0 or str[i - 1] == ' ':
-        ch = str[i].upper()
-        newStr += ch
-    else:
-        newStr = newStr + str[i]
-print('Your String is:', newStr)
