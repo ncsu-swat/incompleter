@@ -53,6 +53,21 @@ class TypeInferrer(ast.NodeVisitor):
             deductions.append(f'{class_name} subclasses str')
             self.unroll_dict[class_name]['type'] = 'str'
 
+        # check for string unique methods
+        string_methods = ['capitalize', 'casefold', 'center', 'count', 'encode',
+                      'endswith', 'expandtabs', 'find', 'format', 'format_map',
+                      'index', 'isalnum', 'isalpha', 'isascii', 'isdecimal',
+                      'isdigit', 'isidentifier', 'islower', 'isnumeric',
+                      'isprintable', 'isspace', 'istitle', 'isupper', 'join',
+                      'ljust', 'lower', 'lstrip', 'maketrans', 'partition',
+                      'replace', 'rfind', 'rindex', 'rjust', 'rpartition',
+                      'rsplit', 'rstrip', 'split', 'splitlines', 'startswith',
+                      'strip', 'swapcase', 'title', 'translate', 'upper', 'zfill']
+
+        if any(method in self.class_methods[class_name] for method in string_methods):
+            deductions.append('implements string-specific methods')
+            self.unroll_dict[class_name]['type'] = 'str'
+
     def mock_container_keys(self, class_name):
         container_node = self.class_container_init.get(class_name, None)
         if container_node and isinstance(container_node, ast.Dict):
