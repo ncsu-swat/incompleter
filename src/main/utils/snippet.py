@@ -20,17 +20,24 @@ from multiprocessing import Process, Queue
 from main.utils.session import Session
 
 class Snippet:
-    TIMEOUT = 120 #seconds
+    TIMEOUT = 1080 #seconds
     timedout_counter = 0
 
-    def __init__(self, snippet_path: str) -> None:
+    def __init__(self, snippet_path: str, snippet_dir: str, bugs=False) -> None:
         self.current_iter = 0
         self.fixpoint_tolerance = 1 #check progress with respect to (current-tolerance)th iteration. This value should be 1 for most error types. For ModuleNotFoundError, the tolerance is set to 2 (from errors.module_not_found_error) because after trying the pattern InstallModule, we want to get a second chance with the pattern RemoveImport.
 
         self.snippet_path: str = snippet_path
         self.snippet_name: str = snippet_path.split('/')[-1]
-        self.tmp_path: str = self.__create_tmp_path()
-        self.tmp_dir: str = '/'.join(self.tmp_path.split('/')[:-1])
+
+
+        if bugs:
+            # If --bugs flag is set, change cwd to the directory
+            self.tmp_dir = snippet_dir #"/mnt/c/Users/aramis/git/BugsInPy/framework/bin/temp1/youtube-dl"
+            self.tmp_path = self.__create_tmp_path() #snippet_path #"test/snippet_check.py"
+        else:
+            self.tmp_path: str = self.__create_tmp_path()
+            self.tmp_dir: str = '/'.join(self.tmp_path.split('/')[:-1])
         
         self.latest: int = 0
         self.history: List[str] = [ self.__place_original_start_marker(self.__clean_snippet(self.__read_snippet())) ]
@@ -47,7 +54,9 @@ class Snippet:
         self.preprocessed_tbds = set()
 
         # Since this function relies on the tbd_counter, we need to call the __replace_iterables_subscriptables_with_tbd function after defining tbd_counter
-        self.__replace_iterables_subscriptables_with_tbd()
+        # self.__replace_iterables_subscriptables_with_tbd()
+
+        self.bugs = bugs
 
     def __read_snippet(self) -> str:
         if not Path(self.snippet_path).exists(): raise FileNotFoundError('Snippet path does not exist\nSnippet path: {}\n'.format(self.snippet_path))
@@ -191,11 +200,25 @@ class Snippet:
 
         return
 
+    # def __create_tmp_path(self) -> str:
+    #     tmp_path = os.path.join(DATA_DIR, 'tmp', Session.working_dir, self.snippet_path.split('/')[-1])
+    #     tmp_file = Path(tmp_path)
+    #     tmp_file.parent.mkdir(parents=True, exist_ok=True)
+
+    #     return tmp_path
+
     def __create_tmp_path(self) -> str:
-        tmp_path = os.path.join(DATA_DIR, 'tmp', Session.working_dir, self.snippet_path.split('/')[-1])
+        dir_path, filename = os.path.split(self.snippet_path)
+        first_dot_index = filename.find('.') if '.' in filename else len(filename)
+        new_filename = filename[:first_dot_index] + '_tmp' + filename[first_dot_index:]
+        tmp_path = os.path.join(dir_path, new_filename)
         tmp_file = Path(tmp_path)
         tmp_file.parent.mkdir(parents=True, exist_ok=True)
 
+        #empty file if it exists
+        with tmp_file.open('w') as file:
+            pass
+        
         return tmp_path
 
     def __create_tmp_file(self, content=None) -> str:
@@ -371,7 +394,7 @@ class Snippet:
             # print('\nStmt cov: {}, Br cov: {}'.format(str(stmt_cov), str(br_cov)))
 
             # cleanup tmp_file at tmp_path after running
-            self.__delete_tmp_file()
+            # self.__delete_tmp_file()
 
             proc_q.put(out.decode('ISO-8859-1'))
             proc_q.put(err.decode('ISO-8859-1'))

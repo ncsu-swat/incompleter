@@ -12,7 +12,7 @@ from main.utils.unmocker import unmock_code_snippet
 from main.actions.defines.define_key import DefineKey
 
 class Moxecutor():
-    def __init__(self, snippet_path: str, is_cov: bool, type_dict = None) -> None:
+    def __init__(self, snippet_path: str, snippet_dir: str, is_cov: bool, type_dict = None, bugs = False) -> None:
         try:
             self.MAX_ITER = 25
             self.is_cov = is_cov
@@ -20,7 +20,7 @@ class Moxecutor():
 
             self.snippet_path = snippet_path
             self.snippet_name = snippet_path.split('/')[-1]
-            self.snippet = Snippet(snippet_path)
+            self.snippet = Snippet(snippet_path, snippet_dir, bugs)
 
             self.messenger = Messenger(snippet=self.snippet)
 
@@ -129,7 +129,7 @@ class Moxecutor():
 
                             # print('\nLATEST SNIPPET (UNMOCKED):\n{}\n'.format(self.snippet.get_latest()))
 
-                            self.snippet.cleanup()
+                            # self.snippet.cleanup()
                             return executability_report, action_iteration_report, action_progress_report, len(self.snippet.action_sequence), coverage_report, unresolved_report, deductions_tally
                     else:
                         # If there are no warnings and errors, we consider the snippet fully executed
@@ -152,7 +152,7 @@ class Moxecutor():
                                 action_iteration_report
                             )
                         
-                        # print('\nLATEST SNIPPET (UNMOCKED):\n{}\n'.format(self.snippet.get_latest()))
+                        print('\nLATEST SNIPPET (UNMOCKED):\n{}\n'.format(self.snippet.get_latest()))
                         
                         # self.snippet.cleanup()
                         return executability_report, action_iteration_report, action_progress_report, len(self.snippet.action_sequence), coverage_report, unresolved_report, deductions_tally
@@ -162,7 +162,7 @@ class Moxecutor():
                 except SyntaxError as e:
                     pass
                 finally:
-                    print('\nLATEST SNIPPET:\n{}\n'.format(self.snippet.get_latest()))
+                    # print('\nLATEST SNIPPET:\n{}\n'.format(self.snippet.get_latest()))
                     _iter += 1
                     # unmocked_snippet = unmock_code_snippet(self.snippet.get_latest())
                     # print('UNMOCKED SNIPPET:\n{}'.format(unmocked_snippet))
@@ -172,7 +172,7 @@ class Moxecutor():
 
             # unmock_code_snippet(self.snippet, executability=False)
 
-            self.snippet.cleanup()
+            # self.snippet.cleanup()
 
             return executability_report, action_iteration_report, action_progress_report, len(self.snippet.action_sequence), coverage_report, unresolved_report, None
         
