@@ -3,7 +3,7 @@ def same_order(l1, l2):
     l1 = [e for e in l1 if e in common_elements]
     l2 = [e for e in l2 if e in common_elements]
     return l1 == l2
-color1 = ['red', 'green', 'black', 'orange']
+color2 = ['red', 'pink', 'green', 'white', 'black']
 color3 = ['white', 'orange', 'pink', 'black']
 print('Original lists:')
 print(color1)

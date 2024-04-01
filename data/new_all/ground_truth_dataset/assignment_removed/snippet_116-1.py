@@ -1,5 +1,5 @@
 import numpy as np
-y = np.array([72, 79, 85, 90, 150, -135, 120, -10, 60, 100.000001])
+x = np.array([72, 79, 85, 90, 150, -135, 120, -10, 60, 100])
 print('Original numbers:')
 print(x)
 print(y)

@@ -1,5 +1,5 @@
 import numpy as np
-y = [[3, 1], [2, 2]]
+x = [[1, 0], [1, 1]]
 print('Matrices and vectors.')
 print('x:')
 print(x)

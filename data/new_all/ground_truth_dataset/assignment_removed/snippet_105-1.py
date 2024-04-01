@@ -9,7 +9,7 @@ def common_chars(str1, str2):
     common_chars = list(common_dict.elements())
     common_chars = sorted(common_chars)
     return ''.join(common_chars)
-str2 = 'PHP'
+str1 = 'Python'
 print('Two strings: ' + str1 + ' : ' + str2)
 print(common_chars(str1, str2))
 str1 = 'Java'

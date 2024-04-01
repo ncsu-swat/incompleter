@@ -1,5 +1,5 @@
 import numpy as np
-y = np.array([2, 4, 5])
+x = np.array([0, 1, 3])
 print('\nOriginal array1:')
 print(x)
 print('\nOriginal array1:')

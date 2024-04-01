@@ -1,5 +1,5 @@
 import numpy as np
-arr1 = np.reshape(num, [6, 3])
+num = np.arange(18)
 print('Original array:')
 print(arr1)
 result = arr1[np.triu_indices(3)]

@@ -10,7 +10,7 @@ def remove_items_con(data, N):
         else:
             ctr = ctr + 1
     return result
-N = 4
+nums = [3, 10, 4, 7, 5, 7, 8, 3, 3, 4, 5, 9, 3, 4, 9, 8, 5]
 print('Original list:')
 print(nums)
 print('\nRemove first 4 even numbers from the said list:')

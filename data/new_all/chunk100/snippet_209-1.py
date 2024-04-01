@@ -1,30 +1,8 @@
-# LExecutor: DO NOT INSTRUMENT
-
-from lexecutor.Runtime import _n_
-from lexecutor.Runtime import _a_
-from lexecutor.Runtime import _c_
-from lexecutor.Runtime import _l_
-try:
-    import pandas as pd
-    _l_(105151)
-
-except ImportError:
-    pass
-try:
-    import numpy as np
-    _l_(105153)
-
-except ImportError:
-    pass
-_c_(105155, _n_(105154, "print", lambda: print), 'Original DataFrame:')
-_l_(105156)
-_c_(105159, _n_(105157, "print", lambda: print), _n_(105158, "df", lambda: df))
-_l_(105160)
-index = _a_(105162, _n_(105161, "df", lambda: df)['weight'], "index")[_c_(105167, _a_(105164, _n_(105163, "df", lambda: df)['weight'], "apply"), _a_(105166, _n_(105165, "np", lambda: np), "isnan"))]
-_l_(105168)
-df_index = _c_(105173, _a_(105172, _a_(105171, _a_(105170, _n_(105169, "df", lambda: df), "index"), "values"), "tolist"))
-_l_(105174)
-_c_(105176, _n_(105175, "print", lambda: print), "\nInteger index of rows with missing data in 'weight' column of the said dataframe:")
-_l_(105177)
-_c_(105184, _n_(105178, "print", lambda: print), [_c_(105182, _a_(105180, _n_(105179, "df_index", lambda: df_index), "index"), _n_(105181, "i", lambda: i)) for i in _n_(105183, "index", lambda: index)])
-_l_(105185)
+import pandas as pd
+import numpy as np
+df = pd.DataFrame({'school_code': ['s001', 's002', 's003', 's001', 's002', 's004'], 'class': ['V', 'V', 'VI', 'VI', 'V', 'VI'], 'name': ['Alberto Franco', 'Gino Mcneill', 'Ryan Parkes', 'Eesha Hinton', 'Gino Mcneill', 'David Parkes'], 'date_of_birth': ['15/05/2002', '17/05/2002', '16/02/1999', '25/09/1998', '11/05/2002', '15/09/1997'], 'weight': [35, None, 33, 30, 31, None]}, index=['t1', 't2', 't3', 't4', 't5', 't6'])
+print('Original DataFrame:')
+print(df)
+df_index = df.index.values.tolist()
+print("\nInteger index of rows with missing data in 'weight' column of the said dataframe:")
+print([df_index.index(i) for i in index])

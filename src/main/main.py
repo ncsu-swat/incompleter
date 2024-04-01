@@ -3,6 +3,7 @@ from collections import defaultdict
 
 from main.utils.moxecutor import Moxecutor
 from main.utils.reporter import Reporter
+from main.utils.snippet import Snippet
 
 import os
 import sys

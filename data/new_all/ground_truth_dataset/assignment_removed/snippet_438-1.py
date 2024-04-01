@@ -1,4 +1,4 @@
 import numpy as np
-y = np.array([])
+x = np.array([2, 3])
 print(x.size)
 print(y.size)

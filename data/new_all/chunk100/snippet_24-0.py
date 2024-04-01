@@ -1,30 +1,8 @@
-# LExecutor: DO NOT INSTRUMENT
-
-from lexecutor.Runtime import _n_
-from lexecutor.Runtime import _a_
-from lexecutor.Runtime import _c_
-from lexecutor.Runtime import _l_
-try:
-    import pandas as pd
-    _l_(106554)
-
-except ImportError:
-    pass
-try:
-    import numpy as np
-    _l_(106556)
-
-except ImportError:
-    pass
-_c_(106559, _a_(106558, _n_(106557, "pd", lambda: pd), "set_option"), 'display.max_rows', None)
-_l_(106560)
-_c_(106562, _n_(106561, "print", lambda: print), 'Original Orders DataFrame:')
-_l_(106563)
-_c_(106566, _n_(106564, "print", lambda: print), _n_(106565, "df", lambda: df))
-_l_(106567)
-_c_(106569, _n_(106568, "print", lambda: print), '\nReplace the missing values with the most frequent values present in each column:')
-_l_(106570)
-result = _c_(106577, _a_(106572, _n_(106571, "df", lambda: df), "fillna"), _a_(106576, _c_(106575, _a_(106574, _n_(106573, "df", lambda: df), "mode")), "iloc")[0])
-_l_(106578)
-_c_(106581, _n_(106579, "print", lambda: print), _n_(106580, "result", lambda: result))
-_l_(106582)
+import pandas as pd
+import numpy as np
+pd.set_option('display.max_rows', None)
+df = pd.DataFrame({'ord_no': [70001, np.nan, 70002, 70004, np.nan, 70005, np.nan, 70010, 70003, 70012, np.nan, 70013], 'purch_amt': [150.5, np.nan, 65.26, 110.5, 948.5, np.nan, 5760, 1983.43, np.nan, 250.45, 75.29, 3045.6], 'sale_amt': [10.5, 20.65, np.nan, 11.5, 98.5, np.nan, 57, 19.43, np.nan, 25.45, 75.29, 35.6], 'ord_date': ['2012-10-05', '2012-09-10', np.nan, '2012-08-17', '2012-09-10', '2012-07-27', '2012-09-10', '2012-10-10', '2012-10-10', '2012-06-27', '2012-08-17', '2012-04-25'], 'customer_id': [3002, 3001, 3001, 3003, 3002, 3001, 3001, 3004, 3003, 3002, 3001, 3001], 'salesman_id': [5002, 5003, 5001, np.nan, 5002, 5001, 5001, np.nan, 5003, 5002, 5003, np.nan]})
+print('Original Orders DataFrame:')
+print(df)
+print('\nReplace the missing values with the most frequent values present in each column:')
+print(result)

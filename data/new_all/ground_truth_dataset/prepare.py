@@ -8,7 +8,7 @@ import sys
 from subprocess import TimeoutExpired
 
 input_file_path = 'input.txt'
-problem_solutions_dir = "./dataset"
+problem_solutions_dir = "./ProblemSolutionsPython"
 
 if not os.path.exists(input_file_path):
     print("Warning: 'input.txt' does not exist in the current directory.")
@@ -19,14 +19,19 @@ def has_imports(code):
 
 def run_script_with_input(script_path, input_file_path, timeout=None):
     with open(input_file_path, 'rb') as input_file:
+        out, err = None, None
         proc = Popen(['python3', script_path], stdout=PIPE, stderr=PIPE, stdin=input_file)
         try:
             out, err = proc.communicate(timeout=timeout)
         except TimeoutExpired:
             proc.kill() 
-            out, err = proc.communicate()  
-            raise TimeoutExpired(proc.args, timeout) 
-    return out.decode('utf-8'), err.decode('utf-8')
+            # out, err = proc.communicate()  
+            # raise TimeoutExpired(proc.args, timeout) 
+    if out is not None:
+        out = out.decode('ISO-8859-1')
+    if err is not None:
+        err = err.decode('ISO-8859-1')
+    return out, err
 
 def parse_output(output):
     pattern = r"\[FROM INNER-WORLD\]\nVAR=(\w+)@(\d+)\nTYPE=(\w+)"
@@ -132,49 +137,50 @@ def process_files(directory, input_file_path, specific_file=None):
                 print(f"Execution of {filename} exceeded 30 seconds and was skipped.")
                 continue  
 
-            vars_and_types = parse_output(output)
-            # print(vars_and_types)
-            if len(vars_and_types) > 50:
-                print(f"Error: More than 50 assignments in {filename}. Something might be wrong.")
-                sys.exit(1)
+            if output is not None:
+                vars_and_types = parse_output(output)
+                # print(vars_and_types)
+                if len(vars_and_types) > 50:
+                    print(f"Error: More than 50 assignments in {filename}. Something might be wrong.")
+                    sys.exit(1)
 
-            # --- Checking for the first occurrence of var based on lowest line number - # START
-            var_lines = {}
-            unique_vars_and_types = []
-            for (var, var_type, line_no) in vars_and_types:
-                if var not in var_lines.keys():
-                    var_lines[var] = line_no
-                else:
-                    if line_no < var_lines[var]:
+                # --- Checking for the first occurrence of var based on lowest line number - # START
+                var_lines = {}
+                unique_vars_and_types = []
+                for (var, var_type, line_no) in vars_and_types:
+                    if var not in var_lines.keys():
                         var_lines[var] = line_no
-            for (var, var_type, line_no) in vars_and_types:
-                if line_no == var_lines[var]:
-                    unique_vars_and_types.append((var, var_type, line_no))
-            # --- Checking for the first occurrence of var based on lowest line number - # END
+                    else:
+                        if line_no < var_lines[var]:
+                            var_lines[var] = line_no
+                for (var, var_type, line_no) in vars_and_types:
+                    if line_no == var_lines[var]:
+                        unique_vars_and_types.append((var, var_type, line_no))
+                # --- Checking for the first occurrence of var based on lowest line number - # END
 
-            original_tree = ast.parse(snippet)
-            for idx, (var, var_type, line_no) in enumerate(unique_vars_and_types):
-                remover = AssignmentRemover(var, line_no)
-                modified_tree = remover.visit(copy.deepcopy(original_tree))
-                modified_code = ast.unparse(ast.fix_missing_locations(modified_tree))
+                original_tree = ast.parse(snippet)
+                for idx, (var, var_type, line_no) in enumerate(unique_vars_and_types):
+                    remover = AssignmentRemover(var, line_no)
+                    modified_tree = remover.visit(copy.deepcopy(original_tree))
+                    modified_code = ast.unparse(ast.fix_missing_locations(modified_tree))
 
-                modified_script_name = f'{filename[:-3]}-{idx}.py'
-                modified_script_path = os.path.join(assignment_removed_dir, modified_script_name)
-                with open(modified_script_path, 'w') as modified_file:
-                    modified_file.write(modified_code)
+                    modified_script_name = f'{filename[:-3]}-{idx}.py'
+                    modified_script_path = os.path.join(assignment_removed_dir, modified_script_name)
+                    with open(modified_script_path, 'w') as modified_file:
+                        modified_file.write(modified_code)
 
-                # Ensure that removal of assignment statement results in only NameError. Discard assignment_removed snippet if it results in another error.
-                out, err = run_script_with_input(modified_script_path, input_file_path, 60)
-                if err is None or 'NameError:' not in err:
-                    os.remove(modified_script_path)
-                    continue
+                    # Ensure that removal of assignment statement results in only NameError. Discard assignment_removed snippet if it results in another error.
+                    out, err = run_script_with_input(modified_script_path, input_file_path, 60)
+                    if err is None or 'NameError:' not in err:
+                        os.remove(modified_script_path)
+                        continue
 
-                json_data[modified_script_name.replace('snippet_', '').replace('.py', '')] = {
-                    "variable": var,
-                    "type": var_type,
-                    "line_no": line_no,
-                    "contains_imports": contains_imports
-                }
+                    json_data[modified_script_name.replace('snippet_', '').replace('.py', '')] = {
+                        "variable": var,
+                        "type": var_type,
+                        "line_no": line_no,
+                        "contains_imports": contains_imports
+                    }
 
     json_file_path = os.path.join(assignment_removed_dir, 'assignments_info.json')
     with open(json_file_path, 'w') as json_file:

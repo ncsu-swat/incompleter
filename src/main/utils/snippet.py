@@ -318,6 +318,7 @@ class Snippet:
             if proc.is_alive():
                 # print('\nCOVERAGE EXECUTION TIMEOUT\n')
                 proc.terminate()
+                Snippet.timedout_counter += 1
                 return None, None, None, None
             else:
                 out = proc_q.get()
@@ -350,37 +351,42 @@ class Snippet:
             # setup tmp_file at tmp_path before running
             self.__create_tmp_file(content=latest_code)
 
-            proc = Popen(['coverage', 'run', '--branch', self.tmp_path], stdout=PIPE, stderr=PIPE, cwd=self.tmp_dir)
-            out, err = proc.communicate()
+            with open(os.path.join(DATA_DIR, 'new_all', 'input.txt'), 'r') as input_file:
+                proc = Popen(['coverage', 'run', '--branch', self.tmp_path], stdin=input_file, stdout=PIPE, stderr=PIPE, cwd=self.tmp_dir)
+                out, err = proc.communicate()
 
-            proc = Popen(['coverage', 'json'], stdout=PIPE, stderr=PIPE, cwd=self.tmp_dir)
-            proc.communicate()
-            
-            stmt_cov, br_cov = None, None
-            if os.path.exists(os.path.join(self.tmp_dir, 'coverage.json')):
-                cov_json = json.load(open(os.path.join(self.tmp_dir, 'coverage.json')))
-                if cov_json['totals']['percent_covered'] is not None:
-                    stmt_cov = cov_json['totals']['percent_covered']/100
-                
-                if cov_json['totals']['covered_branches'] is not None and cov_json['totals']['num_branches'] is not None:
-                    if cov_json['totals']['num_branches'] == 0:
-                        br_cov = 1.0
-                    else:
-                        br_cov = cov_json['totals']['covered_branches']/cov_json['totals']['num_branches']
+                proc = Popen(['coverage', 'json'], stdout=PIPE, stderr=PIPE, cwd=self.tmp_dir)
+                proc.communicate()
 
-            # print('\nStmt cov: {}, Br cov: {}'.format(str(stmt_cov), str(br_cov)))
+                stmt_cov, br_cov = None, None
+                if os.path.exists(os.path.join(self.tmp_dir, 'coverage.json')):
+                    cov_json = json.load(open(os.path.join(self.tmp_dir, 'coverage.json')))
+                    if 'files' in cov_json.keys() and self.snippet_name in cov_json['files'].keys() and 'summary' in cov_json['files'][self.snippet_name].keys():
+                        summary = cov_json['files'][self.snippet_name]['summary']
+                        if summary is not None:
+                            with open(os.path.join(DATA_DIR, 'covs', self.snippet_name.split('.')[0]+'.json'), 'w+') as cov_file:
+                                json.dump(summary, cov_file, indent=2)
+                            stmt_cov = summary['percent_covered']
+                            if stmt_cov is not None:
+                                stmt_cov = stmt_cov/100
+                            if summary['num_branches'] == 0:
+                                br_cov = 1.0
+                            else:
+                                br_cov = summary['covered_branches']/summary['num_branches']
 
-            # cleanup tmp_file at tmp_path after running
-            self.__delete_tmp_file()
+                # print('\nStmt cov: {}, Br cov: {}'.format(str(stmt_cov), str(br_cov)))
 
-            proc_q.put(out.decode('ISO-8859-1'))
-            proc_q.put(err.decode('ISO-8859-1'))
-            proc_q.put(stmt_cov)
-            proc_q.put(br_cov)
+                # cleanup tmp_file at tmp_path after running
+                self.__delete_tmp_file()
+
+                proc_q.put(out.decode('ISO-8859-1'))
+                proc_q.put(err.decode('ISO-8859-1'))
+                proc_q.put(stmt_cov)
+                proc_q.put(br_cov)
             return 0
         except FileNotFoundError as e:
             print('FileNotFoundError: when trying to compute coverage for snippet {}#{}\n'.format(self.snippet_path, str(self.latest)))
-            
+
         proc_q.put(None)
         proc_q.put(None)
         proc_q.put(None)

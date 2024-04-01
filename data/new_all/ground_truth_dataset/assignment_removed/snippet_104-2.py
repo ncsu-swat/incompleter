@@ -2,7 +2,7 @@ import datetime
 now = datetime.datetime.now()
 print(now)
 year = lambda x: x.year
-day = lambda x: x.day
+month = lambda x: x.month
 t = lambda x: x.time()
 print(year(now))
 print(month(now))

@@ -1,6 +1,6 @@
 import numpy as np
 import os
-x = np.arange(10)
+y = np.arange(11, 20)
 print('Original arrays:')
 print(x)
 print(y)

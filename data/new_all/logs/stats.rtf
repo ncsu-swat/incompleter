@@ -25,16 +25,6 @@ LExecutor\
 Avg: 44\
 \
 \
-\
-\
-\
-1. Checked the snippets where none of the techniques worked.\
-2. Checked the last error that LExectuor had produced in these cases.\
-3. 10% were TypeError: 'DummyObject' is not iterable/subscriptable/callable\
-4. 5% were NameError\
-5. 5% were FileNotFoundError\
-\
-\
 Average lengths of snippets for LExecutor:\
 (Total/Fail/Success)\
 Chunk1: (1252 || 1386 || 1061)\
@@ -68,25 +58,6 @@ When incompleter doesn't work:\
 IndexError (snippet_712, snippet_645 --> poorly written code with no safeguard against list length constraints)\
 \
 Example with 'df': (lexecutor_all/snippet_722.py.orig)\
-\
-\
-###################################################################################\
-\
-STARCODER PYTHON15B\
-CODE-LLAMA PYTHON15B\
-\
---> Code-LLAMA 70B (RLHF + HF-Chat) had competitive performance compared to all techniques. Has data generation capabilities. [ However, it has a high overhead of model size + it needed 13000 volunteers for the RLHF process)\
-\
---> Starcoder\
-      |----> Code completion mode\
-			Unusable to say the least because "incompletion" fundamentally differs from "code completion"\
-\
-      |----> Infilling mode (asking to infill the values of missing identifiers)\
-			Original snippet:\
-				I could test for 10 snippets. For 4 snippets, the infiller could predict the correct type but could not generate the data.\
-			Incompleter+:\
-				Yet to test.\
-\
 \
 \
 \

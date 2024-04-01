@@ -1,28 +1,9 @@
-# LExecutor: DO NOT INSTRUMENT
-
-from lexecutor.Runtime import _n_
-from lexecutor.Runtime import _a_
-from lexecutor.Runtime import _c_
-from lexecutor.Runtime import _l_
-try:
-    import pandas as pd
-    _l_(117592)
-
-except ImportError:
-    pass
-_c_(117594, _n_(117593, "print", lambda: print), 'Original DataFrame:')
-_l_(117595)
-_c_(117598, _n_(117596, "print", lambda: print), _n_(117597, "df", lambda: df))
-_l_(117599)
-_c_(117601, _n_(117600, "print", lambda: print), "\nMultiIndex using columns 't_id', ‘school_code’ and 'class':")
-_l_(117602)
-df1 = _c_(117605, _a_(117604, _n_(117603, "df", lambda: df), "set_index"), ['t_id', 'school_code', 'class'])
-_l_(117606)
-_c_(117609, _n_(117607, "print", lambda: print), _n_(117608, "df1", lambda: df1))
-_l_(117610)
-_c_(117612, _n_(117611, "print", lambda: print), '\nConvert 1st and 3rd levels in the index frame into columns:')
-_l_(117613)
-df2 = _c_(117616, _a_(117615, _n_(117614, "df1", lambda: df1), "reset_index"), level=['t_id', 'class'])
-_l_(117617)
-_c_(117620, _n_(117618, "print", lambda: print), _n_(117619, "df2", lambda: df2))
-_l_(117621)
+import pandas as pd
+df = pd.DataFrame({'school_code': ['s001', 's002', 's003', 's001', 's002', 's004'], 'class': ['V', 'V', 'VI', 'VI', 'V', 'VI'], 'name': ['Alberto Franco', 'Gino Mcneill', 'Ryan Parkes', 'Eesha Hinton', 'Gino Mcneill', 'David Parkes'], 'date_of_birth': ['15/05/2002', '17/05/2002', '16/02/1999', '25/09/1998', '11/05/2002', '15/09/1997'], 'weight': [35, 32, 33, 30, 31, 32], 't_id': ['t1', 't2', 't3', 't4', 't5', 't6']})
+print('Original DataFrame:')
+print(df)
+print("\nMultiIndex using columns 't_id', ‘school_code’ and 'class':")
+df1 = df.set_index(['t_id', 'school_code', 'class'])
+print(df1)
+print('\nConvert 1st and 3rd levels in the index frame into columns:')
+print(df2)

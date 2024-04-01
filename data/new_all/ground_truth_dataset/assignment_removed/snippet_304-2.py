@@ -10,7 +10,7 @@ def max_aggregate(list_str, N):
 list_str = ['abcd', 'iabhef', 'dsalsdf', 'sdfsas', 'jlkdfgd']
 print('Original list:')
 print(list_str)
-result = max_aggregate(list_str, N)
+N = 3
 print('\nCharacters of the said list of strings which occur more than:', N)
 print(result[0])
 print('\nCharacters of the said list of strings which occur less than:', N)

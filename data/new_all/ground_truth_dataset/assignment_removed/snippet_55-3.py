@@ -1,7 +1,7 @@
 import itertools as it
 mums1 = [1, 2, 3, 4]
-mums2 = [5, 6, 7, 8]
 mums3 = [9, 10, 11, 12]
+mums4 = [13, 14, 15, 16]
 print('Original lists:')
 print(mums1)
 print(mums2)

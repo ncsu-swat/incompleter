@@ -6,8 +6,8 @@ print(cast_list(d1))
 d2 = ('Red', 'Green')
 print(type(d2))
 print(cast_list(d2))
-d3 = {'Red', 'Green'}
 print(type(d3))
 print(cast_list(d3))
+d4 = {1: 'Red', 2: 'Green', 3: 'Black'}
 print(type(d4))
 print(cast_list(d4))

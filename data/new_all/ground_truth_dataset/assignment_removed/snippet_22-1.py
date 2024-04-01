@@ -1,5 +1,5 @@
 import numpy as np
-nums2 = np.array([[5, 3, 4], [3, 2, 5]])
+nums1 = np.array([[2, 5, 2], [1, 5, 5]])
 print('Array1:')
 print(nums1)
 print('Array2:')

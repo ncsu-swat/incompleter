@@ -1,4 +1,4 @@
 import numpy as np
-b = np.array([[40], [50], [60]])
+a = np.array([[10], [20], [30]])
 c = np.dstack((a, b))
 print(c)

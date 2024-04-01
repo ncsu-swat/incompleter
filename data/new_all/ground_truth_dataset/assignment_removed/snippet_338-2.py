@@ -1,4 +1,4 @@
 import numpy as np
-v = 4
+x = np.random.uniform(1, 12, 5)
 n = x.flat[np.abs(x - v).argmin()]
 print(n)

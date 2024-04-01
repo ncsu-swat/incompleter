@@ -1,5 +1,5 @@
 import numpy as np
-q = np.array([10, 11, 12])
+p = np.array([[0, 0, 0], [1, 2, 3], [4, 5, 6]])
 print('Original arrays:')
 print('Array-1')
 print(p)
