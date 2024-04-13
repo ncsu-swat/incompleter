@@ -45,7 +45,7 @@ if __name__ == '__main__':
 
         print(file_path)
         
-        mox = Moxecutor(snippet_path=file_path, snippet_dir=args.dir, is_cov=args.cov, type_dict=type_dicts[file_name.split('/')[-1].replace('snippet_', '').replace('.py.orig', ''), args.bugs]) if args.cdata else Moxecutor(snippet_path=file_path, snippet_dir=args.dir, is_cov=args.cov, bugs=args.bugs)
+        mox = Moxecutor(snippet_path=file_path, snippet_dir=args.dir, is_cov=args.cov, type_dict=type_dicts[file_name.split('/')[-1].replace('snippet_', '').replace('.py.orig', '')] , bugs=args.bugs) if args.cdata else Moxecutor(snippet_path=file_path, snippet_dir=args.dir, is_cov=args.cov, bugs=args.bugs)
         executability_report, action_iteration_report, action_progress_report, action_sequence_length, coverage_report, unresolved_report, deductions_tally = mox.moxecute()
 
         if executability_report is not None and action_iteration_report is not None and action_progress_report is not None and action_sequence_length is not None and coverage_report is not None and unresolved_report is not None:

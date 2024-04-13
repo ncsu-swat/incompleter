@@ -186,7 +186,7 @@ class Reporter():
             report_str += '\n\n'
 
         # Write failure, success, timeout and last_errs for post-processing
-        self.write_pickles()
+        # self.write_pickles()
 
         return report_str
 
