@@ -1,7 +1,0 @@
-# Extracted from https://stackoverflow.com/questions/8689964/why-do-some-functions-have-underscores-before-and-after-the-function-name
-class A:
-    def __init__(self, a):  # use special method '__init__' for initializing
-        self.a = a
-    def __custom__(self):  # custom special method. you might almost do not use it
-        pass
-

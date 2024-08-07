@@ -1,2 +1,0 @@
-#Source: https://stackoverflow.com/questions/54897849/circular-issue-attempt-to-send-form-url-encoded-data-causes-typeerror-cant-co
-urllib.request.urlopen({api_url}, data=bytes(json.dumps({"ID": theId}), encoding="utf-8"))

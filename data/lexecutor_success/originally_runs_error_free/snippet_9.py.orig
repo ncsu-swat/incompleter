@@ -1,9 +1,0 @@
-# Extracted from https://stackoverflow.com/questions/522563/accessing-the-index-in-for-loops
-xs = [8, 23, 45]
-for i in range(len(xs)):
-    print("item #{} = {}".format(i + 1, xs[i]))
-
-xs = [8, 23, 45]
-for idx, val in enumerate(xs, start=1):
-    print("item #{} = {}".format(idx, val))
-

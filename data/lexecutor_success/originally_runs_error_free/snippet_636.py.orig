@@ -1,5 +1,0 @@
-# Extracted from https://stackoverflow.com/questions/4481724/convert-a-list-of-characters-into-a-string
-a = ['a', 'b', 'c', 'd']
-''.join(a)
-'abcd'
-

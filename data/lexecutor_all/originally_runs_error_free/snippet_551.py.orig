@@ -1,8 +1,0 @@
-# Extracted from https://stackoverflow.com/questions/993358/creating-a-range-of-dates-in-python
-import datetime as dt
-from dateutil.relativedelta import relativedelta
-
-def month_range(start_date, n_months):
-        for m in range(n_months):
-            yield start_date + relativedelta(months=+m)
-

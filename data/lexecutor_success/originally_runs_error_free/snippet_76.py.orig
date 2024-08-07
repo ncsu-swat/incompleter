@@ -1,9 +1,0 @@
-# Extracted from https://stackoverflow.com/questions/339007/how-do-i-pad-a-string-with-zeroes
-'99'.zfill(5)
-'00099'
-'99'.rjust(5,'0')
-'00099'
-
-'99'.ljust(5,'0')
-'99000'
-

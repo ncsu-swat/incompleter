@@ -1,2 +1,0 @@
-#Source: https://stackoverflow.com/questions/55998672/how-to-fix-this-typeerror-sequence-item-0-expected-str-instance-float-found
-toronto_df['Neighbourhood'] = toronto_df.groupby(['Postcode','Borough'])['Neighbourhood'].agg(lambda x: ','.join(x))

@@ -1,4 +1,0 @@
-# Extracted from https://stackoverflow.com/questions/529424/traverse-a-list-in-reverse-order-in-python
-collection = ['a','b','c']
-[item for item in reversed( collection ) ]
-

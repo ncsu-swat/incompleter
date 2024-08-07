@@ -1,8 +1,0 @@
-# Extracted from https://stackoverflow.com/questions/35215161/most-efficient-way-to-map-function-over-numpy-array
-import numpy as np
-x = np.array([1, 2, 3, 4, 5])
-squarer = lambda t: t ** 2
-vfunc = np.vectorize(squarer)
-vfunc(x)
-# Output : array([ 1,  4,  9, 16, 25])
-

@@ -1,8 +1,0 @@
-# Extracted from https://stackoverflow.com/questions/626759/whats-the-difference-between-lists-and-tuples
-import timeit
-print(timeit.timeit(stmt='[1,2,3,4,5,6,7,8,9,10]', number=1000000)) #created list
-print(timeit.timeit(stmt='(1,2,3,4,5,6,7,8,9,10)', number=1000000)) # created tuple 
-
-0.136621
-0.013722200000000018
-

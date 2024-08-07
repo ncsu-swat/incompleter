@@ -1,6 +1,7 @@
-from path_config import DATA_DIR
+from path_config import DATA_DIR, LOG_DIR
 
 import os
+import json
 import pickle
 from tabulate import tabulate
 
@@ -10,6 +11,7 @@ from matplotlib import pyplot as plt
 from main.utils.snippet import Snippet
 
 class Reporter():
+    # lexecutor success cases on the lexecutor dataset
     lexecutor_success = set(['24', '224', '350', '340', '589', '618', '14', '71', '271', '321', '30', '292', '679', '668', '639', '15', '177', '355', '392', '231', '382', '60', '629', '678', '718', '749', '351', '211', '190', '341', '759', '708', '499', '445', '713', '593', '746', '657', '723', '632', '501', '400', '434', '804', '756', '587', '389', '607', '565', '780', '681', '541', '646', '586', '159', '299', '777', '652', '561', '571', '582', '685', '138', '426', '692', '770', '682', '453', '38', '416', '665', '711', '490', '750', '797', '359', '786', '446', '775', '650', '813', '710', '481', '491', '700', '462', '516', '687', '209', '369', '817', '413', '823', '792', '452', '239', '268', '39', '698', '80', '362', '140', '381', '150', '317', '206', '688', '479', '115', '303', '12', '121', '313', '36', '105', '267', '478', '353', '130', '95', '237', '175', '291', '62', '151', '233', '322', '134', '316', '196'])
 
     def __init__(self, chunk_num: str, is_cov: bool) -> None:
@@ -66,8 +68,8 @@ class Reporter():
         headers = ['iter#', 'exec(cnt)', 'stmt(%)', 'br(%)']
 
         cumm_fixed = 0
-        cumm_stmt = -1
-        cumm_br = -1
+        cumm_stmt = 0
+        cumm_br = 0
         for _iter in range(0, max_rows+1):
             # Report complete executablity
             cumm_fixed += self.fixed_report[_iter] if _iter in self.fixed_report.keys() else 0
@@ -162,31 +164,28 @@ class Reporter():
             report_str += '\n'
 
         # Report Venn diagram statistics
-        if self.only_lexecutor is not None and self.only_incompleter is not None and self.common is not None and self.none is not None:
-            report_str += '\n\n\n\n=======================================\n TABLE VII. VENN DIAGRAM STATISTICS:\n=======================================\n\n'
-            report_str += 'This table shows the venn diagram statistics between LExecutor and incompleter.\n\n'
-            table = []
-            headers = ['Set', 'snippet_cnt(%)']
+        # if self.only_lexecutor is not None and self.only_incompleter is not None and self.common is not None and self.none is not None:
+        #     report_str += '\n\n\n\n=======================================\n TABLE VII. VENN DIAGRAM STATISTICS:\n=======================================\n\n'
+        #     report_str += 'This table shows the venn diagram statistics between LExecutor and incompleter.\n\n'
+        #     table = []
+        #     headers = ['Set', 'snippet_cnt(%)']
             
-            table.append(['(only) lexecutor', self.only_lexecutor_perc])
-            table.append(['(only) incompleter', self.only_incompleter_perc])
-            table.append(['(both) common', self.common_perc])
-            table.append(['(none) unsolved', self.none_perc])
+        #     table.append(['(only) lexecutor', self.only_lexecutor_perc])
+        #     table.append(['(only) incompleter', self.only_incompleter_perc])
+        #     table.append(['(both) common', self.common_perc])
+        #     table.append(['(none) unsolved', self.none_perc])
 
-            report_str += tabulate(table, headers, tablefmt='github')
+        #     report_str += tabulate(table, headers, tablefmt='github')
 
-            report_str += '\n\n\n\n  ----------------------------\n   Only LExecutor\n  ----------------------------\n\n   '
-            report_str += str(self.only_lexecutor)
-            report_str += '\n\n  ----------------------------\n   Only Incompleter\n  ----------------------------\n\n   '
-            report_str += str(self.only_incompleter)
-            report_str += '\n\n  ----------------------------\n   Common\n  ----------------------------\n\n   '
-            report_str += str(self.common)
-            report_str += '\n\n  ----------------------------\n   None\n  ----------------------------\n\n   '
-            report_str += str(self.none)
-            report_str += '\n\n'
-
-        # Write failure, success, timeout and last_errs for post-processing
-        self.write_pickles()
+        #     report_str += '\n\n\n\n  ----------------------------\n   Only LExecutor\n  ----------------------------\n\n   '
+        #     report_str += str(self.only_lexecutor)
+        #     report_str += '\n\n  ----------------------------\n   Only Incompleter\n  ----------------------------\n\n   '
+        #     report_str += str(self.only_incompleter)
+        #     report_str += '\n\n  ----------------------------\n   Common\n  ----------------------------\n\n   '
+        #     report_str += str(self.common)
+        #     report_str += '\n\n  ----------------------------\n   None\n  ----------------------------\n\n   '
+        #     report_str += str(self.none)
+        #     report_str += '\n\n'
 
         return report_str
 
@@ -195,9 +194,14 @@ class Reporter():
         self.total_count += 1
         self.total_action_sequence_length += action_sequence_length
         self.is_fixed = False
+        log = {}
 
         if self.is_cov:
             for _iter, covs in coverage_report_by_iter.items():
+                # LOG: get summary coverage of each iteration from coverage_report_by_iter
+                if covs['cov_summary'] is not None:
+                    log['cov_summary'] = covs['cov_summary']
+
                 if covs['stmt'] is not None:
                     if _iter not in self.avg_stmt_cov.keys():
                         self.avg_stmt_cov[_iter] = covs['stmt']
@@ -235,17 +239,27 @@ class Reporter():
                 self.error_report[err_type][_iter] += 1
 
         if self.is_fixed:
+            # LOG: store execution status (execution or exception)
+            log['exec_status'] = 1
+
             self.fexec_action_sequence_length += action_sequence_length
             self.fexec_count += 1
         else:
+            # LOG: store execution status (execution or exception)
+            log['exec_status'] = 0
+
             self.pexec_action_sequence_length += action_sequence_length
             self.pexec_count += 1
 
+        # LOG: create empty dictionary to store the action patterns applied at different iterations
+        log['iter'] = {}
         for _iter, action_pattern in action_report_by_iter.items():
             if action_pattern not in self.action_iteration_report.keys():
                 self.action_iteration_report[action_pattern] = {}
             if _iter not in self.action_iteration_report[action_pattern].keys():
                 self.action_iteration_report[action_pattern][_iter] = 0
+            # LOG: store the applied action patterns for each iteration # (key, value): (iteration, action_pattern) # The keys (iterations) will represent the number of times Incompleter could resolve intermediate errors
+            log['iter'][_iter] = action_pattern
             self.action_iteration_report[action_pattern][_iter] += 1
 
         for action_pattern, impact_dict in action_report_by_progress.items():
@@ -254,10 +268,18 @@ class Reporter():
             self.action_progress_report[action_pattern]['f-exec'] += impact_dict['f-exec']
             self.action_progress_report[action_pattern]['p-exec'] += impact_dict['p-exec']
 
+        # LOG: create empty list to store unresolved errors
+        log['unresolved'] = []
         for err_type, err_msg in unresolved_dict.items():
             if err_type not in self.unresolved_report.keys():
                 self.unresolved_report[err_type] = []
+            # LOG: store unresolved errors
+            log['unresolved'].append(err_type + ': ' + err_msg)
             self.unresolved_report[err_type].append(err_msg)
+
+        # LOG: write log file (one json for each snippet)
+        with open(os.path.join(LOG_DIR, file_name.split('/')[-2], 'logs', file_name.split('/')[-1].split('.')[0]+'.json'), 'w+') as log_file:
+            json.dump(log, log_file, indent=2)
 
     def sort(self) -> None:
         # Sorting the complete executablity report
@@ -267,32 +289,7 @@ class Reporter():
         for err_type in self.error_report.keys():
             self.error_report[err_type] = dict(sorted(self.error_report[err_type].items()))
 
-    def check_pickles(self):
-        with open(os.path.join(self.log_dir, 'failure.pkl'), 'rb') as failure_pkl_file:
-            failure = pickle.load(failure_pkl_file)
-            print(failure)
-        with open(os.path.join(self.log_dir, 'success.pkl'), 'rb') as success_pkl_file:
-            success = pickle.load(success_pkl_file)
-            print(success)
-        with open(os.path.join(self.log_dir, 'timeout.pkl'), 'rb') as timeout_pkl_file:
-            timeout = pickle.load(timeout_pkl_file)
-            print(timeout)
-        with open(os.path.join(self.log_dir, 'lasterrs.pkl'), 'rb') as lasterrs_pkl_file:
-            lasterrs = pickle.load(lasterrs_pkl_file)
-            print(lasterrs)
-
-    def write_pickles(self):
-        with open(os.path.join(self.log_dir, 'failure.pkl'), 'wb') as failure_pkl_file:
-            pickle.dump(list(self.all_cases.difference(self.resolved_cases)), failure_pkl_file)
-        with open(os.path.join(self.log_dir, 'success.pkl'), 'wb') as success_pkl_file:
-            pickle.dump(list(self.resolved_cases), success_pkl_file)
-        with open(os.path.join(self.log_dir, 'timeout.pkl'), 'wb') as timeout_pkl_file:
-            pickle.dump(list(self.timeout), timeout_pkl_file)
-        with open(os.path.join(self.log_dir, 'lasterrs.pkl'), 'wb') as lasterrs_pkl_file:
-            for key, item in self.unresolved_report.items():
-                self.last_errs += [key]*len(item)
-            pickle.dump(self.last_errs, lasterrs_pkl_file)
-
+    # this function is intended for the lexecutor dataset given the defined lexecutor_success set
     def compute_venn(self) -> None:
         self.only_lexecutor = set()
         self.only_incompleter = set()

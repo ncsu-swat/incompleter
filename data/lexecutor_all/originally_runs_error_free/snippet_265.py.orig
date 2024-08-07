@@ -1,7 +1,0 @@
-# Extracted from https://stackoverflow.com/questions/624926/how-do-i-detect-whether-a-variable-is-a-function
-def myfunc(x):
-  try:
-    x()
-  except TypeError:
-    raise Exception("Not callable")
-

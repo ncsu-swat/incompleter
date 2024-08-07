@@ -1,3 +1,0 @@
-# Extracted from https://stackoverflow.com/questions/36367986/how-to-make-inline-plots-in-jupyter-notebook-larger
-options(repr.plot.width=4, repr.plot.height=3)
-

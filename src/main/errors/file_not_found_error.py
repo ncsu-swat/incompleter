@@ -5,6 +5,7 @@ from main.utils.snippet import Snippet
 from main.errors.error_base_class import ErrorBaseClass
 from main.actions.action_base_class import ActionBaseClass
 from main.actions.files.create_file import CreateFile
+from main.actions.files.create_dir import CreateDir
 
 import re
 import os
@@ -13,9 +14,9 @@ class _FileNotFoundError(ErrorBaseClass):
     sample_exts = ['json', 'xml', 'html', 'csv', 'xlsx', 'xls', 'ppt', 'pdf', 'txt', 'rtf', 'doc', 'docx', 'odt', 'ods', 'odp', 'zip', 'tar', 'gz', 'png', 'jpg', 'gif', 'tiff', 'svg', 'webp', 'bmp', 'ico', 'hdf', 'h4', 'hdf4', 'he2', 'h5', 'hdf5', 'he5', 'mp3', 'wav', 'ogg', 'mp4', 'avi', 'mov', 'wmv', 'webm']
 
     mappings = {
-        r'\'?(\S+)\'? not found.*?': [ CreateFile ],
-        r'\[Errno 2\] No such file or directory: \'(\S+)\'': [ CreateFile ],
-        r'File (\S+) does not exist': [ CreateFile]
+        r'\'?([^\']+)\'? not found.*?': [ CreateFile ],
+        r'\[Errno 2\] No such file or directory: \'?([^\']+)\'?': [ CreateFile, CreateDir ],
+        r'File \'?([^\']+)\'? does not exist': [ CreateFile]
     }
 
     def __init__(self, path: str, snippet: Snippet, stack_trace: str) -> None:
@@ -40,6 +41,10 @@ class _FileNotFoundError(ErrorBaseClass):
 
                         kwargs['file_name'] = file_name
                         kwargs['file_content'] = file_content
+                    
+                    elif ActionClass == CreateDir:
+                        dir_name = m.groups()[0]
+                        kwargs['dir_name'] = dir_name
 
                     if (action := ActionClass(snippet=self.snippet, lineno=self.lineno, **kwargs)).check_criteria():
                         return action

@@ -1,9 +1,0 @@
-# Extracted from https://stackoverflow.com/questions/51520/how-to-get-an-absolute-file-path-in-python
-import os
-os.path.abspath("mydir/myfile.txt")
-'C:/example/cwd/mydir/myfile.txt'
-
-import os
-os.path.abspath("C:/example/cwd/mydir/myfile.txt")
-'C:/example/cwd/mydir/myfile.txt'
-

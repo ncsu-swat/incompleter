@@ -1,3 +1,0 @@
-# Extracted from https://stackoverflow.com/questions/363944/python-idiom-to-return-first-item-or-none
-first = lambda l, default=None: next(iter(l or []), default)
-

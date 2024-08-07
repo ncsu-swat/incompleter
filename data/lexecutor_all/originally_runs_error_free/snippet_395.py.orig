@@ -1,4 +1,0 @@
-# Extracted from https://stackoverflow.com/questions/5067604/determine-function-name-from-within-that-function-without-using-traceback
-import sys 
-print("%s/%s" %(sys._getframe().f_code.co_filename, sys._getframe().f_code.co_name))
-

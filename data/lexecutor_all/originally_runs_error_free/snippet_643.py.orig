@@ -1,6 +1,0 @@
-# Extracted from https://stackoverflow.com/questions/1489599/how-do-i-find-out-my-pythonpath-using-python
-import sys
-for a in sys.path:
-    a = a.replace('\\\\','\\')
-    print(a)
-

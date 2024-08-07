@@ -50,6 +50,7 @@ class DefineFunc(ActionBaseClass):
         class FuncCallVisitor(ast.NodeVisitor):
             def __init__(self, **kwargs: dict) -> None:
                 self.func_found = False
+                self.args_found = False
                 self.found_node = None
                 self.func_name = kwargs['func_name']
                 self.func_vararg = kwargs['func_vararg']
@@ -57,9 +58,11 @@ class DefineFunc(ActionBaseClass):
                 self.func_args = kwargs['func_args']
                 self.func_keywords = kwargs['func_keywords']
 
+                self.added_keywords = [keyword.arg for keyword in kwargs['func_keywords'].keys()]
+
             def visit_Call(self, node):
-                if self.func_found:
-                    return node
+                # if self.func_found:
+                    # return node
 
                 if isinstance(node.func, ast.Name) or isinstance(node.func, ast.Attribute):
                     if isinstance(node.func, ast.Name):
@@ -97,18 +100,24 @@ class DefineFunc(ActionBaseClass):
                     if self.found_node.args:
                         for (arg_i, arg) in enumerate(self.found_node.args):
                             if isinstance(arg, ast.Starred):
-                                self.func_vararg.append(ast.arg(arg='arg'+str(arg_i)))
+                                if len(self.func_vararg) == 0:
+                                    self.func_vararg.append(ast.arg(arg='arg'+str(arg_i)))
                             else:
-                                self.func_args.append(ast.arg(arg='arg'+str(arg_i)))
+                                if not self.args_found:
+                                    self.func_args.append(ast.arg(arg='arg'+str(arg_i)))
+                        self.args_found = True
                     if self.found_node.keywords:
                         for kw in self.found_node.keywords:
                             if kw.arg:
-                                self.func_keywords[ast.arg(arg=kw.arg)] = ast.Constant(value=None)
+                                if kw.arg not in self.added_keywords:
+                                    self.func_keywords[ast.arg(arg=kw.arg)] = ast.Constant(value=None)
                             else:
                                 if isinstance(kw.value, ast.Name):
-                                    self.func_kwarg.append(ast.arg(arg=kw.value.id))
+                                    if len(self.func_kwarg) == 0:
+                                        self.func_kwarg.append(ast.arg(arg=kw.value.id))
                                 else:
-                                    self.func_kwarg.append(ast.arg(arg='kwargs'))
+                                    if len(self.func_kwarg) == 0:
+                                        self.func_kwarg.append(ast.arg(arg='kwargs'))
                 
                 return node
 
@@ -198,7 +207,6 @@ class DefineFunc(ActionBaseClass):
                             self.func_def = kwargs['func_def']
 
                             if self.func_level == 'instance':
-                                print('\n\nHERE\n\n')
                                 self.func_def.args.args.insert(0, ast.arg(arg='self'))
 
                         def visit_ClassDef(self, node):

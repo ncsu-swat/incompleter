@@ -1,4 +1,0 @@
-# Extracted from https://stackoverflow.com/questions/3996904/generate-random-integers-between-0-and-9
-from random import randrange
-print(randrange(10))
-

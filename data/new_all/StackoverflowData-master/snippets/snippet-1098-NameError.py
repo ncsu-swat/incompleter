@@ -1,2 +1,0 @@
-#Source: https://stackoverflow.com/questions/49454529/django-forms-typeerror-init-got-an-unexpected-keyword-argument-instance
-path('calendar/<int:calendar_id>/', views.calendaredit, name='calendaredit')

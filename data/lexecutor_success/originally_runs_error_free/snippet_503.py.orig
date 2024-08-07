@@ -1,6 +1,0 @@
-# Extracted from https://stackoverflow.com/questions/12934190/is-there-a-short-contains-function-for-lists
-[2, 51, 6, 8, 3].__contains__(8)
-# Out[33]: True
-[2, 51, 6, 3].__contains__(8)
-# Out[33]: False
-

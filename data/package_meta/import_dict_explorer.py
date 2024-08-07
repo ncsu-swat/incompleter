@@ -12,11 +12,9 @@ if __name__ == '__main__':
     #     pickle.dump(top_list, top_list_file)
 
     # with open('popular_packages_list.pickle', 'rb') as top_list_file:
-    #     top_list = pickle.load(top_list_file)
+        # top_list = pickle.load(top_list_file)
 
-    #     print(top_list)
+        # print(top_list)
 
     with open('import_dict.pickle', 'rb') as import_dict_file:
         import_dict = pickle.load(import_dict_file)
-
-        print(ast.dump(import_dict['re'], indent=2))

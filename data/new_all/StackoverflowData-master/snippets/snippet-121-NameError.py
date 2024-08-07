@@ -1,2 +1,0 @@
-#Source: https://stackoverflow.com/questions/54030855/attributeerror-str-object-has-no-attribute-view-in-seaborn-scatterplot
-sns.scatterplot(x = 'X', y = 'Y', data = toy_data, hue = 'Label', alpha = 0.5)

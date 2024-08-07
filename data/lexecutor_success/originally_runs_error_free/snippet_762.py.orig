@@ -1,6 +1,0 @@
-# Extracted from https://stackoverflow.com/questions/733454/best-way-to-format-integer-as-string-with-leading-zeros
-add_nulls = lambda number, zero_count : "{0:0{1}d}".format(number, zero_count)
-
-add_nulls(2,3)
-'002'
-

@@ -41,12 +41,18 @@ class InstallModule(ActionBaseClass):
             self.snippet.fixpoint_tolerance = 1    # setting 1 when we have already tried InstallModule pattern and we get ModuleNotFoundError for the second time. This time, we set the tolerance to 1 and let RemoveImport take over.
             progress = self.snippet.has_progress() # this should always be False (second attempt should not apply InstallModule again since it did not work the first time. RemoveImport pattern should be applied.)
 
+        if 'sklearn' in self.module_name:
+            self.module_name = 'scikit-learn'
+        if 'tensorflow' in self.module_name:
+            return False    # not installing tensorflow due to interference with existing torch setup
+
         return progress
 
-
     def apply_pattern(self) -> str:
+        
+
         installer = Popen([sys.executable, '-m', 'pip', 'install', self.module_name], stdout=DEVNULL, stderr=DEVNULL)
-        installer.wait()
+        # installer.wait()
 
         tree = ast.parse(self.snippet.get_latest())
         return ast.unparse(ast.fix_missing_locations(tree))

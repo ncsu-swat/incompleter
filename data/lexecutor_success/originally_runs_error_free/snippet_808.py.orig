@@ -1,9 +1,0 @@
-# Extracted from https://stackoverflow.com/questions/5384914/how-do-i-delete-items-from-a-dictionary-while-iterating-over-it
-dict = {'one' : 1, 'two' : 2, 'three' : 3, 'four' : 4}
-delete = []
-for k,v in dict.items():
-    if v%2 == 1:
-        delete.append(k)
-for i in delete:
-    del dict[i]
-

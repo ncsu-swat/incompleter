@@ -1,8 +1,0 @@
-# Extracted from https://stackoverflow.com/questions/645312/what-is-the-quickest-way-to-http-get-in-python
-from nap.url import Url
-api = Url('https://api.github.com')
-
-gists = api.join('gists')
-response = gists.get(params={'since': '2014-05-01T00:00:00Z'})
-print(response.json())
-

@@ -40,15 +40,20 @@ class AddImport(ActionBaseClass):
                 self.import_dict[self.module_name] = ast.Import(names=[ast.alias(name=self.module_name)])
             return True
         else:
+            if self.module_name in self.snippet.removed_imports:
+                return False
+            
             if self.import_dict is None:
                 return False
 
-            # Add import for a module only if it is in the top pypi packages list
+            # Add import for a module if it is in the top pypi packages list
             if self.module_name in self.import_dict.keys():
                 import_ast = self.import_dict[self.module_name]
                 if 'names' in dir(import_ast):
                     for alias in import_ast.names:
                         if alias.name in self.package_list:
+                            return True
+                        elif alias.name.split('.')[0] in self.package_list:
                             return True
 
             # If self.module_name is directly not present in the import_dict keys, check if the alias name of the corresponding ast of the entry is the self.module_name
@@ -62,6 +67,27 @@ class AddImport(ActionBaseClass):
                                                                     ]
                                                                 )
                             return True
+                        
+            # Check if the module is imported later in the code and being referred to before importing
+            class ExistingImportFinder(ast.NodeVisitor):
+                def __init__(self, **kwargs):
+                    self.target_module = kwargs['target']
+                    self.found = False
+
+                def visit_Import(self, node):
+                    for name in node.names:
+                        if self.target_module in name.name:
+                            self.found = True
+
+            tree = ast.parse(self.snippet.get_latest())
+            (import_finder := ExistingImportFinder(target=self.module_name)).visit(tree)
+            if import_finder.found:
+                self.import_dict[self.module_name] = ast.Import(
+                                                        names = [
+                                                            ast.alias(name=self.module_name)
+                                                        ]
+                                                    )
+                return True
 
         return False
 

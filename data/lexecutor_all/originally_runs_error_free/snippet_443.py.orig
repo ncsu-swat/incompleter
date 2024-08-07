@@ -1,8 +1,0 @@
-# Extracted from https://stackoverflow.com/questions/14058453/making-python-loggers-output-all-messages-to-stdout-in-addition-to-log-file
-import logging
-
-logging.basicConfig(filename="logfile.txt")
-stderrLogger=logging.StreamHandler()
-stderrLogger.setFormatter(logging.Formatter(logging.BASIC_FORMAT))
-logging.getLogger().addHandler(stderrLogger)
-

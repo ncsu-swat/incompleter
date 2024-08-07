@@ -1,4 +1,0 @@
-# Extracted from https://stackoverflow.com/questions/4706499/how-do-i-append-to-a-file
-with open("foo", "a") as f:
-    f.write("cool beans...")
-

@@ -1,4 +1,4 @@
-from path_config import DATA_DIR
+from path_config import DATA_DIR, LOG_DIR
 
 import os
 import re
@@ -18,6 +18,8 @@ from subprocess import Popen, PIPE
 
 from multiprocessing import Process, Queue
 from main.utils.session import Session
+
+import traceback
 
 class Snippet:
     TIMEOUT = 120 #seconds
@@ -40,9 +42,14 @@ class Snippet:
 
         self.mocked_values: Dict[str, Any] = {}
         self.def_history: Dict[int, str] = {} # e.g. { iteration_number: defined_identifier }
+        self.unpacked_tbds: Dict[int, str] = {} # e.g. { iteration_number: iterable_or_subscriptable_TBD (cannot unpack non-iterable ... object)}
         
         self.tbd_counter = 0
         self.tbd_tracker: Dict[str, str] = {} # e.g. { TBD#: identifier }
+
+        self.removed_imports = []
+
+        self.preprocessed_tbds = set()
 
         # Since this function relies on the tbd_counter, we need to call the __replace_iterables_subscriptables_with_tbd function after defining tbd_counter
         self.__replace_iterables_subscriptables_with_tbd()
@@ -85,6 +92,9 @@ class Snippet:
 
             def visit_List(self, node):
                 tbd_name = self.snippet.get_next_tbd_name()
+
+                self.snippet.preprocessed_tbds.add(tbd_name)
+                
                 containers_tracker[tbd_name] = {
                     'type': 'List',
                     'elts': ast.Dict(keys=[ast.Constant(value=idx) for idx in range(len(node.elts))], values=[elt for elt in node.elts])
@@ -151,6 +161,9 @@ class Snippet:
 
             def visit_Dict(self, node):
                 tbd_name = self.snippet.get_next_tbd_name()
+
+                self.snippet.preprocessed_tbds.add(tbd_name)
+                
                 containers_tracker[tbd_name] = {
                     'type': 'Dict',
                     'elts': ast.Dict(keys=[key for key in node.keys], values=[value for value in node.values])
@@ -178,8 +191,13 @@ class Snippet:
         DictReplace(snippet=self).visit_Body(tree)
 
         for (tbd_name, tbd_container) in containers_tracker.items():
-            DefineClass(snippet=self, class_name=tbd_name).apply_pattern()
-            DefineIterableOrSubscriptable(snippet=self, class_name=tbd_name, container_values=tbd_container['elts']).apply_pattern()
+            skip = False
+            for val in tbd_container['elts'].values:
+                if isinstance(val, ast.Starred):
+                    skip = True
+            if not skip:
+                DefineClass(snippet=self, class_name=tbd_name).apply_pattern()
+                DefineIterableOrSubscriptable(snippet=self, class_name=tbd_name, container_values=tbd_container['elts']).apply_pattern()
 
         return
 
@@ -201,7 +219,8 @@ class Snippet:
 
     def __delete_tmp_file(self) -> None:
         try:
-            os.remove(self.tmp_path)
+            if os.path.exists(self.tmp_path):
+                os.remove(self.tmp_path)
         except Exception as e:
             print('__delete_tmp_file Exception: ' + e)
 
@@ -300,6 +319,8 @@ class Snippet:
 
     def compute_timed_latest_coverage(self) -> Tuple[float, float]:
         try:
+            os.environ['TBD#'] = str(self.tbd_counter)
+
             proc_q = Queue()
             proc = Process(target=self.compute_latest_coverage, args=(proc_q, ))
             proc.daemon = False
@@ -308,22 +329,24 @@ class Snippet:
             if proc.is_alive():
                 # print('\nCOVERAGE EXECUTION TIMEOUT\n')
                 proc.terminate()
-                return None, None, None, None
+                Snippet.timedout_counter += 1
+                return None, None, None, None, None
             else:
                 out = proc_q.get()
                 err = proc_q.get()
+                cov_summary = proc_q.get()
                 stmt_cov = proc_q.get()
                 br_cov = proc_q.get()
 
                 gc.collect()
-                return out, err, stmt_cov, br_cov
+                return out, err, cov_summary, stmt_cov, br_cov
         except Exception as e:
             print('Exception: {}'.format(e))
         finally:
             gc.collect()
         
         gc.collect()
-        return None, None, None, None
+        return None, None, None, None, None
 
     def compute_latest_coverage(self, proc_q) -> Tuple[float, float]:
         latest_code = self.get_latest()
@@ -340,37 +363,46 @@ class Snippet:
             # setup tmp_file at tmp_path before running
             self.__create_tmp_file(content=latest_code)
 
-            proc = Popen(['coverage', 'run', '--branch', self.tmp_path], stdout=PIPE, stderr=PIPE, cwd=self.tmp_dir)
-            out, err = proc.communicate()
+            with open(os.path.join(DATA_DIR, 'new_all', 'input.txt'), 'r') as input_file:
+                proc = Popen(['coverage', 'run', '--branch', self.tmp_path], stdin=input_file, stdout=PIPE, stderr=PIPE, cwd=self.tmp_dir)
+                out, err = proc.communicate()
+                print('RETURN CODE: ', proc.returncode)
 
-            proc = Popen(['coverage', 'json'], stdout=PIPE, stderr=PIPE, cwd=self.tmp_dir)
-            proc.communicate()
-            
-            stmt_cov, br_cov = None, None
-            if os.path.exists(os.path.join(self.tmp_dir, 'coverage.json')):
-                cov_json = json.load(open(os.path.join(self.tmp_dir, 'coverage.json')))
-                if cov_json['totals']['percent_covered'] is not None:
-                    stmt_cov = cov_json['totals']['percent_covered']/100
-                
-                if cov_json['totals']['covered_branches'] is not None and cov_json['totals']['num_branches'] is not None:
-                    if cov_json['totals']['num_branches'] == 0:
-                        br_cov = 1.0
-                    else:
-                        br_cov = cov_json['totals']['covered_branches']/cov_json['totals']['num_branches']
+                proc = Popen(['coverage', 'json'], stdout=PIPE, stderr=PIPE, cwd=self.tmp_dir)
+                proc.communicate()
 
-            # print('\nStmt cov: {}, Br cov: {}'.format(str(stmt_cov), str(br_cov)))
+                cov_summary, stmt_cov, br_cov = None, None, None
+                if os.path.exists(os.path.join(self.tmp_dir, 'coverage.json')):
+                    cov_json = json.load(open(os.path.join(self.tmp_dir, 'coverage.json')))
+                    if 'files' in cov_json.keys() and self.snippet_name in cov_json['files'].keys() and 'summary' in cov_json['files'][self.snippet_name].keys():
+                        cov_summary = cov_json['files'][self.snippet_name]['summary']
+                        if cov_summary is not None:
+                            with open(os.path.join(LOG_DIR, self.snippet_path.split('/')[-2], 'covs', self.snippet_name.split('.')[0]+'.json'), 'w+') as cov_file:
+                                json.dump(cov_summary, cov_file, indent=2)
+                            stmt_cov = cov_summary['percent_covered']
+                            if stmt_cov is not None:
+                                stmt_cov = stmt_cov/100
+                            if cov_summary['num_branches'] == 0:
+                                br_cov = None # 1.0
+                            else:
+                                br_cov = cov_summary['covered_branches']/cov_summary['num_branches']
 
-            # cleanup tmp_file at tmp_path after running
-            self.__delete_tmp_file()
+                # print('\nStmt cov: {}, Br cov: {}'.format(str(stmt_cov), str(br_cov)))
 
-            proc_q.put(out.decode('ISO-8859-1'))
-            proc_q.put(err.decode('ISO-8859-1'))
-            proc_q.put(stmt_cov)
-            proc_q.put(br_cov)
+                # cleanup tmp_file at tmp_path after running
+                self.__delete_tmp_file()
+
+                proc_q.put(out.decode('ISO-8859-1'))
+                proc_q.put(err.decode('ISO-8859-1'))
+                proc_q.put(cov_summary)
+                proc_q.put(stmt_cov)
+                proc_q.put(br_cov)
             return 0
         except FileNotFoundError as e:
             print('FileNotFoundError: when trying to compute coverage for snippet {}#{}\n'.format(self.snippet_path, str(self.latest)))
-            
+            print(traceback.print_exc())
+
+        proc_q.put(None)
         proc_q.put(None)
         proc_q.put(None)
         proc_q.put(None)
@@ -382,7 +414,7 @@ class Snippet:
             parent = psutil.Process(pid)
             children = parent.children(recursive=True)
             for child in children:
-                process.send_signal(signal.SIGTERM)
+                child.send_signal(signal.SIGTERM)
         except psutil.NoSuchProcess:
             return
 

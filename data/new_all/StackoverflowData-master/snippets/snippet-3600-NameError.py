@@ -1,2 +1,0 @@
-#Source: https://stackoverflow.com/questions/71450772/flask-pytest-failed-tests-test-data-response-pytest-post-data-response-type
-search_page=urlopen(url_for('discovery_bp.search_fund', _external=True))

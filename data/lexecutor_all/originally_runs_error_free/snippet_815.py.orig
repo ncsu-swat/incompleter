@@ -1,4 +1,0 @@
-# Extracted from https://stackoverflow.com/questions/163823/can-list-display-in-a-django-modeladmin-display-attributes-of-foreignkey-field
-def book_author(self):
-  return self.book.author
-

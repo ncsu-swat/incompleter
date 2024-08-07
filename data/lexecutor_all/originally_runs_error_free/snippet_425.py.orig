@@ -1,6 +1,0 @@
-# Extracted from https://stackoverflow.com/questions/23337471/how-to-properly-assert-that-an-exception-gets-raised-in-pytest
-def test_exception():
-    with pytest.raises(Exception) as excinfo:   
-        function_that_raises_exception()   
-    assert str(excinfo.value) == 'some info' 
-

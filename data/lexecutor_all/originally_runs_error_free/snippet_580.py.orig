@@ -1,6 +1,0 @@
-# Extracted from https://stackoverflow.com/questions/16720541/python-string-replace-regular-expression
-import re
-s = "Example String"
-replaced = re.sub('[ES]', 'a', s)
-print(replaced)
-

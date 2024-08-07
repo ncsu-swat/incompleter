@@ -1,4 +1,0 @@
-# Extracted from https://stackoverflow.com/questions/3430372/how-do-i-get-the-full-path-of-the-current-files-directory
-import os
-print(os.path.dirname(__file__))
-

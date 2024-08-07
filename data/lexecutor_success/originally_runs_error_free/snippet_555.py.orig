@@ -1,7 +1,0 @@
-# Extracted from https://stackoverflow.com/questions/2428092/creating-a-json-response-using-django-and-python
-from django.http import JsonResponse
-
-def your_view(request):
-    json_object = {'key': "value"}
-    return JsonResponse(json_object)
-

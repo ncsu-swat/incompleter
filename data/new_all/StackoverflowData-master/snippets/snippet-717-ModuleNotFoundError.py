@@ -1,2 +1,0 @@
-#Source: https://stackoverflow.com/questions/49709504/conda-cythen-pip-pkg-hunspell-cyhunspell-attributeerror-module-hunspell-has-n
-import hunspell; hobj = hunspell.HunSpell('/usr/share/hunspell/en_US.dic', '/usr/share/hunspell/en_US.aff') ; print( "PY_test: hunspell: " + str( hobj.spell('spookie') ) )

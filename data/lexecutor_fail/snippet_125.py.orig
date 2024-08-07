@@ -1,3 +1,0 @@
-# Extracted from https://stackoverflow.com/questions/13148429/how-to-change-the-order-of-dataframe-columns
-df = df[['mean'] + df.columns[:-1].tolist()]
-

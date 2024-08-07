@@ -1,2 +1,0 @@
-#Source: https://stackoverflow.com/questions/52030635/python-praw-typeerror-not-all-arguments-converted-during-string-formatting
-comments.reply("__%s__","\n","Current Temp: %s\u00b0F" % (str(cityname),temp_f))

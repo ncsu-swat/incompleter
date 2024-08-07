@@ -1,6 +1,0 @@
-# Extracted from https://stackoverflow.com/questions/493819/why-is-it-string-joinlist-instead-of-list-joinstring
-'_'.join(['welcome', 'to', 'stack', 'overflow'])
-'_'.join(('welcome', 'to', 'stack', 'overflow'))
-
-'welcome_to_stack_overflow'
-

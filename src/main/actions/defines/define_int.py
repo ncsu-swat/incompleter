@@ -19,7 +19,27 @@ class DefineInteger(ActionBaseClass):
         return desc
 
     def check_criteria(self) -> bool:
-        return True
+        class IsIterableOrSubscriptable(ast.NodeVisitor):
+            def __init__(self, **kwargs):
+                self.class_name = kwargs['class_name']
+                self.snippet = kwargs['snippet']
+                self.lineno = kwargs['lineno']
+                self.is_iterable_or_subscriptable = True
+
+            def visit_ClassDef(self, node):
+                if node.name == self.class_name:
+                    for child in node.body:
+                        if isinstance(child, ast.FunctionDef):
+                            if child.name == '__getitem__':
+                                self.is_iterable_or_subscriptable = False
+                                break
+                return node
+
+        tree = ast.parse(self.snippet.get_latest())
+        visitor = IsIterableOrSubscriptable(class_name=self.class_name, snippet=self.snippet, lineno=self.lineno)
+        visitor.visit(tree)
+        
+        return visitor.is_iterable_or_subscriptable
 
     def apply_pattern(self) -> str:
         # subclass 'int' class
@@ -43,6 +63,7 @@ class DefineInteger(ActionBaseClass):
             def visit_ClassDef(self, node):
                 if node.name == self.class_name:
                     node.bases.append(ast.Name(id='int', ctx=ast.Load()))
+                    node.body.insert(0, ast.parse('def __new__(self):\n\treturn 1'))
                 return node
         
         tree = ast.parse(self.snippet.get_latest())

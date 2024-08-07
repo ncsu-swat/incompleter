@@ -1,6 +1,0 @@
-# Extracted from https://stackoverflow.com/questions/1006289/how-to-find-out-the-number-of-cpus-using-python
-import os
-workers = os.cpu_count()
-if 'sched_getaffinity' in dir(os):
-    workers = len(os.sched_getaffinity(0))
-

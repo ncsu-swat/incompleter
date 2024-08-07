@@ -19,31 +19,83 @@ class DefineString(ActionBaseClass):
         return desc
 
     def check_criteria(self) -> bool:
-        return True
+        class IsIterableOrSubscriptable(ast.NodeVisitor):
+            def __init__(self, **kwargs):
+                self.class_name = kwargs['class_name']
+                self.snippet = kwargs['snippet']
+                self.lineno = kwargs['lineno']
+                self.is_iterable_or_subscriptable = True
 
+            def visit_ClassDef(self, node):
+                if node.name == self.class_name:
+                    for child in node.body:
+                        if isinstance(child, ast.FunctionDef):
+                            if child.name == '__getitem__':
+                                self.is_iterable_or_subscriptable = False
+                                break
+                return node
+
+        tree = ast.parse(self.snippet.get_latest())
+        visitor = IsIterableOrSubscriptable(class_name=self.class_name, snippet=self.snippet, lineno=self.lineno)
+        visitor.visit(tree)
+        
+        return visitor.is_iterable_or_subscriptable
+
+    @ActionBaseClass.add_to_history
     def apply_pattern(self) -> str:
-        # subclass 'str' class
-        self.__subclass_str()
+        class RemoveExistingClass(ast.NodeTransformer):
+            def __init__(self, **kwargs):
+                self.snippet = kwargs['snippet']
+                self.lineno = kwargs['lineno']
+                self.class_name = kwargs['class_name']
 
-        # define function __repr__(self)
-        self.__define_repr()
+            @ActionBaseClass.add_to_history
+            def visit_Body(self, node):
+                for (idx, child) in enumerate(node.body):
+                    node.body[idx] = self.visit(child)         
+                if None in node.body:
+                  node.body.remove(None)
+                return node
 
-        # define function __str__(self)
-        self.__define_str()
+            def visit_ClassDef(self, node):
+                if node.name == self.class_name:
+                    return None
+                return node
 
-        # define function __add__(self, another_str)
-        self.__define_add
+        with open('main/templates/template_str.txt') as template_file:
+            template = template_file.read()
+            template = template.replace('<class_name>', self.class_name)
 
-        # define function __getitem__(self, key)
-        self.__define_getitem()
+            tree = ast.parse(self.snippet.get_latest())
+            RemoveExistingClass(snippet=self.snippet, lineno=self.lineno, class_name=self.class_name).visit_Body(tree)
 
-        # define function __iter__(self)
-        self.__define_iter()
+            return ast.parse(template + '\n\n' + self.snippet.get_latest())
+        
+        # # subclass 'str' class
+        # self.__subclass_str()
 
-        # define function __len__(self)
-        self.__define_len()
+        # # define function __new__(self)
+        # self.__create_new_method_ast()
 
-        return
+        # # define function __repr__(self)
+        # self.__define_repr()
+
+        # # define function __str__(self)
+        # self.__define_str()
+
+        # # define function __add__(self, another_str)
+        # self.__define_add
+
+        # # define function __getitem__(self, key)
+        # self.__define_getitem()
+
+        # # define function __iter__(self)
+        # self.__define_iter()
+
+        # # define function __len__(self)
+        # self.__define_len()
+
+        # return
 
     def __subclass_str(self) -> None:
         class StringSubclasser(ast.NodeTransformer):
@@ -67,6 +119,35 @@ class DefineString(ActionBaseClass):
         tree = StringSubclasser(class_name=self.class_name, snippet=self.snippet, lineno=self.lineno).visit_Body(tree)
 
         return None
+
+    def __create_new_method_ast(self):
+        kwargs = {}
+        kwargs['func_name'] = '__new__'
+        kwargs['class_scope'] = self.class_name
+        kwargs['func_args'] = [ast.arg(arg='self')]
+        kwargs['func_body'] = [
+            ast.Return(value=ast.Call(
+              func=ast.Attribute(
+                  value=ast.Call(
+                      func=ast.Name(id='super', ctx=ast.Load()),
+                      args=[],
+                      keywords=[],
+                  ),
+                  attr='__new__',
+                  ctx=ast.Load(),
+              ),
+              args=[
+                ast.Name(id='self', ctx=ast.Load()),
+                ast.Attribute(
+                  value=ast.Name(id='self', ctx=ast.Load()),
+                  attr='__name__',
+                  ctx=ast.Load()
+                  )
+                ],
+              keywords=[],
+          ))
+        ]
+        DefineFunc(snippet=self.snippet, lineno=self.lineno, **kwargs).apply_pattern()
 
     def __define_str(self) -> None:
         kwargs = {}

@@ -1,3 +1,0 @@
-# Extracted from https://stackoverflow.com/questions/402504/how-to-determine-a-python-variables-type
-print(type(variable_name))
-

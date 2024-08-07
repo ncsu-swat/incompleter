@@ -1,8 +1,0 @@
-# Extracted from https://stackoverflow.com/questions/432112/is-there-a-numpy-function-to-return-the-first-index-of-something-in-an-array
-sequence_of_arrays = [[0, 1], [1, 2], [-5, 0]]
-arrays_to_query = [[-5, 0], [1, 0]]
-
-import numpy_indexed as npi
-idx = npi.indices(sequence_of_arrays, arrays_to_query, missing=-1)
-print(idx)   # [2, -1]
-

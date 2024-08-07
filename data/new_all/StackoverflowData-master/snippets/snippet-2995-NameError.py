@@ -1,2 +1,0 @@
-#Source: https://stackoverflow.com/questions/55536101/typeerror-cannot-concatenate-str-and-int-objects-in-face-detection-using-ha
-cv2.imwrite("dataSet/User."+Id +'.'+ str(sampleNum) + ".jpg", gray[y:y+h,x:x+w])

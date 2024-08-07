@@ -1,5 +1,0 @@
-# Extracted from https://stackoverflow.com/questions/3394835/use-of-args-and-kwargs
-mynum = 1000
-mystr = 'Hello World!'
-print("{mystr} New-style formatting is {mynum}x more fun!".format(**locals()))
-

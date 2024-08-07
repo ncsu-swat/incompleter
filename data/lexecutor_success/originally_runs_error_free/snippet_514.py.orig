@@ -1,5 +1,0 @@
-# Extracted from https://stackoverflow.com/questions/6130374/empty-set-literal
-s = {*()}  # or {*{}} or {*[]}
-print(s)
-set()
-

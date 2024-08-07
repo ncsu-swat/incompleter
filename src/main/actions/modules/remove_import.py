@@ -8,7 +8,9 @@ class RemoveImport(ActionBaseClass):
     def __init__(self, snippet: Snippet=None, lineno: int=0, **kwargs: dict) -> None:
         super().__init__(snippet, lineno)
 
-        self.module_name = kwargs['module_name']
+        self.module_name = None
+        if 'module_name' in kwargs.keys():
+            self.module_name = kwargs['module_name']
 
     def __str__(self) -> str:
         desc = super().__str__()
@@ -25,5 +27,8 @@ class RemoveImport(ActionBaseClass):
         latest_code = self.snippet.get_latest().split('\n')
         latest_code[self.lineno-1] = '# {}'.format(latest_code[self.lineno-1])
         latest_code = '\n'.join(latest_code)
+
+        if self.module_name != None:
+            self.snippet.removed_imports.append(self.module_name)
 
         return ast.parse(latest_code)

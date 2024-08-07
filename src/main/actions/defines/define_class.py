@@ -27,31 +27,11 @@ class DefineClass(ActionBaseClass):
 
             @ActionBaseClass.add_to_history
             def visit_Body(self, node: ast.Module) -> ast.Module:
-                node.body.insert(0, ast.ClassDef(
-                        name=self.class_name,
-                        bases=[],
-                        keywords=[],
-                        body=[
-                            ast.FunctionDef(
-                                name='__init__',
-                                args=ast.arguments(
-                                    posonlyargs=[],
-                                    args=[
-                                        ast.arg(arg='self')
-                                    ],
-                                    vararg=ast.arg(arg='args'),
-                                    kwarg=ast.arg(arg='kwargs'),
-                                    kwonlyargs=[],
-                                    kw_defaults=[],
-                                    defaults=[]),
-                                body=[
-                                    ast.Pass()],
-                                decorator_list=[])
-                        ],
-                        decorator_list=[]
-                    )
-                )
-                
+                with open('main/templates/template_tbd.txt', 'r') as template_file:
+                    template = template_file.read()
+                    template = template.replace('<class_name>', self.class_name)
+                    node.body.insert(0, ast.parse(template))
+
                 return node
 
         tree = ast.parse(self.snippet.get_latest())

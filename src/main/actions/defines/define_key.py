@@ -28,24 +28,33 @@ class DefineKey(ActionBaseClass):
                         self.key = int(self.key)
                     except ValueError:
                         pass
+        
         self.val_id = None
+        if 'val_id' in kwargs.keys():
+            self.val_id = kwargs['val_id']
+        
         self.val = None
+        if self.val_id is not None:
+            self.val = self.val = ast.Call(
+                func=ast.Name(id=self.val_id, ctx=ast.Load()),
+                args=[],
+                keywords=[])
 
     def __str__(self) -> str:
         desc = super().__str__()
-        desc += 'Key: {}\n'.format(self.key_name)
+        desc += 'Key: {}\n'.format(self.key)
 
         return desc
 
     def check_criteria(self) -> bool:
-        # If True
-        self.val_id = self.snippet.get_next_tbd_name()
-        self.val = ast.Call(
-            func=ast.Name(id=self.val_id, ctx=ast.Load()),
-            args=[],
-            keywords=[])
-            
-        DefineClass(snippet=self.snippet, lineno=self.lineno, class_name=self.val_id).apply_pattern()
+        if self.val_id is None:
+            self.val_id = self.snippet.get_next_tbd_name()
+            self.val = ast.Call(
+                func=ast.Name(id=self.val_id, ctx=ast.Load()),
+                args=[],
+                keywords=[])
+                
+            DefineClass(snippet=self.snippet, lineno=self.lineno, class_name=self.val_id).apply_pattern()
 
         return True
 

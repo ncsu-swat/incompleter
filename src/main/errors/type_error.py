@@ -21,6 +21,7 @@ class _TypeError(ErrorBaseClass):
         r'object of type \'?([^\']+)\'? has no len()': [ DefineLength ],
         r'\'(\S+)\' object is not callable': [ DefineCallable ],
         r'.*\'(\S+)\'.*not.*(mapping|iterable|subscriptable|support item assignment)': [ DefineIterableOrSubscriptable ],
+        r'cannot unpack non-iterable (\S+) object': [ DefineIterableOrSubscriptable ],
         r'(?:unsupported operand type\(s\) for |bad operand type for unary )?\'?([^\']+)\'?(?:\:| not supported between instances of) \'(\S+)\'(?: and \'(\S+)\')?': [ DefineOperator ],
     }
 
@@ -36,6 +37,9 @@ class _TypeError(ErrorBaseClass):
                 kwargs = {}
                 if err_msg_pattern in [ r'\'(\S+)\' object is not callable', r'.*\'(\S+)\'.*not.*(mapping|iterable|subscriptable|support item assignment)', r'object of type \'?([^\']+)\'? has no len()' ]:
                     kwargs['class_name'] = m.groups()[0]
+                elif err_msg_pattern in [ r'cannot unpack non-iterable (\S+) object' ]:
+                    kwargs['class_name'] = m.groups()[0]
+                    self.snippet.unpacked_tbds[self.snippet.current_iter] = kwargs['class_name']
                 elif err_msg_pattern in [ r'(?:unsupported operand type\(s\) for |bad operand type for unary )?\'?([^\']+)\'?(?:\:| not supported between instances of) \'(\S+)\'(?: and \'(\S+)\')?' ]:
                     kwargs['operator'] = m.groups()[0]
                     kwargs['class1'] = m.groups()[1]

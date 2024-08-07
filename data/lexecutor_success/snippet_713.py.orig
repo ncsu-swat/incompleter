@@ -1,4 +1,0 @@
-# Extracted from https://stackoverflow.com/questions/796008/cant-subtract-offset-naive-and-offset-aware-datetimes
-from django.utils import timezone
-now_aware = timezone.now()
-

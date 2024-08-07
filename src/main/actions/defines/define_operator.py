@@ -42,11 +42,17 @@ class DefineOperator(ActionBaseClass):
 
             # Subclassing one class based on type of the other
             if self.class2 in [ 'int', 'float' ]:
-                DefineInteger(snippet=self.snippet, lineno=self.lineno, class_name=self.class1).apply_pattern()
+                define_integer = DefineInteger(snippet=self.snippet, lineno=self.lineno, class_name=self.class1)
+                if define_integer.check_criteria():
+                    define_integer.apply_pattern()
             elif self.class2 in [ 'str' ]:
-                DefineString(snippet=self.snippet, lineno=self.lineno, class_name=self.class1).apply_pattern()
+                define_string = DefineString(snippet=self.snippet, lineno=self.lineno, class_name=self.class1)
+                if define_string.check_criteria(): 
+                    define_string.apply_pattern()
             
-            DefineFunc(snippet=self.snippet, lineno=self.lineno, func_name=func_name, class_scope=class_scope, func_args=func_args).apply_pattern()
+            def_func = DefineFunc(snippet=self.snippet, lineno=self.lineno, func_name=func_name, class_scope=class_scope, func_args=func_args, override_criteria=True)
+            def_func.check_criteria()
+            def_func.apply_pattern()
         if self.class2 is not None and 'TBD' in self.class2:
             func_name = self.operator_to_func_name[self.operator]
             class_scope = self.class2
@@ -54,11 +60,15 @@ class DefineOperator(ActionBaseClass):
 
             # Subclassing one class based on type of the other
             if self.class1 in [ 'int', 'float' ]:
-                DefineInteger(snippet=self.snippet, lineno=self.lineno, class_name=self.class2).apply_pattern()
+                define_integer = DefineInteger(snippet=self.snippet, lineno=self.lineno, class_name=self.class2)
+                if define_integer.check_criteria(): define_integer.apply_pattern()
             elif self.class1 in [ 'str' ]:
-                DefineString(snippet=self.snippet, lineno=self.lineno, class_name=self.class2).apply_pattern()
+                define_string = DefineString(snippet=self.snippet, lineno=self.lineno, class_name=self.class2)
+                if define_string.check_criteria():
+                    define_string.apply_pattern()
             
-            DefineFunc(snippet=self.snippet, lineno=self.lineno, func_name=func_name, class_scope=class_scope, func_args=func_args).apply_pattern()
+            def_func = DefineFunc(snippet=self.snippet, lineno=self.lineno, func_name=func_name, class_scope=class_scope, func_args=func_args, override_criteria=True)
+            def_func.check_criteria()
+            def_func.apply_pattern()
         
         return
-

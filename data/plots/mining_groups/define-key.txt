@@ -1,0 +1,150 @@
+==================================
+ TABLE VI. UNRESOLVED ERRORS:
+==================================
+
+  ------------------------------------------------
+   TypeErrors (47 count):
+  ------------------------------------------------
+     0. 'zip' object is not subscriptable (snippet_507.py.orig)
+     1. float() argument must be a string or a real number, not 'ellipsis' (snippet_744.py.orig)
+     2. 'TBD1' object cannot be interpreted as an integer (snippet_817.py.orig)
+     3. Too many arguments for typing.List; actual 2, expected 1 (snippet_90.py.orig)
+     4. the JSON object must be str, bytes or bytearray, not TBD0 (snippet_678.py.orig)
+     5. 'TBD6' object cannot be interpreted as an integer (snippet_763.py.orig)
+     6. TBD3.__invert__() missing 1 required positional argument: 'other' (snippet_338.py.orig)
+     7. chdir: path should be string, bytes, os.PathLike or integer, not TBD0 (snippet_405.py.orig)
+     8. unsupported operand type(s) for >>: 'builtin_function_or_method' and '_io.TextIOWrapper'. Did you mean "print(<message>, file=<output_stream>)"? (snippet_98.py.orig)
+     9. 'list' object is not callable (snippet_718.py.orig)
+     10. 'type' object does not support item deletion (snippet_48.py.orig)
+     11. remove: path should be string, bytes or os.PathLike, not TBD0 (snippet_481.py.orig)
+     12. unsupported operand type(s) for -: 'str' and 'str' (snippet_421.py.orig)
+     13. unsupported operand type(s) for >>: 'DataFrame' and 'TBD2' (snippet_274.py.orig)
+     14. download() missing 1 required positional argument: 'urls' (snippet_206.py.orig)
+     15. 'TBD2' object cannot be interpreted as an integer (snippet_332.py.orig)
+     16. isinstance() arg 2 must be a type, a tuple of types, or a union (snippet_779.py.orig)
+     17. unhashable type: 'slice' (snippet_505.py.orig)
+     18. 'TBD2' object cannot be interpreted as an integer (snippet_548.py.orig)
+     19. can only concatenate list (not "str") to list (snippet_593.py.orig)
+     20. 'list' object is not callable (snippet_583.py.orig)
+     21. close() argument must be a Figure, an int, a string, or None, not <class '__main__.TBD0'> (snippet_382.py.orig)
+     22. 'module' object is not callable (snippet_416.py.orig)
+     23. expected string or bytes-like object, got 'TBD0' (snippet_650.py.orig)
+     24. int() argument must be a string, a bytes-like object or a real number, not 'TBD1' (snippet_536.py.orig)
+     25. isinstance() arg 2 must be a type, a tuple of types, or a union (snippet_632.py.orig)
+     26. 'foo' is an invalid keyword argument for print() (snippet_743.py.orig)
+     27. initial_value must be str or None, not TBD2 (snippet_692.py.orig)
+     28. read_csv() got an unexpected keyword argument 'error_bad_lines' (snippet_586.py.orig)
+     29. Object of type TBD0 is not JSON serializable (snippet_788.py.orig)
+     30. 'str' object cannot be interpreted as an integer (snippet_354.py.orig)
+     31. expected string or bytes-like object, got 'TBD1' (snippet_362.py.orig)
+     32. Population must be a sequence.  For dicts or sets, use sorted(d). (snippet_62.py.orig)
+     33. 'module' object is not callable (snippet_623.py.orig)
+     34. package must be a string (snippet_131.py.orig)
+     35. unhashable type: 'slice' (snippet_774.py.orig)
+     36. expected string or bytes-like object, got 'TBD0' (snippet_681.py.orig)
+     37. utime: path should be string, bytes, os.PathLike or integer, not TBD0 (snippet_638.py.orig)
+     38. listdir: path should be string, bytes, os.PathLike, integer or None, not TBD0 (snippet_287.py.orig)
+     39. 'TBD6' object cannot be interpreted as an integer (snippet_158.py.orig)
+     40. Object of type TBD0 is not JSON serializable (snippet_759.py.orig)
+     41. 'TBD3' object cannot be interpreted as an integer (snippet_12.py.orig)
+     42. isinstance() arg 2 must be a type, a tuple of types, or a union (snippet_123.py.orig)
+     43. cannot unpack non-iterable PathCollection object (snippet_793.py.orig)
+     44. 'function' object is not iterable (snippet_812.py.orig)
+     45. type.__new__() argument 3 must be dict, not TBD0 (snippet_777.py.orig)
+     46. encoding without a string argument (snippet_140.py.orig)
+
+  ------------------------------------------------
+   AttributeErrors (6 count):
+  ------------------------------------------------
+     0. 'str' object has no attribute 'decode'. Did you mean: 'encode'? (snippet_685.py.orig)
+     1. 'dict' object has no attribute 'iteritems' (snippet_339.py.orig)
+     2. 'function' object has no attribute 'get' (snippet_823.py.orig)
+     3. 'list' object has no attribute 'tolist' (snippet_125.py.orig)
+     4. 'builtin_function_or_method' object has no attribute 'equal' (snippet_780.py.orig)
+     5. 'function' object has no attribute 'getPumps' (snippet_792.py.orig)
+
+  ------------------------------------------------
+   ValueErrors (12 count):
+  ------------------------------------------------
+     0. can't have unbuffered text I/O (snippet_118.py.orig)
+     1. Expected object or value (snippet_647.py.orig)
+     2. If using all scalar values, you must pass an index (snippet_679.py.orig)
+     3. not enough values to unpack (expected at least 1, got 0) (snippet_516.py.orig)
+     4. Index Unnamed: 0 invalid (snippet_392.py.orig)
+     5. min() arg is an empty sequence (snippet_413.py.orig)
+     6. cannot reshape array of size 7 into shape (100,100,100) (snippet_563.py.orig)
+     7. can't have unbuffered text I/O (snippet_454.py.orig)
+     8. No objects to concatenate (snippet_379.py.orig)
+     9. Invalid email address. (snippet_324.py.orig)
+     10. creationflags is only supported on Windows platforms (snippet_7.py.orig)
+     11. could not convert string 'column1' to float64 at row 0, column 1. (snippet_569.py.orig)
+
+  ------------------------------------------------
+   OSErrors (2 count):
+  ------------------------------------------------
+     0. [Errno 30] Read-only file system: '/my' (snippet_126.py.orig)
+     1. [Errno 49] Can't assign requested address (snippet_403.py.orig)
+
+  ------------------------------------------------
+   ZeroDivisionErrors (1 count):
+  ------------------------------------------------
+     0. division by zero (snippet_391.py.orig)
+
+  ------------------------------------------------
+   FileNotFoundErrors (7 count):
+  ------------------------------------------------
+     0. [Errno 2] No such file or directory: '/path/to/file/on/local/machine' (snippet_520.py.orig)
+     1. [Errno 2] No such file or directory: 'C:\\Python27\\Lib\\genericpath.py' (snippet_406.py.orig)
+     2. [Errno 2] No such file or directory: '/path/to/somefile.py' (snippet_738.py.orig)
+     3. [Errno 2] No such file or directory: 'C:\\Users\\System-Pc\\Desktop\\ybear.jpg' (snippet_485.py.orig)
+     4. [Errno 2] No such file or directory: 'C:\\Users\\Bob\\SecretPasswordFile.txt' (snippet_798.py.orig)
+     5. [Errno 2] Unable to open file (unable to open file: name = 'my_model.h5', errno = 2, error message = 'No such file or directory', flags = 0, o_flags = 0) (snippet_447.py.orig)
+     6. [Errno 2] No such file or directory: '/pythonwork/thefile_subset11.csv' (snippet_409.py.orig)
+
+  ------------------------------------------------
+   pytz.exceptions.UnknownTimeZoneErrors (1 count):
+  ------------------------------------------------
+     0. 'Asia/India' (snippet_17.py.orig)
+
+  ------------------------------------------------
+   pandas._config.config.OptionErrors (1 count):
+  ------------------------------------------------
+     0. No such keys(s): 'display.height' (snippet_196.py.orig)
+
+  ------------------------------------------------
+   _csv.Errors (1 count):
+  ------------------------------------------------
+     0. iterable expected, not TBD0 (snippet_417.py.orig)
+
+  ------------------------------------------------
+   pandas._libs.tslibs.parsing.DateParseErrors (1 count):
+  ------------------------------------------------
+     0. Unknown datetime string format, unable to parse: Mycol, at position 0 (snippet_735.py.orig)
+
+  ------------------------------------------------
+   KeyErrors (2 count):
+  ------------------------------------------------
+     0. 27 (snippet_160.py.orig)
+     1. "None of [Index(['col_1', 'col_2'], dtype='object')] are in the [columns]" (snippet_400.py.orig)
+
+  ------------------------------------------------
+   ModuleNotFoundErrors (1 count):
+  ------------------------------------------------
+     0. No module named 'c' (snippet_582.py.orig)
+
+  ------------------------------------------------
+   IndexErrors (3 count):
+  ------------------------------------------------
+     0. list index out of range (snippet_712.py.orig)
+     1. list index out of range (snippet_770.py.orig)
+     2. list index out of range (snippet_645.py.orig)
+
+  ------------------------------------------------
+   [/Users/adminuser/Documents/Work/PartialExecution/incompleter/data/tmp/36c46cbf-e6cc-48d9-b278-0058cab98f49/snippet_704.py.orig] - Errors (1 count):
+  ------------------------------------------------
+     0. Your Python interpreter must be 2.7 or greater (within major version 2) (snippet_704.py.orig)
+
+  ------------------------------------------------
+   requests.exceptions.HTTPErrors (1 count):
+  ------------------------------------------------
+     0. 429 Client Error: Too Many Requests for url: http://lorempixel.com/400/200 (snippet_620.py.orig)

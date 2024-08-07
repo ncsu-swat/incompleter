@@ -1,0 +1,267 @@
+==================================
+ TABLE VI. UNRESOLVED ERRORS:
+==================================
+
+  ------------------------------------------------
+   NameErrors (126 count):
+  ------------------------------------------------
+     0. name 'X' is not defined (snippet_507.py.orig)
+     1. name 'a' is not defined (snippet_30.py.orig)
+     2. name 'sequence' is not defined (snippet_389.py.orig)
+     3. name 'items' is not defined. Did you mean: 'iter'? (snippet_267.py.orig)
+     4. name 'my_dt' is not defined (snippet_817.py.orig)
+     5. name 'REDIS_URL' is not defined (snippet_772.py.orig)
+     6. name 'number' is not defined (snippet_251.py.orig)
+     7. name 'ClientTotal' is not defined (snippet_466.py.orig)
+     8. name 'ClassName' is not defined (snippet_80.py.orig)
+     9. name 'Union' is not defined (snippet_90.py.orig)
+     10. name 'json_str' is not defined (snippet_678.py.orig)
+     11. name 'condition' is not defined (snippet_700.py.orig)
+     12. name 'mylist' is not defined. Did you mean: 'list'? (snippet_316.py.orig)
+     13. name 'models' is not defined (snippet_492.py.orig)
+     14. name 'num_list' is not defined (snippet_763.py.orig)
+     15. name 'dfbc' is not defined (snippet_338.py.orig)
+     16. name 'default_path' is not defined (snippet_405.py.orig)
+     17. name 'file' is not defined. Did you mean: 'filter'? (snippet_467.py.orig)
+     18. name 'housing' is not defined (snippet_679.py.orig)
+     19. name 's' is not defined (snippet_317.py.orig)
+     20. name 'data1' is not defined (snippet_589.py.orig)
+     21. name 'n' is not defined (snippet_797.py.orig)
+     22. name 's1' is not defined (snippet_292.py.orig)
+     23. name 'mydict' is not defined. Did you mean: 'dict'? (snippet_516.py.orig)
+     24. name 'df' is not defined (snippet_660.py.orig)
+     25. name 'y' is not defined (snippet_162.py.orig)
+     26. name 'serial' is not defined (snippet_684.py.orig)
+     27. name 'l' is not defined (snippet_417.py.orig)
+     28. name 'yourObject' is not defined (snippet_134.py.orig)
+     29. name 'key' is not defined (snippet_48.py.orig)
+     30. name 'filename' is not defined (snippet_481.py.orig)
+     31. name 'DATA' is not defined (snippet_491.py.orig)
+     32. name 'value' is not defined. Did you mean: 'False'? (snippet_239.py.orig)
+     33. name 'keys' is not defined (snippet_102.py.orig)
+     34. name 'df' is not defined (snippet_559.py.orig)
+     35. name 'pip3' is not defined (snippet_431.py.orig)
+     36. name 'a' is not defined (snippet_453.py.orig)
+     37. name 'raw_data' is not defined (snippet_735.py.orig)
+     38. name 'DataFrame' is not defined (snippet_332.py.orig)
+     39. name 'command' is not defined (snippet_779.py.orig)
+     40. name 'x' is not defined (snippet_505.py.orig)
+     41. name 'cond1' is not defined (snippet_291.py.orig)
+     42. name 'my_list' is not defined (snippet_746.py.orig)
+     43. name 'file' is not defined. Did you mean: 'filter'? (snippet_548.py.orig)
+     44. name 'In' is not defined (snippet_420.py.orig)
+     45. name 'session' is not defined (snippet_823.py.orig)
+     46. name 'text' is not defined. Did you mean: 'next'? (snippet_593.py.orig)
+     47. name 'orig' is not defined (snippet_583.py.orig)
+     48. name 'register' is not defined (snippet_452.py.orig)
+     49. name 'df' is not defined (snippet_92.py.orig)
+     50. name 'parser' is not defined (snippet_359.py.orig)
+     51. name 'df' is not defined (snippet_416.py.orig)
+     52. name 'my_dict' is not defined (snippet_770.py.orig)
+     53. name 'df' is not defined (snippet_618.py.orig)
+     54. name 'df' is not defined (snippet_125.py.orig)
+     55. name 'Out' is not defined. Did you mean: 'oct'? (snippet_541.py.orig)
+     56. name 'number' is not defined (snippet_490.py.orig)
+     57. name 'filepath' is not defined (snippet_738.py.orig)
+     58. name 'line' is not defined. Did you mean: 'slice'? (snippet_650.py.orig)
+     59. name 'start_date' is not defined (snippet_536.py.orig)
+     60. name '_param1_value' is not defined (snippet_632.py.orig)
+     61. name 'dictionary' is not defined (snippet_224.py.orig)
+     62. name 'your_json_data' is not defined (snippet_775.py.orig)
+     63. name 'data' is not defined (snippet_130.py.orig)
+     64. name 'values' is not defined (snippet_413.py.orig)
+     65. name 'text' is not defined. Did you mean: 'next'? (snippet_318.py.orig)
+     66. name 'command' is not defined (snippet_435.py.orig)
+     67. name 'html_doc' is not defined (snippet_682.py.orig)
+     68. name 'df_str' is not defined (snippet_692.py.orig)
+     69. name 'p_file' is not defined (snippet_586.py.orig)
+     70. name 'data' is not defined (snippet_788.py.orig)
+     71. name 'my_model' is not defined (snippet_447.py.orig)
+     72. name 'ut' is not defined (snippet_190.py.orig)
+     73. name 'soup' is not defined (snippet_478.py.orig)
+     74. name '_' is not defined (snippet_355.py.orig)
+     75. name 'somelist' is not defined (snippet_261.py.orig)
+     76. name 'Cheese' is not defined (snippet_271.py.orig)
+     77. name 'Any' is not defined. Did you mean: 'any'? (snippet_309.py.orig)
+     78. name 'count' is not defined. Did you mean: 'round'? (snippet_175.py.orig)
+     79. name 'app' is not defined (snippet_446.py.orig)
+     80. name 'condition' is not defined (snippet_587.py.orig)
+     81. name 'your_object' is not defined (snippet_138.py.orig)
+     82. name 'ChildB' is not defined (snippet_36.py.orig)
+     83. name 'request' is not defined (snippet_479.py.orig)
+     84. name 'items' is not defined. Did you mean: 'iter'? (snippet_501.py.orig)
+     85. name 'string_to_split' is not defined (snippet_362.py.orig)
+     86. name 'iris1' is not defined (snippet_780.py.orig)
+     87. name 'Model' is not defined (snippet_268.py.orig)
+     88. name 'df' is not defined (snippet_518.py.orig)
+     89. name 'foo' is not defined (snippet_716.py.orig)
+     90. name 'M' is not defined (snippet_774.py.orig)
+     91. name 'User' is not defined (snippet_764.py.orig)
+     92. name 'CANDIDATE_BRANCH' is not defined (snippet_211.py.orig)
+     93. name 'mydict' is not defined. Did you mean: 'dict'? (snippet_369.py.orig)
+     94. name 'your_object' is not defined (snippet_177.py.orig)
+     95. name 'df' is not defined (snippet_722.py.orig)
+     96. name 'my_str' is not defined (snippet_681.py.orig)
+     97. name 'filename' is not defined (snippet_638.py.orig)
+     98. name 'df' is not defined (snippet_426.py.orig)
+     99. name 'directory' is not defined (snippet_287.py.orig)
+     100. name 'df' is not defined (snippet_158.py.orig)
+     101. name 'outfile' is not defined (snippet_561.py.orig)
+     102. name 'Reserved' is not defined. Did you mean: 'reversed'? (snippet_698.py.orig)
+     103. name 'sample' is not defined (snippet_759.py.orig)
+     104. name 'df1' is not defined (snippet_621.py.orig)
+     105. name 'bigdict' is not defined (snippet_749.py.orig)
+     106. name 'a' is not defined (snippet_12.py.orig)
+     107. name 'b' is not defined (snippet_123.py.orig)
+     108. name 'c' is not defined (snippet_813.py.orig)
+     109. name 'stuff' is not defined (snippet_714.py.orig)
+     110. name 'self' is not defined (snippet_462.py.orig)
+     111. name 'df' is not defined (snippet_748.py.orig)
+     112. name 'a' is not defined (snippet_303.py.orig)
+     113. name 'df' is not defined (snippet_313.py.orig)
+     114. name 'variable_name' is not defined (snippet_71.py.orig)
+     115. name 'X' is not defined (snippet_209.py.orig)
+     116. name 'df' is not defined (snippet_652.py.orig)
+     117. name 's' is not defined (snippet_140.py.orig)
+     118. name 'this' is not defined (snippet_150.py.orig)
+     119. name 'o' is not defined (snippet_723.py.orig)
+     120. name 'o' is not defined (snippet_629.py.orig)
+     121. name 'Out' is not defined. Did you mean: 'oct'? (snippet_639.py.orig)
+     122. name 'T1' is not defined (snippet_690.py.orig)
+     123. name 'df' is not defined (snippet_159.py.orig)
+     124. name 'lines' is not defined (snippet_286.py.orig)
+     125. name 'df' is not defined (snippet_47.py.orig)
+
+  ------------------------------------------------
+   TypeErrors (23 count):
+  ------------------------------------------------
+     0. float() argument must be a string or a real number, not 'ellipsis' (snippet_744.py.orig)
+     1. 'TBD0' object is not iterable (snippet_339.py.orig)
+     2. unsupported operand type(s) for *: 'TBD0' and 'int' (snippet_375.py.orig)
+     3. unsupported operand type(s) for >>: 'builtin_function_or_method' and '_io.TextIOWrapper'. Did you mean "print(<message>, file=<output_stream>)"? (snippet_98.py.orig)
+     4. unsupported operand type(s) for *: 'TBD0' and 'int' (snippet_708.py.orig)
+     5. 'list' object is not callable (snippet_718.py.orig)
+     6. unsupported operand type(s) for -: 'str' and 'str' (snippet_421.py.orig)
+     7. unsupported operand type(s) for >>: 'DataFrame' and 'TBD2' (snippet_274.py.orig)
+     8. download() missing 1 required positional argument: 'urls' (snippet_206.py.orig)
+     9. 'TBD2' object is not callable (snippet_601.py.orig)
+     10. 'TBD1' object is not subscriptable (snippet_515.py.orig)
+     11. close() argument must be a Figure, an int, a string, or None, not <class '__main__.TBD0'> (snippet_382.py.orig)
+     12. 'TBD1' object is not iterable (snippet_14.py.orig)
+     13. 'foo' is an invalid keyword argument for print() (snippet_743.py.orig)
+     14. 'TBD4' object is not iterable (snippet_45.py.orig)
+     15. 'str' object cannot be interpreted as an integer (snippet_354.py.orig)
+     16. Population must be a sequence.  For dicts or sets, use sorted(d). (snippet_62.py.orig)
+     17. 'module' object is not callable (snippet_623.py.orig)
+     18. package must be a string (snippet_131.py.orig)
+     19. cannot unpack non-iterable PathCollection object (snippet_793.py.orig)
+     20. 'function' object is not iterable (snippet_812.py.orig)
+     21. type.__new__() argument 3 must be dict, not TBD0 (snippet_777.py.orig)
+     22. 'TBD2' object is not iterable (snippet_445.py.orig)
+
+  ------------------------------------------------
+   AttributeErrors (2 count):
+  ------------------------------------------------
+     0. 'str' object has no attribute 'decode'. Did you mean: 'encode'? (snippet_685.py.orig)
+     1. 'function' object has no attribute 'getPumps' (snippet_792.py.orig)
+
+  ------------------------------------------------
+   ModuleNotFoundErrors (11 count):
+  ------------------------------------------------
+     0. No module named 'file_name' (snippet_233.py.orig)
+     1. No module named 'test.b' (snippet_381.py.orig)
+     2. No module named 'mymodule' (snippet_669.py.orig)
+     3. No module named 'urlparse' (snippet_321.py.orig)
+     4. No module named 'foo' (snippet_804.py.orig)
+     5. No module named 'TestPy' (snippet_15.py.orig)
+     6. No module named 'Desktop' (snippet_322.py.orig)
+     7. No module named 'foo' (snippet_115.py.orig)
+     8. No module named 'speed_testpy' (snippet_105.py.orig)
+     9. No module named 'vehicle_parts' (snippet_24.py.orig)
+     10. No module named 'app.module_one' (snippet_151.py.orig)
+
+  ------------------------------------------------
+   ValueErrors (5 count):
+  ------------------------------------------------
+     0. can't have unbuffered text I/O (snippet_118.py.orig)
+     1. can't have unbuffered text I/O (snippet_454.py.orig)
+     2. No objects to concatenate (snippet_379.py.orig)
+     3. Invalid email address. (snippet_324.py.orig)
+     4. creationflags is only supported on Windows platforms (snippet_7.py.orig)
+
+  ------------------------------------------------
+   FileNotFoundErrors (21 count):
+  ------------------------------------------------
+     0. File strings.json does not exist (snippet_647.py.orig)
+     1. [Errno 2] No such file or directory: 'path/to/config.yml' (snippet_701.py.orig)
+     2. yourfile.dat not found. (snippet_75.py.orig)
+     3. [Errno 2] No such file or directory: '/path/to/file/on/local/machine' (snippet_520.py.orig)
+     4. [Errno 2] No such file or directory: './content.xml' (snippet_602.py.orig)
+     5. [Errno 2] No such file or directory: 'file.zip' (snippet_331.py.orig)
+     6. [Errno 2] No such file or directory: 'data.json' (snippet_124.py.orig)
+     7. [Errno 2] No such file or directory: 'foo.txt' (snippet_610.py.orig)
+     8. [Errno 2] No such file or directory: 'filename.csv' (snippet_264.py.orig)
+     9. [Errno 2] No such file or directory: 'filename.csv' (snippet_392.py.orig)
+     10. [Errno 2] No such file or directory: 'C:\\Python27\\Lib\\genericpath.py' (snippet_406.py.orig)
+     11. [Errno 2] No such file or directory: 'C:\\Users\\System-Pc\\Desktop\\ybear.jpg' (snippet_485.py.orig)
+     12. [Errno 2] No such file or directory: 'C:\\Users\\Bob\\SecretPasswordFile.txt' (snippet_798.py.orig)
+     13. [Errno 2] No such file or directory: 'path/to/save/image/to.png' (snippet_107.py.orig)
+     14. [Errno 2] No such file or directory: 'data' (snippet_563.py.orig)
+     15. [Errno 2] No such file or directory: 'your_filename.txt' (snippet_706.py.orig)
+     16. [Errno 2] No such file or directory: '/pythonwork/thefile_subset11.csv' (snippet_409.py.orig)
+     17. [Errno 2] No such file or directory: 'example_3_band_image.jpg' (snippet_653.py.orig)
+     18. [Errno 2] No such file or directory: 'whatever.png' (snippet_758.py.orig)
+     19. c:\1.csv not found. (snippet_569.py.orig)
+     20. [Errno 2] No such file or directory: 'data.txt' (snippet_166.py.orig)
+
+  ------------------------------------------------
+   OSErrors (2 count):
+  ------------------------------------------------
+     0. [Errno 30] Read-only file system: '/my' (snippet_126.py.orig)
+     1. [Errno 49] Can't assign requested address (snippet_403.py.orig)
+
+  ------------------------------------------------
+   ZeroDivisionErrors (1 count):
+  ------------------------------------------------
+     0. division by zero (snippet_391.py.orig)
+
+  ------------------------------------------------
+   pytz.exceptions.UnknownTimeZoneErrors (1 count):
+  ------------------------------------------------
+     0. 'Asia/India' (snippet_17.py.orig)
+
+  ------------------------------------------------
+   pandas._config.config.OptionErrors (1 count):
+  ------------------------------------------------
+     0. No such keys(s): 'display.height' (snippet_196.py.orig)
+
+  ------------------------------------------------
+   ImportErrors (4 count):
+  ------------------------------------------------
+     0. attempted relative import with no known parent package (snippet_341.py.orig)
+     1. cannot import name 'B' from 'b' (/Users/adminuser/miniconda3/envs/incompleter/lib/python3.11/site-packages/b.py) (snippet_582.py.orig)
+     2. attempted relative import with no known parent package (snippet_350.py.orig)
+     3. attempted relative import with no known parent package (snippet_121.py.orig)
+
+  ------------------------------------------------
+   KeyErrors (3 count):
+  ------------------------------------------------
+     0. 3 (snippet_160.py.orig)
+     1. "None of [Index(['col_1', 'col_2'], dtype='object')] are in the [columns]" (snippet_400.py.orig)
+     2. 3 (snippet_335.py.orig)
+
+  ------------------------------------------------
+   IndexErrors (2 count):
+  ------------------------------------------------
+     0. list index out of range (snippet_712.py.orig)
+     1. list index out of range (snippet_645.py.orig)
+
+  ------------------------------------------------
+   [/Users/adminuser/Documents/Work/PartialExecution/incompleter/data/tmp/1bc94d37-2383-4af6-879b-9c37940b0ef3/snippet_704.py.orig] - Errors (1 count):
+  ------------------------------------------------
+     0. Your Python interpreter must be 2.7 or greater (within major version 2) (snippet_704.py.orig)
+
+  ------------------------------------------------
+   requests.exceptions.HTTPErrors (1 count):
+  ------------------------------------------------
+     0. 429 Client Error: Too Many Requests for url: http://lorempixel.com/400/200 (snippet_620.py.orig)

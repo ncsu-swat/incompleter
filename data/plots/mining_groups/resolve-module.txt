@@ -1,0 +1,189 @@
+==================================
+ TABLE VI. UNRESOLVED ERRORS:
+==================================
+
+  ------------------------------------------------
+   TypeErrors (95 count):
+  ------------------------------------------------
+     0. 'TBD0' object is not iterable (snippet_507.py.orig)
+     1. 'TBD0' object is not iterable (snippet_389.py.orig)
+     2. 'TBD0' object is not iterable (snippet_267.py.orig)
+     3. float() argument must be a string or a real number, not 'ellipsis' (snippet_744.py.orig)
+     4. 'TBD1' object cannot be interpreted as an integer (snippet_817.py.orig)
+     5. unsupported operand type(s) for +: 'TBD1' and 'str' (snippet_772.py.orig)
+     6. unsupported operand type(s) for +=: 'TBD0' and 'int' (snippet_251.py.orig)
+     7. 'TBD0' object is not iterable (snippet_339.py.orig)
+     8. 'TBD8' object is not iterable (snippet_466.py.orig)
+     9. 'TBD2' object is not subscriptable (snippet_90.py.orig)
+     10. the JSON object must be str, bytes or bytearray, not TBD0 (snippet_678.py.orig)
+     11. 'TBD6' object is not subscriptable (snippet_492.py.orig)
+     12. 'TBD2' object is not subscriptable (snippet_763.py.orig)
+     13. 'TBD0' object is not subscriptable (snippet_338.py.orig)
+     14. chdir: path should be string, bytes, os.PathLike or integer, not TBD0 (snippet_405.py.orig)
+     15. 'TBD1' object is not iterable (snippet_467.py.orig)
+     16. unsupported operand type(s) for *: 'TBD0' and 'int' (snippet_375.py.orig)
+     17. unsupported operand type(s) for +: 'TBD0' and 'int' (snippet_797.py.orig)
+     18. cannot unpack non-iterable TBD0 object (snippet_516.py.orig)
+     19. unsupported operand type(s) for >>: 'builtin_function_or_method' and '_io.TextIOWrapper'. Did you mean "print(<message>, file=<output_stream>)"? (snippet_98.py.orig)
+     20. unsupported operand type(s) for *: 'TBD0' and 'int' (snippet_708.py.orig)
+     21. 'list' object is not callable (snippet_718.py.orig)
+     22. 'TBD0' object does not support item assignment (snippet_660.py.orig)
+     23. 'TBD0' object is not iterable (snippet_162.py.orig)
+     24. 'type' object does not support item deletion (snippet_48.py.orig)
+     25. remove: path should be string, bytes or os.PathLike, not TBD0 (snippet_481.py.orig)
+     26. 'TBD1' object is not iterable (snippet_102.py.orig)
+     27. unsupported operand type(s) for -: 'str' and 'str' (snippet_421.py.orig)
+     28. 'TBD0' object is not subscriptable (snippet_559.py.orig)
+     29. unsupported operand type(s) for -: 'TBD0' and 'TBD1' (snippet_431.py.orig)
+     30. unsupported operand type(s) for >>: 'DataFrame' and 'TBD2' (snippet_274.py.orig)
+     31. download() missing 1 required positional argument: 'urls' (snippet_206.py.orig)
+     32. 'TBD0' object is not subscriptable (snippet_735.py.orig)
+     33. object of type 'TBD1' has no len() (snippet_332.py.orig)
+     34. 'TBD2' object is not callable (snippet_601.py.orig)
+     35. isinstance() arg 2 must be a type, a tuple of types, or a union (snippet_779.py.orig)
+     36. 'TBD1' object is not subscriptable (snippet_515.py.orig)
+     37. 'TBD0' object is not subscriptable (snippet_505.py.orig)
+     38. 'TBD1' object is not subscriptable (snippet_746.py.orig)
+     39. object of type 'TBD1' has no len() (snippet_548.py.orig)
+     40. 'TBD2' object is not subscriptable (snippet_420.py.orig)
+     41. 'TBD0' object is not subscriptable (snippet_593.py.orig)
+     42. unsupported operand type(s) for |=: 'TBD4' and 'TBD6' (snippet_583.py.orig)
+     43. 'TBD1' object is not callable (snippet_452.py.orig)
+     44. 'TBD1' object is not subscriptable (snippet_92.py.orig)
+     45. close() argument must be a Figure, an int, a string, or None, not <class '__main__.TBD0'> (snippet_382.py.orig)
+     46. 'module' object is not callable (snippet_416.py.orig)
+     47. 'TBD1' object is not iterable (snippet_770.py.orig)
+     48. 'TBD2' object is not subscriptable (snippet_125.py.orig)
+     49. 'TBD1' object is not iterable (snippet_14.py.orig)
+     50. '<=' not supported between instances of 'int' and 'TBD0' (snippet_490.py.orig)
+     51. expected string or bytes-like object, got 'TBD0' (snippet_650.py.orig)
+     52. int() argument must be a string, a bytes-like object or a real number, not 'TBD1' (snippet_536.py.orig)
+     53. isinstance() arg 2 must be a type, a tuple of types, or a union (snippet_632.py.orig)
+     54. 'TBD0' object is not iterable (snippet_413.py.orig)
+     55. 'TBD3' object is not iterable (snippet_318.py.orig)
+     56. 'foo' is an invalid keyword argument for print() (snippet_743.py.orig)
+     57. initial_value must be str or None, not TBD2 (snippet_692.py.orig)
+     58. read_csv() got an unexpected keyword argument 'error_bad_lines' (snippet_586.py.orig)
+     59. Object of type TBD0 is not JSON serializable (snippet_788.py.orig)
+     60. 'TBD4' object is not iterable (snippet_45.py.orig)
+     61. unsupported operand type(s) for *: 'TBD0' and 'int' (snippet_355.py.orig)
+     62. 'TBD0' object is not iterable (snippet_261.py.orig)
+     63. unsupported operand type(s) for +: 'TBD1' and 'int' (snippet_175.py.orig)
+     64. 'TBD0' object is not callable (snippet_36.py.orig)
+     65. 'str' object cannot be interpreted as an integer (snippet_354.py.orig)
+     66. expected string or bytes-like object, got 'TBD1' (snippet_362.py.orig)
+     67. Population must be a sequence.  For dicts or sets, use sorted(d). (snippet_62.py.orig)
+     68. 'module' object is not callable (snippet_623.py.orig)
+     69. unsupported operand type(s) for +: 'TBD15' and 'TBD16' (snippet_518.py.orig)
+     70. unsupported operand type(s) for +: 'TBD1' and 'TBD2' (snippet_716.py.orig)
+     71. package must be a string (snippet_131.py.orig)
+     72. 'TBD0' object is not subscriptable (snippet_774.py.orig)
+     73. 'TBD1' object is not iterable (snippet_369.py.orig)
+     74. 'TBD1' object is not subscriptable (snippet_722.py.orig)
+     75. expected string or bytes-like object, got 'TBD0' (snippet_681.py.orig)
+     76. utime: path should be string, bytes, os.PathLike or integer, not TBD0 (snippet_638.py.orig)
+     77. listdir: path should be string, bytes, os.PathLike, integer or None, not TBD0 (snippet_287.py.orig)
+     78. 'TBD4' object is not subscriptable (snippet_158.py.orig)
+     79. 'TBD2' object is not callable (snippet_759.py.orig)
+     80. 'TBD2' object is not subscriptable (snippet_621.py.orig)
+     81. 'TBD2' object is not iterable (snippet_749.py.orig)
+     82. 'TBD0' object is not subscriptable (snippet_12.py.orig)
+     83. isinstance() arg 2 must be a type, a tuple of types, or a union (snippet_123.py.orig)
+     84. 'TBD0' object is not iterable (snippet_714.py.orig)
+     85. unsupported operand type(s) for /: 'TBD0' and 'TBD2' (snippet_748.py.orig)
+     86. cannot unpack non-iterable PathCollection object (snippet_793.py.orig)
+     87. 'TBD0' object is not iterable (snippet_209.py.orig)
+     88. 'function' object is not iterable (snippet_812.py.orig)
+     89. type.__new__() argument 3 must be dict, not TBD0 (snippet_777.py.orig)
+     90. encoding without a string argument (snippet_140.py.orig)
+     91. 'TBD2' object is not iterable (snippet_445.py.orig)
+     92. 'TBD0' object is not iterable (snippet_690.py.orig)
+     93. 'TBD0' object is not iterable (snippet_286.py.orig)
+     94. 'TBD2' object is not subscriptable (snippet_47.py.orig)
+
+  ------------------------------------------------
+   AttributeErrors (4 count):
+  ------------------------------------------------
+     0. 'str' object has no attribute 'decode'. Did you mean: 'encode'? (snippet_685.py.orig)
+     1. 'function' object has no attribute 'get' (snippet_823.py.orig)
+     2. 'builtin_function_or_method' object has no attribute 'equal' (snippet_780.py.orig)
+     3. 'function' object has no attribute 'getPumps' (snippet_792.py.orig)
+
+  ------------------------------------------------
+   ValueErrors (10 count):
+  ------------------------------------------------
+     0. can't have unbuffered text I/O (snippet_118.py.orig)
+     1. Expected object or value (snippet_647.py.orig)
+     2. If using all scalar values, you must pass an index (snippet_679.py.orig)
+     3. Index Unnamed: 0 invalid (snippet_392.py.orig)
+     4. cannot reshape array of size 7 into shape (100,100,100) (snippet_563.py.orig)
+     5. can't have unbuffered text I/O (snippet_454.py.orig)
+     6. No objects to concatenate (snippet_379.py.orig)
+     7. Invalid email address. (snippet_324.py.orig)
+     8. creationflags is only supported on Windows platforms (snippet_7.py.orig)
+     9. could not convert string 'column1' to float64 at row 0, column 1. (snippet_569.py.orig)
+
+  ------------------------------------------------
+   OSErrors (2 count):
+  ------------------------------------------------
+     0. [Errno 30] Read-only file system: '/my' (snippet_126.py.orig)
+     1. [Errno 49] Can't assign requested address (snippet_403.py.orig)
+
+  ------------------------------------------------
+   ZeroDivisionErrors (1 count):
+  ------------------------------------------------
+     0. division by zero (snippet_391.py.orig)
+
+  ------------------------------------------------
+   FileNotFoundErrors (7 count):
+  ------------------------------------------------
+     0. [Errno 2] No such file or directory: '/path/to/file/on/local/machine' (snippet_520.py.orig)
+     1. [Errno 2] No such file or directory: 'C:\\Python27\\Lib\\genericpath.py' (snippet_406.py.orig)
+     2. [Errno 2] No such file or directory: '/path/to/somefile.py' (snippet_738.py.orig)
+     3. [Errno 2] No such file or directory: 'C:\\Users\\System-Pc\\Desktop\\ybear.jpg' (snippet_485.py.orig)
+     4. [Errno 2] No such file or directory: 'C:\\Users\\Bob\\SecretPasswordFile.txt' (snippet_798.py.orig)
+     5. [Errno 2] Unable to open file (unable to open file: name = 'my_model.h5', errno = 2, error message = 'No such file or directory', flags = 0, o_flags = 0) (snippet_447.py.orig)
+     6. [Errno 2] No such file or directory: '/pythonwork/thefile_subset11.csv' (snippet_409.py.orig)
+
+  ------------------------------------------------
+   pytz.exceptions.UnknownTimeZoneErrors (1 count):
+  ------------------------------------------------
+     0. 'Asia/India' (snippet_17.py.orig)
+
+  ------------------------------------------------
+   pandas._config.config.OptionErrors (1 count):
+  ------------------------------------------------
+     0. No such keys(s): 'display.height' (snippet_196.py.orig)
+
+  ------------------------------------------------
+   _csv.Errors (1 count):
+  ------------------------------------------------
+     0. iterable expected, not TBD0 (snippet_417.py.orig)
+
+  ------------------------------------------------
+   KeyErrors (3 count):
+  ------------------------------------------------
+     0. 3 (snippet_160.py.orig)
+     1. "None of [Index(['col_1', 'col_2'], dtype='object')] are in the [columns]" (snippet_400.py.orig)
+     2. 3 (snippet_335.py.orig)
+
+  ------------------------------------------------
+   ModuleNotFoundErrors (1 count):
+  ------------------------------------------------
+     0. No module named 'c' (snippet_582.py.orig)
+
+  ------------------------------------------------
+   IndexErrors (2 count):
+  ------------------------------------------------
+     0. list index out of range (snippet_712.py.orig)
+     1. list index out of range (snippet_645.py.orig)
+
+  ------------------------------------------------
+   [/Users/adminuser/Documents/Work/PartialExecution/incompleter/data/tmp/2ee44094-f1e2-46df-8be2-93569282f71e/snippet_704.py.orig] - Errors (1 count):
+  ------------------------------------------------
+     0. Your Python interpreter must be 2.7 or greater (within major version 2) (snippet_704.py.orig)
+
+  ------------------------------------------------
+   requests.exceptions.HTTPErrors (1 count):
+  ------------------------------------------------
+     0. 429 Client Error: Too Many Requests for url: http://lorempixel.com/400/200 (snippet_620.py.orig)

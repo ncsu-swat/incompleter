@@ -1,6 +1,0 @@
-# Extracted from https://stackoverflow.com/questions/6760685/creating-a-singleton-in-python
-class A:
-    instance = None
-    # Methods and variables of the class/object A follow
-A.instance = A()
-
